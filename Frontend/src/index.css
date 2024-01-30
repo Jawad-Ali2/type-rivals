@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200&family=Nanum+Myeongjo:wght@700&family=Poppins:wght@400;500;600;700&family=Roboto+Slab:wght@300&family=Young+Serif&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root{
+  --faded-border : linear-gradient(to right, #3b61875c,#3e6e9e5c, #3b61875c);
+  --body-color : #081624;
+  --text-color : #3B6187;
+  --hover-text-color: #425c6d;
+  --foreground-color: #1C2936;
+  --background-color: #031221;
+  --figma-gradient : linear-gradient(to bottom,#072542,#021F3D);
+  --button-color : #dd8430;
+  --dark-text-color: #184d7f;
+  --transparent-background-color: #031221bb;
+}
+*{
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+}
+.web-gradient{
+  background: var(--figma-gradient);
+}
+.web-transparent{
+  background: var(--transparent-background-color);
+}
+.web-button{
+  color: white;
+  font-weight:600;
+  width: 12rem;
+  height: 3rem;
+  border: none;
+  border-radius: 10px;
+  padding: 2px;
+  text-align: center;
+  background-color: var(--button-color);
+  transition: all 0.15s ease-in;
+}
+.web-button:hover{
+  scale: 105%;
+}
+.web-text{
+  color:var(--text-color) ;
+}
+.web-text:hover{
+  color: var(--hover-text-color);
+}
+.web-text-dark{
+  color: var(--dark-text-color);
+}
+.web-body{
+  background-color: var(--body-color);
+}
+.web-foreground{
+  background-color: var(--foreground-color);
+}
+.web-background{
+  background-color: var(--background-color);
+}
+.active li{
+  border-bottom: 2px;
+}
+.faded-border{
+  border-image : var(--faded-border);
+  border-image-slice: 1;
+}
