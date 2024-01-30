@@ -19,10 +19,10 @@ export const Landing = ()=>{
         link:"/dashboard",
         button_text:"Join a Death Match"
     }
-    return <section className="landing-section w-full max-w-[45rem]">
+    return <section className="landing-section w-full">
         <div className="landing-container w-full h-full mt-[3rem] text-center">
             <p className="web-text text-[28px] font-semibold">Type Rivals</p>
-            <ul className="card-list w-[20rem] mx-auto md:w-full h-full flex flex-wrap flex-col md:flex-row items-center">
+            <ul className="card-list w-[20rem] mx-auto md:w-full h-full flex flex-wrap flex-col md:flex-row items-center justify-center">
                 <li className="mt-10 md:mx-4"><Card {...Card1}/></li>
                 <li className="mt-10 md:mx-4"><Card {...Card2}/></li>
                 <li className="mt-10 md:mx-4"><Card {...Card3}/></li>
