@@ -13,11 +13,24 @@
   --button-color : #dd8430;
   --dark-text-color: #184d7f;
   --transparent-background-color: #031221bb;
+  --border-color:  #071d32;
 }
 *{
   margin: 0;
   padding: 0;
   font-family: "Poppins", sans-serif;
+}
+.web-border{
+  border-color: var(--border-color);
+}
+.web-input{
+  background: var(--foreground-color);
+  border-bottom: 2px solid var(--text-color);
+  outline: none;
+  color: var(--background-color);
+
+  height: 30px;
+  padding: 3px;
 }
 .web-gradient{
   background: var(--figma-gradient);

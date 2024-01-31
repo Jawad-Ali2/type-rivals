@@ -4,4 +4,6 @@ export {Statistics} from "./Statistics/Statistics";
 export {Card} from "./Card/Card"
 export {StatBar} from "./StatBar/StatBar";
 export {RaceMap} from "./RaceMap/RaceMap";
-  
+export {AuthForm} from "./AuthForm/AuthForm";
+export {SignIn} from "./SignIn/SignIn";
+export {SignUp} from "./SignUp/SignUp";
