@@ -19,26 +19,20 @@ const userSchema = new Schema({
     type: Number,
     required: true,
   },
-  raceDetail: [
-    {
-      wins: {
-        type: Number,
-        required: true,
-      },
-      loses: {
-        type: Number,
-        required: true,
-      },
-      avgSpeed: {
-        type: Number,
-        required: true,
-      },
-      maxSpeed: {
-        type: Number,
-        required: true,
-      },
+  raceDetail: {
+    wins: {
+      type: Number,
     },
-  ],
+    loses: {
+      type: Number,
+    },
+    avgSpeed: {
+      type: Number,
+    },
+    maxSpeed: {
+      type: Number,
+    },
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);

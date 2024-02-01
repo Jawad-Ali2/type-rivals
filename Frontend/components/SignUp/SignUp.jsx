@@ -2,7 +2,6 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const SignUp = ({ handleError }) => {
-  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   async function handleSignup(e) {
     e.preventDefault();

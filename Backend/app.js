@@ -21,7 +21,7 @@ app.use(
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use((req, res, next) => {
-  User.findById({ _id: "65b8efc66fcd404c6433b7f8" }).then((user) => {
+  User.findById({ _id: "65bb6f0b0b633f7c4c70a9a2" }).then((user) => {
     req.user = user;
     next();
   });
@@ -43,14 +43,12 @@ mongoose
           email: "test@example.com",
           password: 123,
           age: 20,
-          raceDetail: [
-            {
-              wins: 100,
-              loses: 20,
-              avgSpeed: 79,
-              maxSpeed: 92,
-            },
-          ],
+          raceDetail: {
+            wins: 100,
+            loses: 20,
+            avgSpeed: 79,
+            maxSpeed: 92,
+          },
         });
 
         user.save();
