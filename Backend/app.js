@@ -5,6 +5,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const userRoutes = require("./routes/user");
+const authRoutes = require("./routes/auth");
 
 const User = require("./models/user");
 
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
   });
 });
 
+app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 
 mongoose
@@ -39,11 +41,16 @@ mongoose
         const user = new User({
           name: "Jawad",
           email: "test@example.com",
+          password: 123,
           age: 20,
-          wins: 100,
-          loses: 20,
-          avgSpeed: 79,
-          maxSpeed: 92,
+          raceDetail: [
+            {
+              wins: 100,
+              loses: 20,
+              avgSpeed: 79,
+              maxSpeed: 92,
+            },
+          ],
         });
 
         user.save();
