@@ -29,27 +29,12 @@ export const SignIn = ({ handleError }) => {
     }
   }
   return (
-    <div className="authform web-foreground w-full mx-auto max-w-[20rem] h-[20rem] rounded-lg flex items-center border-4 web-border flex-col justify-between py-2">
-      <p className="web-text font-semibold text-lg">Sign In</p>
-      <div className="auth-fields w-[12rem] px-2 ">
-        <form onSubmit={handleSignIn} method="post">
-          <input
-            placeholder="email@email.com"
-            name="email"
-            type="email"
-            className="web-input w-[12rem]"
-          />
-          <input
-            placeholder="Password"
-            name="password"
-            className="web-input w-[12rem] mt-5"
-            type="password"
-          />
-          <button type="submit" className="web-button !w-[10rem]">
-            Sign In
-          </button>
-        </form>
-      </div>
+    <form onSubmit={handleSignIn} method="POST" className="flex flex-col justify-between items-center h-full w-full">
+    <div className="form-fields w-[90%] mx-auto ">
+      <input className="web-input w-full faded-border border-b-2" placeholder="Email"/>
+      <input className="web-input w-full faded-border border-b-2 mt-5" placeholder="Password"/>
     </div>
+    <button className="text-white p-2 web-foreground-overlay w-[5rem] rounded-lg mb-2" type="submit">Log In</button>
+  </form>
   );
 };

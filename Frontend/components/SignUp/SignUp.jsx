@@ -1,6 +1,20 @@
 import { useNavigate } from "react-router-dom";
-
+import { useState } from "react";
+import default_dp from "/src/assets/Default_dp.png"
 export const SignUp = ({ handleError }) => {
+  const [preview, setPreview] = useState(default_dp)
+  const handleImageChange = (e)=>{
+    const prev_img = e.target.files[0]  
+    if(prev_img){
+      const reader = new FileReader()
+      reader.onloadend = ()=>{
+        setPreview(reader.result)
+      }
+      reader.readAsDataURL(prev_img)
+    } else{
+      setPreview(default_dp)
+    }
+  }
   const navigate = useNavigate();
   async function handleSignup(e) {
     e.preventDefault();
@@ -38,45 +52,17 @@ export const SignUp = ({ handleError }) => {
   }
 
   return (
-    <div className="authform web-foreground w-full mx-auto max-w-[20rem] h-[25rem] rounded-lg flex items-center border-4 web-border flex-col justify-between py-2">
-      <p className="web-text font-semibold text-lg">Sign Up</p>
-      <div className="auth-fields w-[12rem] px-2">
-        <form onSubmit={handleSignup} method="POST">
-          <input
-            placeholder="typer69"
-            name="username"
-            type="text"
-            className="web-input w-[12rem] p-2"
-          />
-          <input
-            placeholder="typer@email.com"
-            name="email"
-            type="text"
-            className="web-input w-[12rem] mt-5"
-          />
-          <input
-            placeholder="*****"
-            type="password"
-            className="web-input w-[12rem] mt-5"
-            name="password"
-          />
-          <input
-            placeholder="Confirm Password"
-            className="web-input w-[12rem] mt-5"
-            name="confirm-password"
-            type="password"
-          />
-          <input
-            type="number"
-            className="web-input w-[12rem] mt-5"
-            name="age"
-            id="age"
-          />
-          <button type="submit" className="web-button !w-[10rem] mt-10">
-            Register
-          </button>
-        </form>
+  <form onSubmit={handleSignup} method="POST" className="flex flex-col justify-between items-center h-full">
+    <div className="form-fields w-[90%] mx-auto">
+      <div className="dp-input  w-full h-[5rem] flex flex-row justify-between items-center text-white my-2">
+        <label className="web-foreground-overlay p-2" for="profile-picture">Select Profile Picture<input onChange={handleImageChange} id="profile-picture" type="file" className="hidden" accept="image/"/></label>
+        <div className="web-foreground-overlay profile-preview h-[5rem] w-[5rem]"><img src={preview} className="w-full h-full"/></div>
       </div>
+      <input className="web-input w-full faded-border border-b-2" placeholder="Alias"/>
+      <input className="web-input w-full faded-border border-b-2" placeholder="Email"/>
+      <input className="web-input w-full faded-border border-b-2" placeholder="Password"/>
+      <input className="web-input w-full faded-border border-b-2" placeholder="Confirm Password"/>
     </div>
-  );
+    <button className="text-white p-2 web-foreground-overlay w-[5rem] rounded-lg mb-2" type="submit">Register</button>
+  </form>)
 };

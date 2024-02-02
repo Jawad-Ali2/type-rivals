@@ -71,14 +71,14 @@ export const Header = () => {
             {isAuthenticated ? (
               <button
                 onClick={handleLogout}
-                className="text-white bg-red-500 rounded-md p-2"
+                className="web-foreground-button"
               >
                 Log out
               </button>
             ) : (
               <Link
                 to={"/auth"}
-                className="text-white bg-[#dd8430] rounded-md p-2"
+                className="web-foreground-button"
               >
                 Sign In
               </Link>
@@ -121,7 +121,7 @@ export const Header = () => {
             </NavLink>
           ))}
           <button
-            className="w-fit  transition-all duration-200 m-2 bg-red-600 p-2 text-white rounded-md border-b-[#3B6187] hover:border-b-[2px] border-b-[0px]"
+            className="w-fit h-[2rem] transition-all duration-200  mx-2 border-b-[#3B6187]"
             onClick={handleLogout}
           >
             {isAuthenticated ? "Log out" : "Sign In"}
