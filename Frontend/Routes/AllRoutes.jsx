@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 import { Home, Dashboard, Landing, Race, Auth } from "../pages";
-import { AuthProvider } from "../context/AuthContext";
 export const AllRoutes = () => {
   return (
     <Routes>

@@ -1,10 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Statistics } from "../../components";
+import { AuthContext } from "../../context/AuthContext";
 export const Dashboard = () => {
   const [data, setData] = useState({});
+  const { token } = useContext(AuthContext);
+
   useEffect(() => {
     async function getUserDashboard() {
-      const response = await fetch("http://localhost:8000/user/dashboard");
+      const response = await fetch("http://localhost:8000/user/dashboard", {
+        headers: { Authorization: "Bearer " + token },
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -37,14 +42,16 @@ export const Dashboard = () => {
         </div>
         <div className="profile-tools w-full mx-auto max-w-[20rem] md:max-w-full  h-[2rem] web-foreground pt-1 mt-2">
           <ul className="w-full">
-            {["Edit Profile", "Privacy & Security", "My Cars"].map((user) => (
-              <li
-                key={user._id}
-                className="inline web-text text-sm font-semibold mx-2"
-              >
-                {user}
-              </li>
-            ))}
+            {["Edit Profile", "Privacy & Security", "My Cars"].map(
+              (user, i) => (
+                <li
+                  key={i}
+                  className="inline web-text text-sm font-semibold mx-2"
+                >
+                  {user}
+                </li>
+              )
+            )}
           </ul>
         </div>
       </div>

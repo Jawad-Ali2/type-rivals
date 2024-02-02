@@ -7,8 +7,6 @@ const bodyParser = require("body-parser");
 const userRoutes = require("./routes/user");
 const authRoutes = require("./routes/auth");
 
-const User = require("./models/user");
-
 const app = express();
 
 app.use(
@@ -20,12 +18,6 @@ app.use(
 );
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use((req, res, next) => {
-  User.findById({ _id: "65bb6f0b0b633f7c4c70a9a2" }).then((user) => {
-    req.user = user;
-    next();
-  });
-});
 
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
@@ -35,25 +27,6 @@ mongoose
     `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@type-rivals.uhhezl0.mongodb.net/db`
   )
   .then(() => {
-    User.findOne().then((user) => {
-      if (!user) {
-        // Creating dummy user for testing purposes
-        const user = new User({
-          name: "Jawad",
-          email: "test@example.com",
-          password: 123,
-          age: 20,
-          raceDetail: {
-            wins: 100,
-            loses: 20,
-            avgSpeed: 79,
-            maxSpeed: 92,
-          },
-        });
-
-        user.save();
-      }
-    });
     console.log("Database Connected");
     app.listen(8000, () => {
       console.log(

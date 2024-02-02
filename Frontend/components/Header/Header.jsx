@@ -2,12 +2,14 @@ import website_logo from "/src/assets/website_logo.png";
 import CIcon from "@coreui/icons-react";
 import { cilMenu } from "@coreui/icons";
 import { useContext, useRef } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 export const Header = () => {
   const dropDownRef = useRef();
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, token, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const handleDropDown = () => {
     if (dropDownRef.current.classList.contains("left-0")) {
       dropDownRef.current.classList.remove("left-0");
@@ -17,6 +19,21 @@ export const Header = () => {
       dropDownRef.current.classList.add("left-0");
     }
   };
+
+  async function handleLogout() {
+    const response = await fetch("http://localhost:8000/auth/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.ok) {
+      logout();
+      navigate("/");
+    }
+  }
+
   return (
     <section className="header-section">
       <div className="header-container fixed w-full h-[5rem] web-gradient">
@@ -43,7 +60,7 @@ export const Header = () => {
               ["Home", "/home"],
               ["Collections", "/collections"],
               ["Dashboard", "/dashboard"],
-              isAuthenticated ? ["Login", "/auth"] : ["Log out", "/logout"],
+              // isAuthenticated ? ["Log out", "/logout"] : ["Login", "/auth"],
             ].map(([el, link], i) => (
               <NavLink key={i} to={link} end>
                 <li className="w-fit  cursor-pointer inline h-[2rem] transition-all duration-200 py-2 m-2 border-b-[#3B6187] hover:border-b-[2px] border-b-[0px]">
@@ -51,6 +68,21 @@ export const Header = () => {
                 </li>
               </NavLink>
             ))}
+            {isAuthenticated ? (
+              <button
+                onClick={handleLogout}
+                className="text-white bg-red-500 rounded-md p-2"
+              >
+                Log out
+              </button>
+            ) : (
+              <Link
+                to={"/auth"}
+                className="text-white bg-[#dd8430] rounded-md p-2"
+              >
+                Sign In
+              </Link>
+            )}
           </ul>
         </div>
         <div className="sub-header w-full hidden md:block h-[2rem] web-background">
@@ -81,7 +113,6 @@ export const Header = () => {
             ["Home", "/home"],
             ["Collections", "/collections"],
             ["Dashboard", "/dashboard"],
-            ["Log Out", "/logout"],
           ].map(([el, link], i) => (
             <NavLink key={i} to={link} end>
               <li className="w-fit h-[2rem] transition-all duration-200 py-2 m-2 border-b-[#3B6187] hover:border-b-[2px] border-b-[0px]">
@@ -89,6 +120,12 @@ export const Header = () => {
               </li>
             </NavLink>
           ))}
+          <button
+            className="w-fit  transition-all duration-200 m-2 bg-red-600 p-2 text-white rounded-md border-b-[#3B6187] hover:border-b-[2px] border-b-[0px]"
+            onClick={handleLogout}
+          >
+            {isAuthenticated ? "Log out" : "Sign In"}
+          </button>
           <li className="faded-border w-full border-b-[2px]"></li>
           {["Quick Race", "1-v-1", "vs CPU", "Death Match", "Tournaments"].map(
             (el, i) => (

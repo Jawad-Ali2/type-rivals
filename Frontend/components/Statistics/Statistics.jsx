@@ -5,10 +5,10 @@ export const Statistics = ({ data }) => {
     Email: data.email,
     Age: data.age,
     // Races: data.races,
-    Wins: data.raceDetail.wins,
-    Losses: data.raceDetail.loses,
-    "Avg. Speed": data.raceDetail.avgSpeed,
-    "Max Speed": data.raceDetail.maxSpeed,
+    Wins: data.raceDetail?.wins,
+    Losses: data.raceDetail?.loses,
+    "Avg. Speed": data.raceDetail?.avgSpeed,
+    "Max Speed": data.raceDetail?.maxSpeed,
   });
   console.log(statistics);
   return (
