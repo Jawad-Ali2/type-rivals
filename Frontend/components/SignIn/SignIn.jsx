@@ -29,8 +29,9 @@ export const SignIn = ({ handleError }) => {
     }
   }
   return (
-    <form onSubmit={handleSignIn} method="POST" className="flex flex-col justify-between items-center h-full w-full">
-    <div className="form-fields w-[90%] mx-auto ">
+    <form onSubmit={handleSignIn} method="POST" className="flex flex-col justify-between items-center h-full w-full pt-5">
+      <p className="w-full text-center text-lg web-text font-semibold">Welcome Back!</p>
+    <div className="form-fields w-[90%] mx-auto h-full p-2 ">
       <input className="web-input w-full faded-border border-b-2" placeholder="Email"/>
       <input className="web-input w-full faded-border border-b-2 mt-5" placeholder="Password"/>
     </div>

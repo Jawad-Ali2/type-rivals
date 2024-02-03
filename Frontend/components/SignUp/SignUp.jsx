@@ -55,7 +55,7 @@ export const SignUp = ({ handleError }) => {
   <form onSubmit={handleSignup} method="POST" className="flex flex-col justify-between items-center h-full">
     <div className="form-fields w-[90%] mx-auto">
       <div className="dp-input  w-full h-[5rem] flex flex-row justify-between items-center text-white my-2">
-        <label className="web-foreground-overlay p-2" for="profile-picture">Select Profile Picture<input onChange={handleImageChange} id="profile-picture" type="file" className="hidden" accept="image/"/></label>
+        <label className="web-foreground-overlay cursor-pointer p-2" for="profile-picture">Select Profile Picture<input onChange={handleImageChange} id="profile-picture" type="file" className="hidden" accept="image/"/></label>
         <div className="web-foreground-overlay profile-preview h-[5rem] w-[5rem]"><img src={preview} className="w-full h-full"/></div>
       </div>
       <input className="web-input w-full faded-border border-b-2" placeholder="Alias"/>

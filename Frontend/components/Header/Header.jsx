@@ -1,5 +1,7 @@
 import website_logo from "/src/assets/website_logo.png";
+import display_pic from "/src/assets/Default_dp.png";
 import CIcon from "@coreui/icons-react";
+import "./Header.css"
 import { cilMenu } from "@coreui/icons";
 import { useContext, useRef } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
@@ -19,7 +21,7 @@ export const Header = () => {
       dropDownRef.current.classList.add("left-0");
     }
   };
-
+  
   async function handleLogout() {
     const response = await fetch("http://localhost:8000/auth/logout", {
       method: "POST",
@@ -55,35 +57,64 @@ export const Header = () => {
               icon={cilMenu}
             />
           </div>
-          <ul className="nav-list web-text text-md  hidden md:inline-block">
-            {[
-              ["Home", "/home"],
-              ["Collections", "/collections"],
-              ["Dashboard", "/dashboard"],
-              // isAuthenticated ? ["Log out", "/logout"] : ["Login", "/auth"],
-            ].map(([el, link], i) => (
-              <NavLink key={i} to={link} end>
-                <li className="w-fit  cursor-pointer inline h-[2rem] transition-all duration-200 py-2 m-2 border-b-[#3B6187] hover:border-b-[2px] border-b-[0px]">
-                  {el}
-                </li>
-              </NavLink>
-            ))}
-            {isAuthenticated ? (
-              <button
-                onClick={handleLogout}
-                className="web-foreground-button"
-              >
-                Log out
-              </button>
-            ) : (
-              <Link
-                to={"/auth"}
-                className="web-foreground-button"
-              >
-                Sign In
-              </Link>
-            )}
-          </ul>
+          <div className="header-nav  flex-row justify-between items-center pr-5 hidden md:flex" >
+            <ul className="nav-list  text-md  hidden md:inline-block">
+              {[
+                ["Home", "/home"],
+                ["Collections", "/collections"],
+                ["Dashboard", "/dashboard"],
+                // isAuthenticated ? ["Log out", "/logout"] : ["Login", "/auth"],
+              ].map(([el, link], i) => (
+                <NavLink key={i} to={link} end>
+                  <li className="w-fit web-text  cursor-pointer inline h-[2rem] transition-all duration-200 py-2 m-2">
+                    {el}
+                  </li>
+                </NavLink>
+              ))}
+            </ul>
+            <div className="profile-nav cursor-pointer relative hidden md:block ml-[0rem] duration-300 transition-all" onMouseOver={()=>{
+              const el = document.querySelector(".profile-nav")
+              const list = document.querySelector(".profile-nav-list")
+              const anchor = document.querySelector(".anchor")
+              const nameContainer = document.querySelector(".name-container")
+              el.classList.remove("ml-[0rem]")
+              el.classList.add("ml-[10rem]")
+              nameContainer.classList.remove("w-[0rem]", "opacity-0")
+              nameContainer.classList.add("w-[10rem]", "opacity-100")
+              anchor.classList.remove("hidden")
+              list.classList.remove("h-[0rem]")
+              list.classList.add("h-[10rem]")
+            }} onMouseLeave={()=>{
+              const el = document.querySelector(".profile-nav")
+          
+              const list = document.querySelector(".profile-nav-list")
+              const anchor = document.querySelector(".anchor")
+              const nameContainer = document.querySelector(".name-container")
+              el.classList.add("ml-[0rem]")
+              el.classList.remove("ml-[10rem]")
+              nameContainer.classList.add("w-[0rem]", "opacity-0")
+              nameContainer.classList.remove("w-[10rem]", "opacity-100")
+              anchor.classList.add("hidden")
+              list.classList.add("h-[0rem]")
+              list.classList.remove("h-[10rem]")
+            }}>
+              <div className="name-container absolute w-[10rem] opacity-0 transition-all duration-300 h-[1.5rem] text-md z-10 truncate text-nowrap right-[3.3rem] top-[1rem] web-background px-2">
+                <p className="text-white">Mikasa Ackerman</p>
+              </div>
+              <div className="img-container p-1 web-background z-20 rounded-[200%]">
+                  <img src={display_pic} className="h-[3rem] w-[3rem]"/>
+              </div>
+              <div className="anchor top-[3.5rem] hidden"></div>
+              <div className="profile-nav-list web-foreground w-[9rem] overflow-hidden absolute h-[0rem] top-[4rem] transition-all duration-300 left-[-3rem]">
+                <ul className="profile-btns-list w-full text-left p-2">
+                  <li className="web-text cursor-pointer">Dashboard</li>
+                  <li className="web-text cursor-pointer">Collections</li>
+                  <li className="web-text cursor-pointer">Settings</li>
+                  <li className="web-text cursor-pointer !border-none">Logout</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="sub-header w-full hidden md:block h-[2rem] web-background">
           <ul className="subheader-nav  w-full flex flex-row justify-center items-center mx-auto text-sm ">
