@@ -29,13 +29,32 @@ export const SignIn = ({ handleError }) => {
     }
   }
   return (
-    <form onSubmit={handleSignIn} method="POST" className="flex flex-col justify-between items-center h-full w-full pt-5">
-      <p className="w-full text-center text-lg web-text font-semibold">Welcome Back!</p>
-    <div className="form-fields w-[90%] mx-auto h-full p-2 ">
-      <input className="web-input w-full faded-border border-b-2" placeholder="Email"/>
-      <input className="web-input w-full faded-border border-b-2 mt-5" placeholder="Password"/>
-    </div>
-    <button className="text-white p-2 web-foreground-overlay w-[5rem] rounded-lg mb-2" type="submit">Log In</button>
-  </form>
+    <form
+      onSubmit={handleSignIn}
+      method="POST"
+      className="flex flex-col justify-between items-center h-full w-full pt-5"
+    >
+      <p className="w-full text-center text-lg web-text font-semibold">
+        Welcome Back!
+      </p>
+      <div className="form-fields w-[90%] mx-auto h-full p-2 ">
+        <input
+          className="web-input w-full faded-border border-b-2"
+          name="email"
+          placeholder="Email"
+        />
+        <input
+          className="web-input w-full faded-border border-b-2 mt-5"
+          name="password"
+          placeholder="Password"
+        />
+      </div>
+      <button
+        className="text-white p-2 web-foreground-overlay w-[5rem] rounded-lg mb-2"
+        type="submit"
+      >
+        Log In
+      </button>
+    </form>
   );
 };

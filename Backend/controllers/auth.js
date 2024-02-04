@@ -23,7 +23,12 @@ exports.postSignUp = (req, res) => {
         email: email,
         password: hashedPassword,
         age: age,
-        raceDetail: {},
+        raceDetail: {
+          wins: 0,
+          losses: 0,
+          avgSpeed: 0,
+          maxSpeed: 0,
+        },
       });
 
       return user.save();
@@ -37,6 +42,7 @@ exports.postSignUp = (req, res) => {
 };
 
 exports.postLogin = (req, res) => {
+  console.log(req.body);
   const email = req.body.email;
   const password = req.body.password;
   console.log(email, password);

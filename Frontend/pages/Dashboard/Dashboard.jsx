@@ -21,15 +21,6 @@ export const Dashboard = () => {
   }, []);
 
   document.title = "User Dashboard";
-  // const data = {
-  //     NAME: "SLIM SHADY",
-  //     AGE: 45,
-  //     RACES: 108,
-  //     WINS : 56,
-  //     LOSES: 52,
-  //     "AVG. SPEED": "75 WPM",
-  //     "MAX SPEED": "98 WPM"
-  // }
   return (
     <section className="dashboard-section w-full max-w-[45rem]">
       <div className="dashboard-container w-full  pt-[5rem]">

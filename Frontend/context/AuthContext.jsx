@@ -4,7 +4,10 @@ export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(() => {
+    const token = JSON.parse(localStorage.getItem("token"));
+    return token;
+  });
 
   useEffect(() => {
     const storedToken = JSON.parse(localStorage.getItem("token"));
@@ -20,6 +23,7 @@ export function AuthProvider({ children }) {
     }
 
     const remainingMiliseconds = new Date(expiryDate) - new Date().getTime();
+    console.log(storedToken);
     setToken(storedToken);
     setIsAuthenticated(true);
     autoLogout(remainingMiliseconds);

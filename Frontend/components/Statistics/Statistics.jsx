@@ -10,7 +10,6 @@ export const Statistics = ({ data }) => {
     "Avg. Speed": data.raceDetail?.avgSpeed,
     "Max Speed": data.raceDetail?.maxSpeed,
   });
-  console.log(statistics);
   return (
     <section className="statistics-section">
       <div className="statistics-container  w-full flex flex-col md:flex-row justify-center md:justify-between items-center">

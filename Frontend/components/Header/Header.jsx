@@ -1,16 +1,31 @@
 import website_logo from "/src/assets/website_logo.png";
 import display_pic from "/src/assets/Default_dp.png";
 import CIcon from "@coreui/icons-react";
-import "./Header.css"
+import "./Header.css";
 import { cilMenu } from "@coreui/icons";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 export const Header = () => {
+  const [username, setUsername] = useState("John Doe");
   const dropDownRef = useRef();
   const { isAuthenticated, token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function getUserDashboard() {
+      const response = await fetch("http://localhost:8000/user/dashboard", {
+        headers: { Authorization: "Bearer " + token },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUsername(data.name);
+      }
+    }
+    getUserDashboard();
+  }, []);
 
   const handleDropDown = () => {
     if (dropDownRef.current.classList.contains("left-0")) {
@@ -21,7 +36,7 @@ export const Header = () => {
       dropDownRef.current.classList.add("left-0");
     }
   };
-  
+
   async function handleLogout() {
     const response = await fetch("http://localhost:8000/auth/logout", {
       method: "POST",
@@ -34,6 +49,35 @@ export const Header = () => {
       logout();
       navigate("/");
     }
+  }
+
+  function handleMouseOver() {
+    const el = document.querySelector(".profile-nav");
+    const list = document.querySelector(".profile-nav-list");
+    const anchor = document.querySelector(".anchor");
+    const nameContainer = document.querySelector(".name-container");
+    el.classList.remove("ml-[0rem]");
+    el.classList.add("ml-[10rem]");
+    nameContainer.classList.remove("w-[0rem]", "opacity-0");
+    nameContainer.classList.add("w-[10rem]", "opacity-100");
+    anchor.classList.remove("hidden");
+    list.classList.remove("h-[0rem]");
+    list.classList.add("h-[10rem]");
+  }
+
+  function handleMouseLeave() {
+    const el = document.querySelector(".profile-nav");
+
+    const list = document.querySelector(".profile-nav-list");
+    const anchor = document.querySelector(".anchor");
+    const nameContainer = document.querySelector(".name-container");
+    el.classList.add("ml-[0rem]");
+    el.classList.remove("ml-[10rem]");
+    nameContainer.classList.add("w-[0rem]", "opacity-0");
+    nameContainer.classList.remove("w-[10rem]", "opacity-100");
+    anchor.classList.add("hidden");
+    list.classList.add("h-[0rem]");
+    list.classList.remove("h-[10rem]");
   }
 
   return (
@@ -57,7 +101,7 @@ export const Header = () => {
               icon={cilMenu}
             />
           </div>
-          <div className="header-nav  flex-row justify-between items-center pr-5 hidden md:flex" >
+          <div className="header-nav  flex-row justify-between items-center pr-5 hidden md:flex">
             <ul className="nav-list  text-md  hidden md:inline-block">
               {[
                 ["Home", "/home"],
@@ -72,37 +116,20 @@ export const Header = () => {
                 </NavLink>
               ))}
             </ul>
-            <div className="profile-nav cursor-pointer relative hidden md:block ml-[0rem] duration-300 transition-all" onMouseOver={()=>{
-              const el = document.querySelector(".profile-nav")
-              const list = document.querySelector(".profile-nav-list")
-              const anchor = document.querySelector(".anchor")
-              const nameContainer = document.querySelector(".name-container")
-              el.classList.remove("ml-[0rem]")
-              el.classList.add("ml-[10rem]")
-              nameContainer.classList.remove("w-[0rem]", "opacity-0")
-              nameContainer.classList.add("w-[10rem]", "opacity-100")
-              anchor.classList.remove("hidden")
-              list.classList.remove("h-[0rem]")
-              list.classList.add("h-[10rem]")
-            }} onMouseLeave={()=>{
-              const el = document.querySelector(".profile-nav")
-          
-              const list = document.querySelector(".profile-nav-list")
-              const anchor = document.querySelector(".anchor")
-              const nameContainer = document.querySelector(".name-container")
-              el.classList.add("ml-[0rem]")
-              el.classList.remove("ml-[10rem]")
-              nameContainer.classList.add("w-[0rem]", "opacity-0")
-              nameContainer.classList.remove("w-[10rem]", "opacity-100")
-              anchor.classList.add("hidden")
-              list.classList.add("h-[0rem]")
-              list.classList.remove("h-[10rem]")
-            }}>
+            <section
+              className="profile-nav cursor-pointer relative hidden md:block ml-[0rem] duration-300 transition-all"
+              onMouseOver={handleMouseOver}
+              onMouseLeave={handleMouseLeave}
+            >
               <div className="name-container absolute w-[10rem] opacity-0 transition-all duration-300 h-[1.5rem] text-md z-10 truncate text-nowrap right-[3.3rem] top-[1rem] web-background px-2">
-                <p className="text-white">Mikasa Ackerman</p>
+                <p className="text-white">{username}</p>
               </div>
               <div className="img-container p-1 web-background z-20 rounded-[200%]">
-                  <img src={display_pic} className="h-[3rem] w-[3rem]"/>
+                <img
+                  src={display_pic}
+                  alt="profile-pic"
+                  className="h-[3rem] w-[3rem]"
+                />
               </div>
               <div className="anchor top-[3.5rem] hidden"></div>
               <div className="profile-nav-list web-foreground w-[9rem] overflow-hidden absolute h-[0rem] top-[4rem] transition-all duration-300 left-[-3rem]">
@@ -110,10 +137,18 @@ export const Header = () => {
                   <li className="web-text cursor-pointer">Dashboard</li>
                   <li className="web-text cursor-pointer">Collections</li>
                   <li className="web-text cursor-pointer">Settings</li>
-                  <li className="web-text cursor-pointer !border-none">Logout</li>
+                  {isAuthenticated ? (
+                    <li className="web-text cursor-pointer !border-none">
+                      <button onClick={handleLogout}>Logout</button>
+                    </li>
+                  ) : (
+                    <li className="web-text cursor-pointer !border-none">
+                      <Link to={"/auth"}>Login</Link>
+                    </li>
+                  )}
                 </ul>
               </div>
-            </div>
+            </section>
           </div>
         </div>
         <div className="sub-header w-full hidden md:block h-[2rem] web-background">
