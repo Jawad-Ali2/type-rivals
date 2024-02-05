@@ -64,7 +64,7 @@ export const Race = ({duration=60})=>{
             <div className="racemap-container w-full">
                 <p className="web-text font-semibold">Race Map</p>
                 <p className="web-text font-semibold float-right">{getFormmatedTime(time)} </p>
-                <RaceMap maskRef = {maskRef} originalRef = {originalRef} setRaceFinished = {setRaceFinished} setMistakes= {setMistakes} setRaceStarted={setRaceStarted} setErrors ={setErrors}/>   
+                <RaceMap maskRef = {maskRef} originalRef = {originalRef} setRaceFinished = {setRaceFinished} setMistakes= {setMistakes} setRaceStarted={setRaceStarted} setErrors ={setErrors} raceTimerOn = {timerOn}/>   
             </div>
             <div ref={statRef} className="lock-screen absolute w-full h-full top-[5rem] z-[-10] flex left-0 flex-row items-center justify-center transition-all duration-300">
                 <div className="finish-statistics absolute  z-10 top-[-25rem] w-[20rem] transition-all duration-300 h-[20rem] web-foreground rounded-lg">

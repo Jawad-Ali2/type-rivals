@@ -71,7 +71,7 @@ export const Header = () => {
 
   return (
     <section className="header-section">
-      <div className="header-container fixed w-full h-[5rem] web-gradient">
+      <div className="header-container fixed w-full h-[5rem] web-gradient z-[500]">
         <div className="header-contents h-full w-[95%] m-auto flex flex-row justify-between items-center">
           <div className="logo-container h-full">
             <img
@@ -114,7 +114,7 @@ export const Header = () => {
                <div className="name-container transition-all duration-300 max-w-[10rem] absolute truncate text-nowrap web-background text-white z-10 top-[0.6rem] right-[2rem] opacity-0 p-1 text-sm rounded-lg">
                   {username} 
                </div>
-               <div className="profile-dropdown absolute transition-all duration-300 right-[-1.5rem] top-[4rem] w-[8rem] overflow-hidden h-[0rem] rounded-lg web-gradient shadow-md shadow-[#031221]">
+               <div className="profile-dropdown absolute transition-all duration-300 right-[-1.5rem] top-[4rem] w-[8rem] overflow-hidden h-[0rem] rounded-lg web-gradient shadow-md shadow-[#031221] z-[500]">
                   <ul className="profile-btns-list  px-2">
                     <li className="web-text cursor-pointer">Leaderboard</li>
                     <li className="web-text cursor-pointer">Dashboard</li>

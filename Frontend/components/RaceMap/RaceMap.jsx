@@ -9,7 +9,8 @@ export const RaceMap = ({
   setRaceFinished,
   setMistakes,
   setRaceStarted,
-  setErrors
+  setErrors,
+  raceTimerOn
 }) => {
   const success = "text-green-600";
   const error = "text-red-500";
@@ -24,6 +25,12 @@ export const RaceMap = ({
   //   const raceTrack =
   //     "Anime, a captivating form of animated entertainment originating from Japan, has grown into a global phenomenon. Its influence extends far beyond its home country, captivating audiences worldwide with its diverse genres and compelling storytelling.";
 
+  useEffect(()=>{
+    if(raceTimerOn){
+      const inp = document.querySelector(".track-input")
+      inp.focus()
+    }
+  }, [raceTimerOn])
   useEffect(() => {
     let isMounted = true;
     console.log("Is Auth: "+isAuthenticated);
@@ -100,12 +107,12 @@ export const RaceMap = ({
       </div>
       <div className="input-area w-full mt-5">
         <input
-        autoFocus={true}
+        disabled={raceTimerOn? false: true}
           onChange={(e) => {
             setInput(e.target.value);
           }}
           value={input}
-          className="w-full web-text web-body outline-none px-2 h-[2rem] border-b-2 border-[#1C2936]"
+          className="track-input w-full web-text web-body outline-none px-2 h-[2rem] border-b-2 border-[#1C2936]"
           placeholder="Type Here..."
         ></input>
       </div>
