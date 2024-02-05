@@ -7,3 +7,5 @@ export {RaceMap} from "./RaceMap/RaceMap";
 export {AuthForm} from "./AuthForm/AuthForm";
 export {SignIn} from "./SignIn/SignIn";
 export {SignUp} from "./SignUp/SignUp";
+export {RaceLoader} from "./RaceLoader/RaceLoader";
+export {Loader} from "./Loader/Loader";

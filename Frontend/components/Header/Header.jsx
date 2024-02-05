@@ -52,32 +52,21 @@ export const Header = () => {
     }
   }
   function handleMouseOver() {
-    const el = document.querySelector(".profile-nav");
-    const list = document.querySelector(".profile-nav-list");
-    const anchor = document.querySelector(".anchor");
-    const nameContainer = document.querySelector(".name-container");
-    setOffset(username.length);
-    nameContainer.classList.remove("opacity-0");
-    nameContainer.classList.add("opacity-100");
-    anchor.classList.remove("opacity-0");
-    anchor.classList.add("opacity-100");
-    list.classList.remove("h-[0rem]");
-    list.classList.add("h-[10rem]");
+    const profileDropDown = document.querySelector(".profile-dropdown")
+    const nameContainer = document.querySelector(".name-container")
+    profileDropDown.classList.add("h-[10rem]")
+    profileDropDown.classList.remove("h-[0rem]")
+    nameContainer.classList.remove("opacity-0","right-[2rem]")
+    nameContainer.classList.add("opacity-100", "right-[5rem]")
   }
 
   function handleMouseLeave() {
-    const el = document.querySelector(".profile-nav");
-
-    const list = document.querySelector(".profile-nav-list");
-    const anchor = document.querySelector(".anchor");
-    const nameContainer = document.querySelector(".name-container");
-    setOffset(0);
-    nameContainer.classList.add("w-[0rem]", "opacity-0");
-    nameContainer.classList.remove("w-[10rem]", "opacity-100");
-    anchor.classList.add("opacity-0");
-    anchor.classList.remove("opacity-100");
-    list.classList.add("h-[0rem]");
-    list.classList.remove("h-[10rem]");
+    const profileDropDown = document.querySelector(".profile-dropdown")
+    const nameContainer = document.querySelector(".name-container")
+    profileDropDown.classList.add("h-[0rem]")
+    profileDropDown.classList.remove("h-[10rem]")
+    nameContainer.classList.add("opacity-0","right-[2rem]")
+    nameContainer.classList.remove("opacity-100", "right-[5rem]")
   }
 
   return (
@@ -118,14 +107,14 @@ export const Header = () => {
             </ul>           
 
           </div>
-          {isAuthenticated?<div className="profile-navigation relative max-w-[13rem] w-full h-[4rem]">
-                <div className="profile-pic-container w-[4rem] h-[4rem] web-background rounded-[200%] absolute top-0 right-[1rem]">
+          {isAuthenticated?<div onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} className="profile-navigation hidden md:block relative max-w-[13rem] w-full h-[3rem]">
+                <div className="profile-pic-container w-[3rem] h-[3rem] web-background rounded-[200%] absolute top-0 right-[1rem] z-50">
                   <img src={display_pic} className="w-full h-full p-2"/>
                 </div>
-               <div className="name-container max-w-[10rem] absolute truncate text-nowrap web-background text-white top-[1rem] right-[6rem] p-1 text-sm rounded-lg">
+               <div className="name-container transition-all duration-300 max-w-[10rem] absolute truncate text-nowrap web-background text-white z-10 top-[0.6rem] right-[2rem] opacity-0 p-1 text-sm rounded-lg">
                   {username} 
                </div>
-               <div className="profile-dropdown absolute right-[-1rem] top-[5rem] w-[8rem] h-[10rem] rounded-lg web-gradient shadow-md shadow-[#031221]">
+               <div className="profile-dropdown absolute transition-all duration-300 right-[-1.5rem] top-[4rem] w-[8rem] overflow-hidden h-[0rem] rounded-lg web-gradient shadow-md shadow-[#031221]">
                   <ul className="profile-btns-list  px-2">
                     <li className="web-text cursor-pointer">Leaderboard</li>
                     <li className="web-text cursor-pointer">Dashboard</li>
@@ -134,7 +123,7 @@ export const Header = () => {
                   </ul>
                </div>
             </div>:
-            <Link to={"/auth"}><button className="web-background web-text rounded-xl hover:scale-105 transition-all duration-300 p-2">Sign In</button></Link>
+            <Link className="hidden md:block" to={"/auth"}><button className="web-background web-text rounded-xl hover:scale-105 transition-all duration-300 p-2">Sign In</button></Link>
             }
         </div>
         <div className="sub-header w-full hidden md:block h-[2rem] web-background">

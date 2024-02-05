@@ -8,6 +8,8 @@ export const RaceMap = ({
   originalRef,
   setRaceFinished,
   setMistakes,
+  setRaceStarted,
+  setErrors
 }) => {
   const success = "text-green-600";
   const error = "text-red-500";
@@ -24,10 +26,13 @@ export const RaceMap = ({
 
   useEffect(() => {
     let isMounted = true;
-    console.log(isAuthenticated);
+    console.log("Is Auth: "+isAuthenticated);
+    console.log("Token: "+ token)
     if (!isAuthenticated) {
       return navigate("/auth");
     }
+
+  
     async function getParagraph() {
       try {
         console.log("Function called");
@@ -43,10 +48,12 @@ export const RaceMap = ({
           if (isMounted) {
             setRaceTrack(data.content.text);
             setRaceDataFetch(true);
+            setRaceStarted(true)
           }
         }
       } catch (error) {
         console.error(error);
+        setErrors(prev=>error)
       }
     }
     getParagraph();
@@ -54,7 +61,7 @@ export const RaceMap = ({
     return () => {
       isMounted = false;
     };
-  }, [isAuthenticated, token]);
+  }, [token, isAuthenticated]);
 
   useEffect(() => {
     if (raceDataFetch) {
@@ -93,6 +100,7 @@ export const RaceMap = ({
       </div>
       <div className="input-area w-full mt-5">
         <input
+        autoFocus={true}
           onChange={(e) => {
             setInput(e.target.value);
           }}

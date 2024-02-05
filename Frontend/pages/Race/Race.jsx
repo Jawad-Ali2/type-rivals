@@ -1,21 +1,32 @@
 import { RaceMap } from "../../components"
 import { useCountDown } from "../../Hooks"
 import { useEffect, useRef, useState } from "react"
+import { RaceLoader } from "../../components"
 export const Race = ({duration=60})=>{
 
     document.title = "Race | Type Rivals"
     const [time,timerOn, setTimerOn, getFormmatedTime] = useCountDown(duration)
+    const [prepareTime, prepareTimerOn, setPrepareTimerOn, getPrepareFormattedTime] = useCountDown(5)
     const [speed, setSpeed] = useState(0)
+    const [errors, setErrors] = useState(null)
     const [accuracy, setAccuracy] = useState(0)
     const [mistakes, setMistakes] = useState(0)
     const [raceFinished, setRaceFinished] = useState(false)
+    const [raceStarted, setRaceStarted] = useState(false)
     const maskRef = useRef()
     const originalRef = useRef()
     const statRef = useRef()
     useEffect(()=>{
+        if(raceStarted){
         console.log("Timer Enabled")
-        setTimerOn(true)
-    },[])
+        setPrepareTimerOn(true)
+        }
+    },[raceStarted])
+    useEffect(()=>{
+        if(prepareTime<=0){
+            setTimerOn(true);
+        }
+    }, [prepareTime])
     const handleSpeedMeasuring = (inpText, originalText) =>{
         let total_valid_words = 0
         let words = inpText.split(" ")
@@ -47,12 +58,13 @@ export const Race = ({duration=60})=>{
             handleTimeout()
         }
     }, [time,raceFinished])
-    return <section className="race-section w-full max-w-[45rem]"> 
+    return <section className="race-section w-full max-w-[45rem]">
+        <RaceLoader errors = {errors} raceStarted={!raceStarted} time={prepareTime}/> 
         <div className="race-container pt-[5rem] w-[90%] mx-auto">
             <div className="racemap-container w-full">
                 <p className="web-text font-semibold">Race Map</p>
                 <p className="web-text font-semibold float-right">{getFormmatedTime(time)} </p>
-                <RaceMap maskRef = {maskRef} originalRef = {originalRef} setRaceFinished = {setRaceFinished} setMistakes= {setMistakes}/>   
+                <RaceMap maskRef = {maskRef} originalRef = {originalRef} setRaceFinished = {setRaceFinished} setMistakes= {setMistakes} setRaceStarted={setRaceStarted} setErrors ={setErrors}/>   
             </div>
             <div ref={statRef} className="lock-screen absolute w-full h-full top-[5rem] z-[-10] flex left-0 flex-row items-center justify-center transition-all duration-300">
                 <div className="finish-statistics absolute  z-10 top-[-25rem] w-[20rem] transition-all duration-300 h-[20rem] web-foreground rounded-lg">
