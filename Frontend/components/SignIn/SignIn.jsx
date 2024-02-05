@@ -3,6 +3,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export const SignIn = ({ handleError }) => {
+  document.title = "Sign In | Type Rivals"
   const { login, token } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -42,11 +43,13 @@ export const SignIn = ({ handleError }) => {
           className="web-input w-full faded-border border-b-2"
           name="email"
           placeholder="Email"
+          autoComplete="off"
         />
         <input
           className="web-input w-full faded-border border-b-2 mt-5"
           name="password"
           placeholder="Password"
+          type="password"
         />
       </div>
       <button

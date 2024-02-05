@@ -3,7 +3,7 @@ import { useCountDown } from "../../Hooks"
 import { useEffect, useRef, useState } from "react"
 export const Race = ({duration=60})=>{
 
-    document.title = "Race"
+    document.title = "Race | Type Rivals"
     const [time,timerOn, setTimerOn, getFormmatedTime] = useCountDown(duration)
     const [speed, setSpeed] = useState(0)
     const [accuracy, setAccuracy] = useState(0)

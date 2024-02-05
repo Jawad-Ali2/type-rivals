@@ -21,9 +21,9 @@ app.use(bodyParser.json());
 
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
+console.log(process.env.HOSTNAME)
 
-mongoose
-  .connect(
+mongoose.connect(
     `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@type-rivals.uhhezl0.mongodb.net/db`
   )
   .then(() => {

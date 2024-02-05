@@ -9,6 +9,7 @@ import { AuthContext } from "../../context/AuthContext";
 
 export const Header = () => {
   const [username, setUsername] = useState("John Doe");
+  const [offset, setOffset] = useState(0)
   const dropDownRef = useRef();
   const { isAuthenticated, token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -50,17 +51,16 @@ export const Header = () => {
       navigate("/");
     }
   }
-
   function handleMouseOver() {
     const el = document.querySelector(".profile-nav");
     const list = document.querySelector(".profile-nav-list");
     const anchor = document.querySelector(".anchor");
     const nameContainer = document.querySelector(".name-container");
-    el.classList.remove("ml-[0rem]");
-    el.classList.add("ml-[10rem]");
-    nameContainer.classList.remove("w-[0rem]", "opacity-0");
-    nameContainer.classList.add("w-[10rem]", "opacity-100");
-    anchor.classList.remove("hidden");
+    setOffset(username.length);
+    nameContainer.classList.remove("opacity-0");
+    nameContainer.classList.add("opacity-100");
+    anchor.classList.remove("opacity-0");
+    anchor.classList.add("opacity-100");
     list.classList.remove("h-[0rem]");
     list.classList.add("h-[10rem]");
   }
@@ -71,11 +71,11 @@ export const Header = () => {
     const list = document.querySelector(".profile-nav-list");
     const anchor = document.querySelector(".anchor");
     const nameContainer = document.querySelector(".name-container");
-    el.classList.add("ml-[0rem]");
-    el.classList.remove("ml-[10rem]");
+    setOffset(0);
     nameContainer.classList.add("w-[0rem]", "opacity-0");
     nameContainer.classList.remove("w-[10rem]", "opacity-100");
-    anchor.classList.add("hidden");
+    anchor.classList.add("opacity-0");
+    anchor.classList.remove("opacity-100");
     list.classList.add("h-[0rem]");
     list.classList.remove("h-[10rem]");
   }
@@ -101,7 +101,7 @@ export const Header = () => {
               icon={cilMenu}
             />
           </div>
-          <div className="header-nav  flex-row justify-between items-center pr-5 hidden md:flex">
+          <div className="header-nav flex-row w-auto justify-between items-center pr-5 hidden md:flex">
             <ul className="nav-list  text-md  hidden md:inline-block">
               {[
                 ["Home", "/home"],
@@ -115,41 +115,27 @@ export const Header = () => {
                   </li>
                 </NavLink>
               ))}
-            </ul>
-            <section
-              className="profile-nav cursor-pointer relative hidden md:block ml-[0rem] duration-300 transition-all"
-              onMouseOver={handleMouseOver}
-              onMouseLeave={handleMouseLeave}
-            >
-              <div className="name-container absolute w-[10rem] opacity-0 transition-all duration-300 h-[1.5rem] text-md z-10 truncate text-nowrap right-[3.3rem] top-[1rem] web-background px-2">
-                <p className="text-white">{username}</p>
-              </div>
-              <div className="img-container p-1 web-background z-20 rounded-[200%]">
-                <img
-                  src={display_pic}
-                  alt="profile-pic"
-                  className="h-[3rem] w-[3rem]"
-                />
-              </div>
-              <div className="anchor top-[3.5rem] hidden"></div>
-              <div className="profile-nav-list web-foreground w-[9rem] overflow-hidden absolute h-[0rem] top-[4rem] transition-all duration-300 left-[-3rem]">
-                <ul className="profile-btns-list w-full text-left p-2">
-                  <li className="web-text cursor-pointer">Dashboard</li>
-                  <li className="web-text cursor-pointer">Collections</li>
-                  <li className="web-text cursor-pointer">Settings</li>
-                  {isAuthenticated ? (
-                    <li className="web-text cursor-pointer !border-none">
-                      <button onClick={handleLogout}>Logout</button>
-                    </li>
-                  ) : (
-                    <li className="web-text cursor-pointer !border-none">
-                      <Link to={"/auth"}>Login</Link>
-                    </li>
-                  )}
-                </ul>
-              </div>
-            </section>
+            </ul>           
+
           </div>
+          {isAuthenticated?<div className="profile-navigation relative max-w-[13rem] w-full h-[4rem]">
+                <div className="profile-pic-container w-[4rem] h-[4rem] web-background rounded-[200%] absolute top-0 right-[1rem]">
+                  <img src={display_pic} className="w-full h-full p-2"/>
+                </div>
+               <div className="name-container max-w-[10rem] absolute truncate text-nowrap web-background text-white top-[1rem] right-[6rem] p-1 text-sm rounded-lg">
+                  {username} 
+               </div>
+               <div className="profile-dropdown absolute right-[-1rem] top-[5rem] w-[8rem] h-[10rem] rounded-lg web-gradient shadow-md shadow-[#031221]">
+                  <ul className="profile-btns-list  px-2">
+                    <li className="web-text cursor-pointer">Leaderboard</li>
+                    <li className="web-text cursor-pointer">Dashboard</li>
+                    <li className="web-text cursor-pointer">Settings</li>
+                    <li className="text-red-600 hover:text-red-700 !border-none cursor-pointer" onClick={handleLogout}>Logout</li>
+                  </ul>
+               </div>
+            </div>:
+            <Link to={"/auth"}><button className="web-background web-text rounded-xl hover:scale-105 transition-all duration-300 p-2">Sign In</button></Link>
+            }
         </div>
         <div className="sub-header w-full hidden md:block h-[2rem] web-background">
           <ul className="subheader-nav  w-full flex flex-row justify-center items-center mx-auto text-sm ">

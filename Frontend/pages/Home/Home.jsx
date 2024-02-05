@@ -1,6 +1,6 @@
 import { StatBar } from "../../components"
 export const Home = () =>{
-    document.title="Home"
+    document.title="Home | Type Rivals"
     const top_racers = [{date_or_rank:"01", title:"Zaid Bin Zaheer", speed:529},
                         {date_or_rank:"02", title:"Eren Yeager", speed:525},
                         {date_or_rank:"03", title:"Jawad Ali", speed:2}]

@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Statistics } from "../../components";
 import { AuthContext } from "../../context/AuthContext";
 export const Dashboard = () => {
+  document.title = "Dashboard | Type Rivals"
   const [data, setData] = useState({});
   const { token } = useContext(AuthContext);
 
@@ -20,7 +21,7 @@ export const Dashboard = () => {
     getUserDashboard();
   }, []);
 
-  document.title = "User Dashboard";
+
   return (
     <section className="dashboard-section w-full max-w-[45rem]">
       <div className="dashboard-container w-full  pt-[5rem]">

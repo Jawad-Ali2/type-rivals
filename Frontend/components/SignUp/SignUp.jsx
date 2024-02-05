@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import default_dp from "/src/assets/Default_dp.png"
 export const SignUp = ({ handleError }) => {
+  document.title = "Sign Up | Type Rivals"
   const [preview, setPreview] = useState(default_dp)
   const handleImageChange = (e)=>{
     const prev_img = e.target.files[0]  
@@ -58,10 +59,10 @@ export const SignUp = ({ handleError }) => {
         <label className="web-foreground-overlay cursor-pointer p-2" for="profile-picture">Select Profile Picture<input onChange={handleImageChange} id="profile-picture" type="file" className="hidden" accept="image/"/></label>
         <div className="web-foreground-overlay profile-preview h-[5rem] w-[5rem]"><img src={preview} className="w-full h-full"/></div>
       </div>
-      <input className="web-input w-full faded-border border-b-2" placeholder="Alias"/>
-      <input className="web-input w-full faded-border border-b-2" placeholder="Email"/>
-      <input className="web-input w-full faded-border border-b-2" placeholder="Password"/>
-      <input className="web-input w-full faded-border border-b-2" placeholder="Confirm Password"/>
+      <input className="web-input w-full faded-border border-b-2" autoComplete="off" placeholder="Alias"/>
+      <input className="web-input w-full faded-border border-b-2" autoComplete="off" placeholder="Email"/>
+      <input className="web-input w-full faded-border border-b-2" type="password" placeholder="Password"/>
+      <input className="web-input w-full faded-border border-b-2" type="password" placeholder="Confirm Password"/>
     </div>
     <button className="text-white p-2 web-foreground-overlay w-[5rem] rounded-lg mb-2" type="submit">Register</button>
   </form>)
