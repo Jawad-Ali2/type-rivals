@@ -1,8 +1,5 @@
 import "./RaceMap.css";
 import { useState, useEffect, useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-
 export const RaceMap = ({
   maskRef,
   originalRef,
@@ -17,11 +14,10 @@ export const RaceMap = ({
   const [mask, setMask] = useState("");
   const [color, setColor] = useState(success);
   const [raceTrack, setRaceTrack] = useState(raceData);
-  const navigate = useNavigate();
-
   //   const raceTrack =
   //     "Anime, a captivating form of animated entertainment originating from Japan, has grown into a global phenomenon. Its influence extends far beyond its home country, captivating audiences worldwide with its diverse genres and compelling storytelling.";
 
+  //Focuses on Input on Race Start
   useEffect(() => {
     if (raceTimerOn) {
       const inp = document.querySelector(".track-input");
@@ -29,11 +25,13 @@ export const RaceMap = ({
     }
   }, [raceTimerOn]);
 
+  //Sets Paragraph when Paragraph is Fetched
   useEffect(()=>{
     setRaceTrack(prev=>raceData)
   }, [raceData])
-  useEffect(() => {
 
+  //Race Progress & Comparison with mask
+  useEffect(() => {
       if (input === raceTrack && raceTrack) {
         setRaceFinished((prev) => true);
       }

@@ -9,7 +9,7 @@ export const Race = ({duration=60})=>{
     document.title = "Race | Type Rivals"
     const [time,timerOn, setTimerOn, getFormmatedTime] = useCountDown(duration)
     const [prepareTime, prepareTimerOn, setPrepareTimerOn, getPrepareFormattedTime] = useCountDown(5)
-    
+
     const [speed, setSpeed] = useState(0)
     const [errors, setErrors] = useState(null)
     const [accuracy, setAccuracy] = useState(0)
@@ -76,13 +76,12 @@ export const Race = ({duration=60})=>{
     const handleSpeedMeasuring = (inpText, originalText) =>{
         let total_valid_words = 0
         let words = inpText.split(" ")
-        let original_words = originalText.split(" ")
         let total_invalid_words = 0
-        console.log(words)
         total_valid_words = inpText.length/5
         let time_taken = (duration - time)/duration
         const wpm =(total_valid_words - total_invalid_words)/time_taken
         let acc= (inpText.length - mistakes)/ inpText.length * 100
+        acc = acc? acc:0
         setSpeed(prev=>Math.round(wpm))
         setAccuracy(prev=>Math.round(acc))
     }

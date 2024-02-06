@@ -92,7 +92,7 @@ export const Header = () => {
               icon={cilMenu}
             />
           </div>
-          <div className="header-nav flex-row w-auto justify-between items-center pr-5 hidden md:flex">
+          <div className="header-nav flex-row w-auto justify-between items-center hidden md:flex">
             <ul className="nav-list  text-md  hidden md:inline-block">
               {[
                 ["Home", "/home"],
@@ -112,7 +112,7 @@ export const Header = () => {
             <div
               onMouseOver={handleMouseOver}
               onMouseLeave={handleMouseLeave}
-              className="profile-navigation hidden md:block relative max-w-[13rem] w-full h-[3rem]"
+              className="profile-navigation hidden md:block relative min-w-[8rem]  h-[3rem]"
             >
               <div className="profile-pic-container w-[3rem] h-[3rem] web-background rounded-[200%] absolute top-0 right-[1rem] z-50">
                 <img src={display_pic} className="w-full h-full p-2" />
