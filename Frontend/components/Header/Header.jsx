@@ -9,9 +9,9 @@ import { AuthContext } from "../../context/AuthContext";
 
 export const Header = () => {
   const [username, setUsername] = useState("John Doe");
-  const [offset, setOffset] = useState(0)
+  const [offset, setOffset] = useState(0);
   const dropDownRef = useRef();
-  const { isAuthenticated, token, logout } = useContext(AuthContext);
+  const { isAuthenticated, token, csrfToken, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,9 +41,11 @@ export const Header = () => {
   async function handleLogout() {
     const response = await fetch("http://localhost:8000/auth/logout", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "x-csrf-token": csrfToken,
       },
     });
     if (response.ok) {
@@ -52,21 +54,21 @@ export const Header = () => {
     }
   }
   function handleMouseOver() {
-    const profileDropDown = document.querySelector(".profile-dropdown")
-    const nameContainer = document.querySelector(".name-container")
-    profileDropDown.classList.add("h-[10rem]")
-    profileDropDown.classList.remove("h-[0rem]")
-    nameContainer.classList.remove("opacity-0","right-[2rem]")
-    nameContainer.classList.add("opacity-100", "right-[5rem]")
+    const profileDropDown = document.querySelector(".profile-dropdown");
+    const nameContainer = document.querySelector(".name-container");
+    profileDropDown.classList.add("h-[10rem]");
+    profileDropDown.classList.remove("h-[0rem]");
+    nameContainer.classList.remove("opacity-0", "right-[2rem]");
+    nameContainer.classList.add("opacity-100", "right-[5rem]");
   }
 
   function handleMouseLeave() {
-    const profileDropDown = document.querySelector(".profile-dropdown")
-    const nameContainer = document.querySelector(".name-container")
-    profileDropDown.classList.add("h-[0rem]")
-    profileDropDown.classList.remove("h-[10rem]")
-    nameContainer.classList.add("opacity-0","right-[2rem]")
-    nameContainer.classList.remove("opacity-100", "right-[5rem]")
+    const profileDropDown = document.querySelector(".profile-dropdown");
+    const nameContainer = document.querySelector(".name-container");
+    profileDropDown.classList.add("h-[0rem]");
+    profileDropDown.classList.remove("h-[10rem]");
+    nameContainer.classList.add("opacity-0", "right-[2rem]");
+    nameContainer.classList.remove("opacity-100", "right-[5rem]");
   }
 
   return (
@@ -104,27 +106,41 @@ export const Header = () => {
                   </li>
                 </NavLink>
               ))}
-            </ul>           
-
+            </ul>
           </div>
-          {isAuthenticated?<div onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} className="profile-navigation hidden md:block relative max-w-[13rem] w-full h-[3rem]">
-                <div className="profile-pic-container w-[3rem] h-[3rem] web-background rounded-[200%] absolute top-0 right-[1rem] z-50">
-                  <img src={display_pic} className="w-full h-full p-2"/>
-                </div>
-               <div className="name-container transition-all duration-300 max-w-[10rem] absolute truncate text-nowrap web-background text-white z-10 top-[0.6rem] right-[2rem] opacity-0 p-1 text-sm rounded-lg">
-                  {username} 
-               </div>
-               <div className="profile-dropdown absolute transition-all duration-300 right-[-1.5rem] top-[4rem] w-[8rem] overflow-hidden h-[0rem] rounded-lg web-gradient shadow-md shadow-[#031221] z-[500]">
-                  <ul className="profile-btns-list  px-2">
-                    <li className="web-text cursor-pointer">Leaderboard</li>
-                    <li className="web-text cursor-pointer">Dashboard</li>
-                    <li className="web-text cursor-pointer">Settings</li>
-                    <li className="text-red-600 hover:text-red-700 !border-none cursor-pointer" onClick={handleLogout}>Logout</li>
-                  </ul>
-               </div>
-            </div>:
-            <Link className="hidden md:block" to={"/auth"}><button className="web-background web-text rounded-xl hover:scale-105 transition-all duration-300 p-2">Sign In</button></Link>
-            }
+          {isAuthenticated ? (
+            <div
+              onMouseOver={handleMouseOver}
+              onMouseLeave={handleMouseLeave}
+              className="profile-navigation hidden md:block relative max-w-[13rem] w-full h-[3rem]"
+            >
+              <div className="profile-pic-container w-[3rem] h-[3rem] web-background rounded-[200%] absolute top-0 right-[1rem] z-50">
+                <img src={display_pic} className="w-full h-full p-2" />
+              </div>
+              <div className="name-container transition-all duration-300 max-w-[10rem] absolute truncate text-nowrap web-background text-white z-10 top-[0.6rem] right-[2rem] opacity-0 p-1 text-sm rounded-lg">
+                {username}
+              </div>
+              <div className="profile-dropdown absolute transition-all duration-300 right-[-1.5rem] top-[4rem] w-[8rem] overflow-hidden h-[0rem] rounded-lg web-gradient shadow-md shadow-[#031221] z-[500]">
+                <ul className="profile-btns-list  px-2">
+                  <li className="web-text cursor-pointer">Leaderboard</li>
+                  <li className="web-text cursor-pointer">Dashboard</li>
+                  <li className="web-text cursor-pointer">Settings</li>
+                  <li
+                    className="text-red-600 hover:text-red-700 !border-none cursor-pointer"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </li>
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <Link className="hidden md:block" to={"/auth"}>
+              <button className="web-background web-text rounded-xl hover:scale-105 transition-all duration-300 p-2">
+                Sign In
+              </button>
+            </Link>
+          )}
         </div>
         <div className="sub-header w-full hidden md:block h-[2rem] web-background">
           <ul className="subheader-nav  w-full flex flex-row justify-center items-center mx-auto text-sm ">
