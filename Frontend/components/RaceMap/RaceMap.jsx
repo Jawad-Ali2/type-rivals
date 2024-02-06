@@ -8,8 +8,7 @@ export const RaceMap = ({
   originalRef,
   setRaceFinished,
   setMistakes,
-  setRaceStarted,
-  setErrors,
+  raceData,
   raceTimerOn,
 }) => {
   const success = "text-green-600";
@@ -17,9 +16,7 @@ export const RaceMap = ({
   const [input, setInput] = useState("");
   const [mask, setMask] = useState("");
   const [color, setColor] = useState(success);
-  const [raceTrack, setRaceTrack] = useState("");
-  const [raceDataFetch, setRaceDataFetch] = useState(false);
-  const { isAuthenticated, token } = useContext(AuthContext);
+  const [raceTrack, setRaceTrack] = useState(raceData);
   const navigate = useNavigate();
 
   //   const raceTrack =
@@ -32,51 +29,12 @@ export const RaceMap = ({
     }
   }, [raceTimerOn]);
 
+  useEffect(()=>{
+    setRaceTrack(prev=>raceData)
+  }, [raceData])
   useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    let isMounted = true;
-    if (!isAuthenticated) {
-      return navigate("/auth");
-    }
 
-    async function getParagraph() {
-      try {
-        console.log("Function called");
-        const response = await fetch("http://localhost:8000/user/quick-race", {
-          signal,
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Context:", data);
-          if (isMounted) {
-            setRaceTrack(data.content.text);
-            setRaceDataFetch(true);
-            setRaceStarted(true);
-          }
-        }
-      } catch (error) {
-        console.error(error);
-        setErrors((prev) => error);
-      }
-    }
-    getParagraph();
-
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (raceDataFetch) {
-      console.log(raceTrack);
-      // console.log("inside test");
-      if (input === raceTrack) {
+      if (input === raceTrack && raceTrack) {
         setRaceFinished((prev) => true);
       }
       const progressed_race = raceTrack.slice(0, input.length);
@@ -87,8 +45,8 @@ export const RaceMap = ({
         setMistakes((prev) => prev + 1);
         setColor(error);
       }
-    }
-  }, [input, raceTrack, raceDataFetch]);
+  
+  }, [input, raceTrack]);
 
   return (
     <section className="racemap-section relative">
@@ -109,7 +67,7 @@ export const RaceMap = ({
       </div>
       <div className="input-area w-full mt-5">
         <input
-          disabled={raceTimerOn ? false : true}
+          disabled={!raceTimerOn}
           onChange={(e) => {
             setInput(e.target.value);
           }}

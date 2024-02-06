@@ -1,32 +1,78 @@
 import { RaceMap } from "../../components"
 import { useCountDown } from "../../Hooks"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useContext } from "react"
+import { useNavigate } from "react-router-dom"
 import { RaceLoader } from "../../components"
+import { AuthContext } from "../../context/AuthContext";
 export const Race = ({duration=60})=>{
 
     document.title = "Race | Type Rivals"
     const [time,timerOn, setTimerOn, getFormmatedTime] = useCountDown(duration)
     const [prepareTime, prepareTimerOn, setPrepareTimerOn, getPrepareFormattedTime] = useCountDown(5)
+    
     const [speed, setSpeed] = useState(0)
     const [errors, setErrors] = useState(null)
     const [accuracy, setAccuracy] = useState(0)
     const [mistakes, setMistakes] = useState(0)
     const [raceFinished, setRaceFinished] = useState(false)
-    const [raceStarted, setRaceStarted] = useState(false)
+    const [raceData, setRaceData] = useState("")
+
+    const { isAuthenticated, token } = useContext(AuthContext)
+
     const maskRef = useRef()
     const originalRef = useRef()
     const statRef = useRef()
+
+    const navigate = useNavigate()
+    //Prepare Timer
     useEffect(()=>{
-        if(raceStarted){
-        console.log("Timer Enabled")
+        if(raceData){
         setPrepareTimerOn(true)
         }
-    },[raceStarted])
+    },[raceData])
+    //Race Timer
     useEffect(()=>{
         if(prepareTime<=0){
             setTimerOn(true);
         }
     }, [prepareTime])
+
+    //Paragraph Fetch useEffect
+    useEffect(()=>{
+       if(!isAuthenticated){
+        navigate("/auth")
+       }
+       const controller = new AbortController()
+       const signal = controller.signal
+       const options = {
+        headers:{
+            Authorization: "Bearer " + token   
+        }
+        ,signal
+       } 
+       //Fetching Paragraph
+       const getParagraph = ()=>{
+        fetch("http://localhost:8000/user/quick-race", options)
+        .then(res=>{
+            if(res.status===200){
+                return res.json()
+            }else{
+                return new Promise.reject("Failed to Fetch.")
+            }
+        }).then(data=>{
+            setRaceData(prev=>data.content.text)
+        }).catch(err=> {
+            if(err.name !=="AbortError"){
+                setErrors(prev=>err)
+            }
+        })
+       }
+       getParagraph()
+       return ()=>{
+        controller.abort()
+       }
+    },[isAuthenticated])
+
     const handleSpeedMeasuring = (inpText, originalText) =>{
         let total_valid_words = 0
         let words = inpText.split(" ")
@@ -59,12 +105,12 @@ export const Race = ({duration=60})=>{
         }
     }, [time,raceFinished])
     return <section className="race-section w-full max-w-[45rem]">
-        <RaceLoader errors = {errors} raceStarted={!raceStarted} time={prepareTime}/> 
+        <RaceLoader raceData={raceData} errors = {errors}  time={prepareTime}/> 
         <div className="race-container pt-[5rem] w-[90%] mx-auto">
             <div className="racemap-container w-full">
                 <p className="web-text font-semibold">Race Map</p>
                 <p className="web-text font-semibold float-right">{getFormmatedTime(time)} </p>
-                <RaceMap maskRef = {maskRef} originalRef = {originalRef} setRaceFinished = {setRaceFinished} setMistakes= {setMistakes} setRaceStarted={setRaceStarted} setErrors ={setErrors} raceTimerOn = {timerOn}/>   
+                <RaceMap maskRef = {maskRef} originalRef = {originalRef} setRaceFinished = {setRaceFinished} setMistakes= {setMistakes} raceData = {raceData} raceTimerOn = {timerOn}/>   
             </div>
             <div ref={statRef} className="lock-screen absolute w-full h-full top-[5rem] z-[-10] flex left-0 flex-row items-center justify-center transition-all duration-300">
                 <div className="finish-statistics absolute  z-10 top-[-25rem] w-[20rem] transition-all duration-300 h-[20rem] web-foreground rounded-lg">
