@@ -3,20 +3,22 @@ import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export const SignIn = ({ handleError }) => {
-  document.title = "Sign In | Type Rivals"
-  const { login, token } = useContext(AuthContext);
+  document.title = "Sign In | Type Rivals";
+  const { login, token, csrfToken } = useContext(AuthContext);
   const navigate = useNavigate();
 
   async function handleSignIn(e) {
     e.preventDefault();
 
-    console.log(e.target.email.value);
+    console.log(e.target.email.value, token, csrfToken);
 
     const response = await fetch("http://localhost:8000/auth/signin", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+        // Authorization: "Bearer " + token,
+        "X-Csrf-Token": csrfToken,
       },
       body: JSON.stringify({
         email: e.target.email.value,

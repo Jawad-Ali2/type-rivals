@@ -9,7 +9,9 @@ export const Dashboard = () => {
   useEffect(() => {
     async function getUserDashboard() {
       const response = await fetch("http://localhost:8000/user/dashboard", {
-        headers: { Authorization: "Bearer " + token },
+        headers: {
+          Authorization: "Bearer " + token,
+        },
       });
 
       if (response.ok) {

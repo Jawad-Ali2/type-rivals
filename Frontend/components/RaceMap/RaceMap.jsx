@@ -10,7 +10,7 @@ export const RaceMap = ({
   setMistakes,
   setRaceStarted,
   setErrors,
-  raceTimerOn
+  raceTimerOn,
 }) => {
   const success = "text-green-600";
   const error = "text-red-500";
@@ -25,25 +25,26 @@ export const RaceMap = ({
   //   const raceTrack =
   //     "Anime, a captivating form of animated entertainment originating from Japan, has grown into a global phenomenon. Its influence extends far beyond its home country, captivating audiences worldwide with its diverse genres and compelling storytelling.";
 
-  useEffect(()=>{
-    if(raceTimerOn){
-      const inp = document.querySelector(".track-input")
-      inp.focus()
-    }
-  }, [raceTimerOn])
   useEffect(() => {
+    if (raceTimerOn) {
+      const inp = document.querySelector(".track-input");
+      inp.focus();
+    }
+  }, [raceTimerOn]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     let isMounted = true;
-    console.log("Is Auth: "+isAuthenticated);
-    console.log("Token: "+ token)
     if (!isAuthenticated) {
       return navigate("/auth");
     }
 
-  
     async function getParagraph() {
       try {
         console.log("Function called");
         const response = await fetch("http://localhost:8000/user/quick-race", {
+          signal,
           headers: {
             Authorization: "Bearer " + token,
           },
@@ -55,20 +56,21 @@ export const RaceMap = ({
           if (isMounted) {
             setRaceTrack(data.content.text);
             setRaceDataFetch(true);
-            setRaceStarted(true)
+            setRaceStarted(true);
           }
         }
       } catch (error) {
         console.error(error);
-        setErrors(prev=>error)
+        setErrors((prev) => error);
       }
     }
     getParagraph();
 
     return () => {
       isMounted = false;
+      controller.abort();
     };
-  }, [token, isAuthenticated]);
+  }, []);
 
   useEffect(() => {
     if (raceDataFetch) {
@@ -107,7 +109,7 @@ export const RaceMap = ({
       </div>
       <div className="input-area w-full mt-5">
         <input
-        disabled={raceTimerOn? false: true}
+          disabled={raceTimerOn ? false : true}
           onChange={(e) => {
             setInput(e.target.value);
           }}
