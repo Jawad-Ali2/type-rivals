@@ -13,8 +13,12 @@ export const RaceMap = ({
   const [input, setInput] = useState("");
   const [mask, setMask] = useState("");
   const [color, setColor] = useState(success);
+  // const [raceDataFetch, setRaceDataFetch] = useState(false);
+  // const { isAuthenticated, token } = useContext(AuthContext);
+  // const navigate = useNavigate();
+
   const [raceTrack, setRaceTrack] = useState(raceData);
-  
+
   //Focuses on Input on Race Start
   useEffect(() => {
     if (raceTimerOn) {
@@ -24,32 +28,30 @@ export const RaceMap = ({
   }, [raceTimerOn]);
 
   //Sets Paragraph when Paragraph is Fetched
-  useEffect(()=>{
-    if(!raceData){
-      setMask(prev=>"")
-      setRaceTrack(prev=>"")
-      setInput(prev=>"")
-      setColor(prev=>success)
-    }else{
-    setRaceTrack(prev=>raceData)
+  useEffect(() => {
+    if (!raceData) {
+      setMask((prev) => "");
+      setRaceTrack((prev) => "");
+      setInput((prev) => "");
+      setColor((prev) => success);
+    } else {
+      setRaceTrack((prev) => raceData);
     }
-    
-  }, [raceData])
+  }, [raceData]);
 
   //Race Progress & Comparison with mask
   useEffect(() => {
-      if (input === raceTrack && raceTrack) {
-        setRaceFinished((prev) => true);
-      }
-      const progressed_race = raceTrack.slice(0, input.length);
-      if (input === progressed_race) {
-        setMask((prev) => input);
-        setColor(success);
-      } else {
-        setMistakes((prev) => prev + 1);
-        setColor(error);
-      }
-  
+    if (input === raceTrack && raceTrack) {
+      setRaceFinished((prev) => true);
+    }
+    const progressed_race = raceTrack.slice(0, input.length);
+    if (input === progressed_race) {
+      setMask((prev) => input);
+      setColor(success);
+    } else {
+      setMistakes((prev) => prev + 1);
+      setColor(error);
+    }
   }, [input, raceTrack]);
 
   return (
@@ -76,6 +78,7 @@ export const RaceMap = ({
             setInput(e.target.value);
           }}
           value={input}
+          S
           className="track-input w-full web-text web-body outline-none px-2 h-[2rem] border-b-2 border-[#1C2936]"
           placeholder="Type Here..."
         ></input>
