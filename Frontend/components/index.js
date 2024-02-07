@@ -9,3 +9,4 @@ export {SignIn} from "./SignIn/SignIn";
 export {SignUp} from "./SignUp/SignUp";
 export {RaceLoader} from "./RaceLoader/RaceLoader";
 export {Loader} from "./Loader/Loader";
+export {AudioMap} from "./AudioMap/AudioMap";

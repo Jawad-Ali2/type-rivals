@@ -3,6 +3,10 @@ export const useCountDown = (time_in_seconds)=>{
     const [time, setTime] = useState(time_in_seconds)
     const [timerOn, setTimerOn] = useState(false)
     
+    const resetTimer = ()=>{
+        setTime(prev=>time_in_seconds)
+        setTimerOn(prev=>false)
+    }
     useEffect(()=>{
         let timerID
         if(time>0 && timerOn){
@@ -20,6 +24,6 @@ export const useCountDown = (time_in_seconds)=>{
         
         return formatted_time
     }
-    return [time,timerOn, setTimerOn, getFormmatedTime]
+    return [time,timerOn,resetTimer, setTimerOn, getFormmatedTime]
 
 }

@@ -14,9 +14,7 @@ export const RaceMap = ({
   const [mask, setMask] = useState("");
   const [color, setColor] = useState(success);
   const [raceTrack, setRaceTrack] = useState(raceData);
-  //   const raceTrack =
-  //     "Anime, a captivating form of animated entertainment originating from Japan, has grown into a global phenomenon. Its influence extends far beyond its home country, captivating audiences worldwide with its diverse genres and compelling storytelling.";
-
+  
   //Focuses on Input on Race Start
   useEffect(() => {
     if (raceTimerOn) {
@@ -27,7 +25,15 @@ export const RaceMap = ({
 
   //Sets Paragraph when Paragraph is Fetched
   useEffect(()=>{
+    if(!raceData){
+      setMask(prev=>"")
+      setRaceTrack(prev=>"")
+      setInput(prev=>"")
+      setColor(prev=>success)
+    }else{
     setRaceTrack(prev=>raceData)
+    }
+    
   }, [raceData])
 
   //Race Progress & Comparison with mask

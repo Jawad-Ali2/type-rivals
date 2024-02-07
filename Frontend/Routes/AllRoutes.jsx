@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { Home, Dashboard, Landing, Race, Auth } from "../pages";
+import { Home, Dashboard, Landing, Race, Auth, Narrator } from "../pages";
 export const AllRoutes = () => {
   return (
     <Routes>
@@ -8,6 +8,7 @@ export const AllRoutes = () => {
       <Route path="/dashboard" element={<Dashboard />}></Route>
       <Route path="/race" element={<Race />} />
       <Route path="/auth" element={<Auth />} />
+      <Route path="/narrator" element={<Narrator/>}/>
     </Routes>
   );
 };

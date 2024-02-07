@@ -5,11 +5,12 @@ import { useNavigate } from "react-router-dom"
 import { RaceLoader } from "../../components"
 import { AuthContext } from "../../context/AuthContext";
 export const Race = ({duration=60})=>{
-
+    
     document.title = "Race | Type Rivals"
-    const [time,timerOn, setTimerOn, getFormmatedTime] = useCountDown(duration)
-    const [prepareTime, prepareTimerOn, setPrepareTimerOn, getPrepareFormattedTime] = useCountDown(5)
+    const [time,timerOn,resetTimer, setTimerOn, getFormmatedTime] = useCountDown(duration)
+    const [prepareTime, prepareTimerOn,resetPrepareTimer, setPrepareTimerOn, getPrepareFormattedTime] = useCountDown(5)
 
+    const [replay, setReplay] = useState(false)
     const [speed, setSpeed] = useState(0)
     const [errors, setErrors] = useState(null)
     const [accuracy, setAccuracy] = useState(0)
@@ -24,6 +25,14 @@ export const Race = ({duration=60})=>{
     const statRef = useRef()
 
     const navigate = useNavigate()
+
+    //Reload/Update Components
+    const update = useEffect(()=>{
+        setRaceFinished(prev=>false)
+        setRaceData(prev=>"")
+        resetTimer()
+        resetPrepareTimer()
+    },[replay])
     //Prepare Timer
     useEffect(()=>{
         if(raceData){
@@ -50,6 +59,7 @@ export const Race = ({duration=60})=>{
         }
         ,signal
        } 
+       
        //Fetching Paragraph
        const getParagraph = ()=>{
         fetch("http://localhost:8000/user/quick-race", options)
@@ -71,15 +81,15 @@ export const Race = ({duration=60})=>{
        return ()=>{
         controller.abort()
        }
-    },[isAuthenticated])
+    },[isAuthenticated, replay])
 
     const handleSpeedMeasuring = (inpText, originalText) =>{
         let total_valid_words = 0
-        let words = inpText.split(" ")
         let total_invalid_words = 0
         total_valid_words = inpText.length/5
-        let time_taken = (duration - time)/duration
-        const wpm =(total_valid_words - total_invalid_words)/time_taken
+        const time_taken = (duration - time)
+        const time_in_minutes = time_taken/60
+        const wpm =(total_valid_words - total_invalid_words)/time_in_minutes
         let acc= (inpText.length - mistakes)/ inpText.length * 100
         acc = acc? acc:0
         setSpeed(prev=>Math.round(wpm))
@@ -111,35 +121,38 @@ export const Race = ({duration=60})=>{
                 <p className="web-text font-semibold float-right">{getFormmatedTime(time)} </p>
                 <RaceMap maskRef = {maskRef} originalRef = {originalRef} setRaceFinished = {setRaceFinished} setMistakes= {setMistakes} raceData = {raceData} raceTimerOn = {timerOn}/>   
             </div>
-            <div ref={statRef} className="lock-screen absolute w-full h-full top-[5rem] z-[-10] flex left-0 flex-row items-center justify-center transition-all duration-300">
+           {raceData && <div ref={statRef} className="lock-screen absolute w-full h-full top-[5rem] z-[-10] flex left-0 flex-row items-center justify-center transition-all duration-300">
                 <div className="finish-statistics absolute  z-10 top-[-25rem] w-[20rem] transition-all duration-300 h-[20rem] web-foreground rounded-lg">
                     <p className="web-text font-semibold w-full text-center p-2">Statistics</p>
-                    <table className="w-full max-w-[15rem] mx-auto px-2 web-text font-semibold text-sm text-center">
-                        <thead>
-                        <tr>
-                            <th className="px-2">
-                            </th>
-                            <th>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Speed</td>
-                            <td>{speed} WPM</td>
-                        </tr>
-                        <tr>
-                            <td>Time Taken</td>
-                            <td>{getFormmatedTime(duration-time)}</td>
-                        </tr>
-                        <tr>
-                            <td>Accuracy</td>
-                            <td>{accuracy}%</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div className="stat-body w-full h-[17rem] p-2 flex flex-col items-center justify-between">
+                        <table className="w-full max-w-[15rem]  mx-auto px-2 web-text font-semibold text-md text-left">
+                            <thead>
+                            <tr>
+                                <th className="px-2">
+                                </th>
+                                <th>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Speed</td>
+                                <td>{speed} WPM</td>
+                            </tr>
+                            <tr>
+                                <td>Time Taken</td>
+                                <td>{getFormmatedTime(duration-time)}</td>
+                            </tr>
+                            <tr>
+                                <td>Accuracy</td>
+                                <td>{accuracy}%</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <button className="web-button" onClick={()=>{setReplay(prev=>!prev)}}>Replay</button>
+                    </div>
                 </div>
-            </div>
+            </div>}
         </div>
     </section>
 }
