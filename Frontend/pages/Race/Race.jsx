@@ -82,7 +82,7 @@ export const Race = ({duration=60})=>{
         controller.abort()
        }
     },[isAuthenticated, replay])
-
+    //Speed Measuring
     const handleSpeedMeasuring = (inpText, originalText) =>{
         let total_valid_words = 0
         let total_invalid_words = 0
