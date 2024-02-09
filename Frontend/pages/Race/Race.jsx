@@ -22,7 +22,7 @@ export const Race = ({duration=60})=>{
     const navigate = useNavigate()
     
     
-    const [paragraph, audioLink, errors, fetchData,resetData] = useFetch("http://localhost:8000/user/quick-race/") 
+    const [paragraph, audioLink, errors,resetData] = useFetch("http://localhost:8000/user/quick-race/") 
     //Reload/Update Components
     const update = useEffect(()=>{
         setRaceFinished(prev=>false)
@@ -43,32 +43,12 @@ export const Race = ({duration=60})=>{
         }
     }, [prepareTime])
 
-    //Paragraph Fetch useEffect
-    // useEffect(()=>{
-    //    if(!isAuthenticated){
-    //     navigate("/auth")
-    //    }
-    //    const controller = new AbortController()
-    //    const signal = controller.signal
-    //    const options = {
-    //     headers:{
-    //         Authorization: "Bearer " + token   
-    //     }
-    //     ,signal
-    //    } 
-    //    fetchData(options)
-    //    return ()=>{
-    //     controller.abort()
-    //    }
-    // },[isAuthenticated, replay])
     //Speed Measuring
-    const handleSpeedMeasuring = (inpText, originalText) =>{
-        let total_valid_words = 0
-        let total_invalid_words = 0
-        total_valid_words = inpText.length/5
+    const handleSpeedMeasuring = (inpText) =>{
+        const total_valid_words = inpText.length/5
         const time_taken = (duration - time)
         const time_in_minutes = time_taken/60
-        const wpm =(total_valid_words - total_invalid_words)/time_in_minutes
+        const wpm =total_valid_words/time_in_minutes
         let acc= (inpText.length - mistakes)/ inpText.length * 100
         acc = acc? acc:0
         setSpeed(prev=>Math.round(wpm))
@@ -80,7 +60,7 @@ export const Race = ({duration=60})=>{
         const statdiv = document.getElementsByClassName("finish-statistics")[0]
         statdiv.classList.remove("top-[-25rem]")
         statdiv.classList.add("top-[5rem]")
-        handleSpeedMeasuring(maskRef.current.innerText, originalRef.current.innerText)
+        handleSpeedMeasuring(maskRef.current.innerText)
     }
     useEffect(()=>{
         let session_ended = false
@@ -95,11 +75,11 @@ export const Race = ({duration=60})=>{
         }
         if(session_ended && speed){
             console.log(speed)
-            //Save State Here
+            //Save Info Here Bro...
         }
     }, [time,raceFinished,speed])
     return <section className="race-section w-full max-w-[45rem]">
-        <RaceLoader loading={!paragraph} errors = {errors}  time={prepareTime}/> 
+        <RaceLoader loading={!paragraph} errors = {errors}  time={prepareTime}>Fetching Paragraph...</RaceLoader> 
         <div className="race-container pt-[5rem] w-[90%] mx-auto">
             <div className="racemap-container w-full">
                 <p className="web-text font-semibold">Race Map</p>

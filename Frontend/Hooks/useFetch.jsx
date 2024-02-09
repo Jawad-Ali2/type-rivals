@@ -51,5 +51,5 @@ export const useFetch = (url) =>{
             controller.abort()
         }
     },[isAuthenticated, refetch])
-    return [paragraph, audioLink, errors,fetchData ,resetData]
+    return [paragraph, audioLink, errors ,resetData]
 }
