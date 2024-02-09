@@ -78,7 +78,6 @@ export const RaceMap = ({
             setInput(e.target.value);
           }}
           value={input}
-          S
           className="track-input w-full web-text web-body outline-none px-2 h-[2rem] border-b-2 border-[#1C2936]"
           placeholder="Type Here..."
         ></input>

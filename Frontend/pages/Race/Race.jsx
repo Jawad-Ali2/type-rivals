@@ -6,7 +6,7 @@ import { RaceLoader } from "../../components"
 
 export const Race = ({duration=60})=>{    
     document.title = "Race | Type Rivals"
-    const [time,timerOn,resetTimer, setTimerOn, getFormmatedTime] = useCountDown(duration-55)
+    const [time,timerOn,resetTimer, setTimerOn, getFormmatedTime] = useCountDown(duration)
     const [prepareTime, prepareTimerOn,resetPrepareTimer, setPrepareTimerOn, getPrepareFormattedTime] = useCountDown(5)
 
     const [replay, setReplay] = useState(false)
