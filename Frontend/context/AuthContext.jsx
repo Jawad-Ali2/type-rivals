@@ -6,14 +6,14 @@ export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState(() => {
     const token = JSON.parse(localStorage.getItem("token"));
-    console.log("from useState", token);
+    //console.log("from useState", token);
     if (token) {
       setIsAuthenticated(true);
     }
     return token;
   });
   const [csrfToken, setCsrfToken] = useState(null);
-  console.log("csrf", csrfToken);
+  //console.log("csrf", csrfToken);
 
   useEffect(() => {
     getCsrfToken();
@@ -30,15 +30,15 @@ export function AuthProvider({ children }) {
     }
 
     const remainingMiliseconds = new Date(expiryDate) - new Date().getTime();
-    console.log("in useEffect", storedToken);
+    //console.log("in useEffect", storedToken);
     setToken(storedToken);
     setIsAuthenticated(true);
     autoLogout(remainingMiliseconds);
   }, []);
 
   const autoLogout = (miliseconds) => {
-    console.log("inside auto-logout");
-    console.log(miliseconds);
+    //console.log("inside auto-logout");
+    //console.log(miliseconds);
     setTimeout(() => {
       logout();
     }, miliseconds);
@@ -59,14 +59,14 @@ export function AuthProvider({ children }) {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
+        //console.log(data);
         setCsrfToken(data.csrfToken);
       }
     } catch (err) {
-      console.log(err);
+      //console.log(err);
     }
   }
-  console.log(csrfToken);
+  //console.log(csrfToken);
 
   const contextValue = useMemo(
     () => ({
