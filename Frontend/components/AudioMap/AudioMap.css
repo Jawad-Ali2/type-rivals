@@ -1,0 +1,24 @@
+.audio-btn{
+    color: var(--foreground-div-color);
+    transition: all 0.1s ease-in;
+}
+
+.audio-btn:hover{
+    scale: 115%;
+}
+.narrator-icon{
+    filter:invert(1);
+}
+input[type="range"]{
+    appearance: none;
+    background: var(--text-color);
+    height: 4px;
+    border-radius: 20px;
+}
+input[type="range"]::-webkit-slider-thumb{
+    appearance: none;
+    background: var(--dark-text-color);
+    width: 15px;
+    height: 15px;
+    border-radius: 20px;
+}
