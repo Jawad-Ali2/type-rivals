@@ -10,3 +10,5 @@ export {SignUp} from "./SignUp/SignUp";
 export {RaceLoader} from "./RaceLoader/RaceLoader";
 export {Loader} from "./Loader/Loader";
 export {AudioMap} from "./AudioMap/AudioMap";
+export {TrackInput} from "./TrackInput/TrackInput";
+export {RaceStats} from "./RaceStats/RaceStats"

@@ -15,14 +15,19 @@ export const useCountDown = (time_in_seconds)=>{
                 
             }, 1000)
         }
-        return ()=>clearInterval(timerID)
+        if(time<=0)
+       setTimerOn(prev=>false)
+        return ()=>{
+            clearInterval(timerID)
+
+        }
     }, [time, timerOn])
     const getFormmatedTime = (time)=>{
-        let minutes = Math.floor(time / 60);
-        let seconds = Math.round(time % 60);
+        let minutes = Math.round(time / 60);
+        let seconds =Math.ceil(time % 60);
         let formatted_time = `${minutes < 10? "0" :""}${minutes}:${seconds<10? "0":""}${seconds}`   
         return formatted_time
     }
-    return [time,timerOn,resetTimer, setTimerOn, getFormmatedTime, setTime]
+    return [time,timerOn,resetTimer, setTimerOn, getFormmatedTime]
 
 }

@@ -3,13 +3,18 @@ import styled, {keyframes} from 'styled-components'
 import "./AudioMap.css"
 import narrator_icon from "/src/assets/speaker.png"
 import { useCountDown } from "../../Hooks"
+import { TrackInput } from "../TrackInput/TrackInput"
+import { RaceStats } from "../RaceStats/RaceStats"
 const VOLUME_KEY="volume@typerivals"
-export const AudioMap = ({audioLink,startRace, trackDuration})=>{
+export const AudioMap = ({paragraph,audioLink,startRace, trackDuration})=>{
+    document.title = "Narrator | Type Rivals"
     const audioRef = useRef()
-
-    const [raceTime, raceTimerOn, resetRaceTimer, setRaceTimerOn, getRaceFormattedTime, setTime] = useCountDown(trackDuration)
+    const [input, setInput] = useState("")
+    const [correct, setCorrect] = useState(true)
+    const [raceTime, raceTimerOn, resetRaceTimer, setRaceTimerOn, getRaceFormattedTime] = useCountDown(trackDuration)
     const [isPlaying, setIsPlaying] = useState(false)
     const [currentTime, setCurrentTime] = useState(0)
+    const [raceFinsihed, setRaceFinsihed] = useState(false)
     const [volume, setVolume] = useState(()=>{
         const vol = localStorage.getItem(VOLUME_KEY)
         if(vol)
@@ -29,6 +34,13 @@ export const AudioMap = ({audioLink,startRace, trackDuration})=>{
             setRaceTimerOn(prev=>true)
         }
     }, [startRace])
+    useEffect(()=>{
+        if(raceTime<=0 && !raceTimerOn){
+            setRaceFinsihed(prev=>true)
+            console.log("Finished")
+        }
+    }, [raceTime, raceTimerOn])
+    
     const handleVolumeChange = useEffect(()=>{
         audioRef.current.volume = volume/100
         localStorage.setItem(VOLUME_KEY, volume)
@@ -66,6 +78,7 @@ export const AudioMap = ({audioLink,startRace, trackDuration})=>{
     },[])
  
     return <div className="audio-map-container w-full relative">
+        <RaceStats input={input} paragraph={paragraph} time={trackDuration - raceTime} raceFinisihed={raceFinsihed}/>
         <div className="timer absolute right-[3rem] top-[0rem] web-text text-md font-semibold">{getRaceFormattedTime(raceTime)}</div>
         <div className="audio-box w-[90%] mx-auto max-w-[45rem] h-[10rem] rounded-xl web-foreground">
             <audio ref={audioRef} src={audioLink}  type="audio/mp3">
@@ -88,6 +101,10 @@ export const AudioMap = ({audioLink,startRace, trackDuration})=>{
                     <input id="volume-control" className="w-[10rem]" type="range" min={0} max={100} value={volume} onChange={e=>setVolume(e.target.value)}/>
                 </div>
             </div>
+        </div>
+        <div className="input-area  w-full max-w-[40rem] mx-auto mt-5 relative">
+            <TrackInput input={input} setInput={setInput} raceFinished={raceFinsihed} paragraph={paragraph} setCorrect={setCorrect}/>
+            <p className={"absolute right-[0rem] fa-solid "+(correct?"text-green-600 fa-circle-check":"text-red-500 fa-circle-xmark")}></p>
         </div>
     </div>
 }
