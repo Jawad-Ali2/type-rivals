@@ -39,7 +39,11 @@ export const AudioMap = ({paragraph,audioLink,startRace, trackDuration})=>{
             console.log("Finished")
         }
     }, [raceTime, raceTimerOn])
-    
+    useEffect(()=>{
+        if(raceFinsihed){
+            setRaceTimerOn(prev=>false)
+        }
+    }, [raceFinsihed])
     const handleVolumeChange = useEffect(()=>{
         audioRef.current.volume = volume/100
         localStorage.setItem(VOLUME_KEY, volume)

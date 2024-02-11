@@ -20,7 +20,10 @@ export const RaceStats = ({input, paragraph, time, raceFinisihed})=>{
         const wordsPerMinute = Math.round(correctlyTyped/timeTakenInMinutes)
         setSpeed(prev=>wordsPerMinute)
         }
-    }, [raceFinisihed])
+        if(raceFinisihed && speed){
+            //Save Speed Here Bro
+        }
+    }, [raceFinisihed,speed])
     return( <div className={"lock-screen transition-all duration-300 fixed w-full flex flex-col items-center justify-center left-0 top-[5rem]   h-full bg-black " + (raceFinisihed? "bg-opacity-40 z-[40]":"bg-opacity-0 z-[-10]")}>
         <div className={"stats-container transition-all duration-300 fixed  flex flex-col items-center justify-between p-2 w-[20rem]  h-[20rem] rounded-xl bg-gradient-to-b from-blue-950 via-violet-950 to bg-indigo-950 shadow-md shadow-blue-violet-950 " +(raceFinisihed? "top-[13rem]" :"top-[-25rem]")}>
             <p className="text-white text-2xl font-semibold w-full text-center">Statistics</p>

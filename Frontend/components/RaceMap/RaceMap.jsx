@@ -42,11 +42,15 @@ export const RaceMap = ({
     else
       setColor(prev=>error)
   }, [correct])
+  useEffect(()=>{
+    if(raceFinished)
+      setRaceTimerOn(prev=>false)
+  }, [raceFinished])
   useEffect(() => {
     if(raceTime<=0 && !raceTimerOn){
-      setRaceFinished(prev=>true);
+      setRaceFinished(prev=>true)
     }
-  }, [raceTime, raceTimerOn]);
+  }, [raceTime, raceTimerOn])
 
   return (
     <section className="racemap-section relative">
