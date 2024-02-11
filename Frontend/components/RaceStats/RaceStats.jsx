@@ -17,7 +17,7 @@ export const RaceStats = ({input, paragraph, time, raceFinisihed})=>{
         const wordsTyped = getValidInput(input)
         const correctlyTyped = wordsTyped.length/ 5
         const timeTakenInMinutes = time/60
-        const wordsPerMinute = correctlyTyped/timeTakenInMinutes
+        const wordsPerMinute = Math.round(correctlyTyped/timeTakenInMinutes)
         setSpeed(prev=>wordsPerMinute)
         }
     }, [raceFinisihed])

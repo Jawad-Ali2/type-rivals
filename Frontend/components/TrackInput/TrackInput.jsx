@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-export const TrackInput = ({paragraph,input,setInput, setCorrect, raceFinished})=>{
+export const TrackInput = ({paragraph,input,setInput, setCorrect, raceFinished, setRaceFinished})=>{
     
     const handleInputChange = (e)=>{
         const typedInput = e.target.value;
@@ -7,6 +7,10 @@ export const TrackInput = ({paragraph,input,setInput, setCorrect, raceFinished})
         setInput(prev=>typedInput)
         if(typedInput===progressedParagraph){
             setCorrect(prev=>true)
+            if(typedInput===paragraph){
+                setRaceFinished(prev=>true)
+                console.log("YES: " + raceFinished)
+            }
         } else{
             setCorrect(prev=>false)
         }

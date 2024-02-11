@@ -3,9 +3,11 @@ import { useFetch, useCountDown } from "../../Hooks"
 import { RaceLoader } from "../../components"
 import { useEffect, useState } from "react"
 export const Narrator = ()=>{
+    document.title = "Narrator | Type Rivals"
     const [prepareTime, prepareTimerOn, resetPrepareTimer, setPrepareTimerOn, getPrepareFormattedTime] = useCountDown(5)
     const [paragraph, audioLink, errors, resetData] = useFetch("http://localhost:8000/user/quick-race/")
     const [trackDuration, setTrackDuration] = useState(null)
+    //Meta Data Handlings
     useEffect(()=>{
         const audio = new Audio(audioLink)
         const handleMetaData = ()=>{

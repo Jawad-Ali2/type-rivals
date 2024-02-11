@@ -7,7 +7,6 @@ import { TrackInput } from "../TrackInput/TrackInput"
 import { RaceStats } from "../RaceStats/RaceStats"
 const VOLUME_KEY="volume@typerivals"
 export const AudioMap = ({paragraph,audioLink,startRace, trackDuration})=>{
-    document.title = "Narrator | Type Rivals"
     const audioRef = useRef()
     const [input, setInput] = useState("")
     const [correct, setCorrect] = useState(true)
@@ -103,7 +102,7 @@ export const AudioMap = ({paragraph,audioLink,startRace, trackDuration})=>{
             </div>
         </div>
         <div className="input-area  w-full max-w-[40rem] mx-auto mt-5 relative">
-            <TrackInput input={input} setInput={setInput} raceFinished={raceFinsihed} paragraph={paragraph} setCorrect={setCorrect}/>
+            <TrackInput input={input} setInput={setInput} raceFinished={raceFinsihed} paragraph={paragraph} setCorrect={setCorrect} setRaceFinished={setRaceFinsihed}/>
             <p className={"absolute right-[0rem] fa-solid "+(correct?"text-green-600 fa-circle-check":"text-red-500 fa-circle-xmark")}></p>
         </div>
     </div>
