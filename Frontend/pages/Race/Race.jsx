@@ -6,7 +6,7 @@ import { RaceLoader } from "../../components"
 
 export const Race = ({duration=60})=>{    
     document.title = "Race | Type Rivals"
-    const [time,timerOn,resetTimer, setTimerOn, getFormmatedTime] = useCountDown(duration)
+    const [time,timerOn,resetTimer, setTimerOn, getFormmatedTime] = useCountDown(duration-55)
     const [prepareTime, prepareTimerOn,resetPrepareTimer, setPrepareTimerOn, getPrepareFormattedTime] = useCountDown(5)
 
     const [replay, setReplay] = useState(false)
@@ -86,7 +86,7 @@ export const Race = ({duration=60})=>{
                 <p className="web-text font-semibold float-right">{getFormmatedTime(time)} </p>
                 <RaceMap maskRef = {maskRef} originalRef = {originalRef} setRaceFinished = {setRaceFinished} setMistakes= {setMistakes} raceData = {paragraph} raceTimerOn = {timerOn}/>   
             </div>
-           {paragraph && <div ref={statRef} className="lock-screen absolute w-full h-full top-[5rem] z-[10] flex left-0 flex-row items-center justify-center transition-all duration-300">
+           {paragraph && <div ref={statRef} className="lock-screen absolute w-full h-full top-[5rem] z-[-10] flex left-0 flex-row items-center justify-center transition-all duration-300">
                 <div className="finish-statistics absolute  z-10 top-[-25rem] w-[20rem] transition-all duration-300 h-[20rem] web-foreground rounded-lg">
                     <p className="web-text font-semibold w-full text-center p-2">Statistics</p>
                     <div className="stat-body w-full h-[17rem] p-2 flex flex-col items-center justify-between">

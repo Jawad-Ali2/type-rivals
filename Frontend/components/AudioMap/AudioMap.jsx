@@ -2,10 +2,12 @@ import { useRef, useState, useEffect } from "react"
 import styled, {keyframes} from 'styled-components'
 import "./AudioMap.css"
 import narrator_icon from "/src/assets/speaker.png"
-
+import { useCountDown } from "../../Hooks"
 const VOLUME_KEY="volume@typerivals"
-export const AudioMap = ({audioLink})=>{
+export const AudioMap = ({audioLink,startRace, trackDuration})=>{
     const audioRef = useRef()
+
+    const [raceTime, raceTimerOn, resetRaceTimer, setRaceTimerOn, getRaceFormattedTime, setTime] = useCountDown(trackDuration)
     const [isPlaying, setIsPlaying] = useState(false)
     const [currentTime, setCurrentTime] = useState(0)
     const [volume, setVolume] = useState(()=>{
@@ -22,6 +24,11 @@ export const AudioMap = ({audioLink})=>{
         }
         setIsPlaying(prev=>!prev)
     }
+    useEffect(()=>{
+        if(startRace){
+            setRaceTimerOn(prev=>true)
+        }
+    }, [startRace])
     const handleVolumeChange = useEffect(()=>{
         audioRef.current.volume = volume/100
         localStorage.setItem(VOLUME_KEY, volume)
@@ -37,7 +44,7 @@ export const AudioMap = ({audioLink})=>{
         opacity:1
     }
     `;
-    const FadingDiv = styled.div`animation:${isPlaying?fadeInOut:null} 1.5s linear infinite`;
+    const FadingDiv = styled.div`animation:${isPlaying?fadeInOut:null} 2s linear infinite`;
     const handleDurationChange = ()=>{
         if(audioRef){
             const progressedTrackDuration = (audioRef.current.currentTime/audioRef.current.duration) * 100
@@ -49,21 +56,17 @@ export const AudioMap = ({audioLink})=>{
         } 
     }
     useEffect(()=>{
-        if(audioRef){
+        if(audioRef && audioRef.current){
         audioRef.current.addEventListener('timeupdate', handleDurationChange)
         }
         return ()=>{
-            if(audioRef)
+            if(audioRef && audioRef.current)
             audioRef.current.removeEventListener('timeupdate', handleDurationChange)
         }
     },[])
-    const getFormmatedTime = (time)=>{
-        let minutes = Math.floor(time / 60);
-        let seconds = Math.round(time % 60);
-        let formatted_time = `${minutes < 10? "0" :""}${minutes}:${seconds<10? "0":""}${seconds}`   
-        return formatted_time
-    }
-    return <div className="audio-map-container w-full">
+ 
+    return <div className="audio-map-container w-full relative">
+        <div className="timer absolute right-[3rem] top-[0rem] web-text text-md font-semibold">{getRaceFormattedTime(raceTime)}</div>
         <div className="audio-box w-[90%] mx-auto max-w-[45rem] h-[10rem] rounded-xl web-foreground">
             <audio ref={audioRef} src={audioLink}  type="audio/mp3">
             
@@ -73,8 +76,8 @@ export const AudioMap = ({audioLink})=>{
                     <img src={narrator_icon} className="narrator-icon w-[100px] h-[100px]" />    
                 </FadingDiv>
                 <div className="duration-area relative">
-                    <p className="web-icon text-sm absolute left-[-2.6rem] top-[6px]">{audioRef?.current? getFormmatedTime(audioRef.current.currentTime):0}</p>
-                    <p className="web-icon text-sm absolute right-[-2.6rem] top-[6px]">{audioRef?.current? getFormmatedTime(audioRef.current.duration): 0}</p>     
+                    <p className="web-icon text-sm absolute left-[-2.6rem] top-[6px]">{audioRef?.current? getRaceFormattedTime(audioRef.current.currentTime):0}</p>
+                    <p className="web-icon text-sm absolute right-[-2.6rem] top-[6px]">{audioRef?.current? getRaceFormattedTime(audioRef.current.duration): 0}</p>     
                     <input id="duration-control" className="w-[10rem]" type="range" min={0} max={100} value={currentTime} readOnly/>
                 </div>
             </div>
