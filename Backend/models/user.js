@@ -32,6 +32,9 @@ const userSchema = new Schema({
     maxSpeed: {
       type: Number,
     },
+    races: {
+      type: Number,
+    },
   },
 });
 

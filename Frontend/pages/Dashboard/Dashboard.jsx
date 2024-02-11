@@ -1,28 +1,41 @@
 import { useContext, useEffect, useState } from "react";
 import { Statistics } from "../../components";
 import { AuthContext } from "../../context/AuthContext";
+import axios from "axios";
 export const Dashboard = () => {
-  document.title = "Dashboard | Type Rivals"
+  document.title = "Dashboard | Type Rivals";
   const [data, setData] = useState({});
   const { token } = useContext(AuthContext);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     async function getUserDashboard() {
-      const response = await fetch("http://localhost:8000/user/dashboard", {
+      const options = {
         headers: {
           Authorization: "Bearer " + token,
         },
-      });
+        signal,
+      };
 
-      if (response.ok) {
-        const data = await response.json();
+      const response = await axios.get(
+        "http://localhost:8000/user/dashboard",
+        options
+      );
+
+      if (response.status === 200) {
+        const data = await response.data;
         console.log(data);
         setData(data);
       }
     }
     getUserDashboard();
-  }, []);
 
+    return () => {
+      controller.abort();
+    };
+  }, []);
 
   return (
     <section className="dashboard-section w-full max-w-[45rem]">

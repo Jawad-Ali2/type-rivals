@@ -80,5 +80,8 @@ exports.postLogin = (req, res) => {
 };
 
 exports.postLogout = (req, res) => {
+  // console.log(req.headers.cookie);
+  res.clearCookie("X-Csrf-Token");
+
   res.status(200).send({ message: "Logged out" });
 };

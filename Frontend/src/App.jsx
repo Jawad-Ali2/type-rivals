@@ -1,5 +1,6 @@
 import "./App.css";
 import { Header, Hero } from "../components";
+
 function App() {
   return (
     <>

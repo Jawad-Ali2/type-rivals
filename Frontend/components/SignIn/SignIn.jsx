@@ -27,7 +27,7 @@ export const SignIn = ({ handleError }) => {
     });
     if (response.ok) {
       const result = await response.json();
-      login(result.token);
+      login(result.token, result.userId);
       navigate("/home");
     }
   }

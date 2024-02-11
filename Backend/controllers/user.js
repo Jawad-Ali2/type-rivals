@@ -74,3 +74,40 @@ exports.quickRaceTrack = (req, res) => {
       res.status(500).send({ message: error.message });
     });
 };
+
+exports.saveUserStats = (req, res) => {
+  const speed = req.body.speed;
+  const userId = req.body.userId;
+
+  let currUser;
+  let updatedData = {
+    races: 0,
+    avgSpeed: 0,
+    maxSpeed: 0,
+  };
+
+  User.findById(userId)
+    .then((user) => {
+      console.log(user.raceDetail.races);
+      user.raceDetail.races += 1;
+
+      user.raceDetail.avgSpeed = Math.round(
+        (user.raceDetail.avgSpeed * (user.raceDetail.races - 1) + speed) /
+          user.raceDetail.races
+      );
+
+      if (speed > user.raceDetail.maxSpeed) user.raceDetail.maxSpeed = speed;
+      console.log(
+        user.raceDetail.races,
+        user.raceDetail.avgSpeed,
+        user.raceDetail.maxSpeed
+      );
+      return user.save();
+    })
+    .then(() => {
+      res.status(200).json({ message: "User stats updated successfully" });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};

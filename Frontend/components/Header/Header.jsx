@@ -6,6 +6,7 @@ import { cilMenu } from "@coreui/icons";
 import { useContext, useEffect, useRef, useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import axios from "axios";
 
 export const Header = () => {
   const [username, setUsername] = useState("John Doe");
@@ -13,32 +14,41 @@ export const Header = () => {
   const dropDownRef = useRef();
   const { isAuthenticated, token, csrfToken, logout } = useContext(AuthContext);
   const navigate = useNavigate();
-  
+
   const headerBtns = [
     ["Home", "/home"],
     ["Collections", "/collections"],
     ["Dashboard", "/dashboard"],
-  ]
+  ];
   const subHeaderButtons = [
-    ["Quick Race","/race"],
+    ["Quick Race", "/race"],
     ["Race vs Narrator", "/narrator"],
-    ["vs CPU","/race"],
-    ["Death Match","/race"],
-    ["Tournaments","/race"],
-  ]
+    ["vs CPU", "/race"],
+    ["Death Match", "/race"],
+    ["Tournaments", "/race"],
+  ];
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     async function getUserDashboard() {
-      const response = await fetch("http://localhost:8000/user/dashboard", {
+      const response = await axios.get("http://localhost:8000/user/dashboard", {
         headers: { Authorization: "Bearer " + token },
+        signal,
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) {
+        const data = await response.data;
+        console.log(data);
         setUsername(data.name);
       }
     }
     getUserDashboard();
-  }, []);
+
+    return () => {
+      controller.abort();
+    };
+  }, [username, token]);
 
   const handleDropDown = () => {
     if (dropDownRef.current.classList.contains("left-0")) {
@@ -151,7 +161,7 @@ export const Header = () => {
         </div>
         <div className="sub-header w-full hidden md:block h-[2rem] web-background">
           <ul className="subheader-nav  w-full flex flex-row justify-center items-center mx-auto text-sm ">
-            {subHeaderButtons.map(([el,link], i) => (
+            {subHeaderButtons.map(([el, link], i) => (
               <Link className="my-2" to={link} key={i}>
                 <li className="w-fit inline cursor-pointer transition-all duration-200 md:mx-2 lg:mx-4 xl:mx-6 web-text">
                   {el}
@@ -181,15 +191,13 @@ export const Header = () => {
             {isAuthenticated ? "Log out" : "Sign In"}
           </button>
           <li className="faded-border w-full border-b-[2px]"></li>
-          {subHeaderButtons.map(
-            ([el,link], i) => (
-              <Link key={i} to={link}>
-                <li className="w-fit h-[2rem] transition-all duration-200 py-2 m-2 border-b-[#3B6187] hover:border-b-[2px] border-b-[0px]">
-                  {el}
-                </li>
-              </Link>
-            )
-          )}
+          {subHeaderButtons.map(([el, link], i) => (
+            <Link key={i} to={link}>
+              <li className="w-fit h-[2rem] transition-all duration-200 py-2 m-2 border-b-[#3B6187] hover:border-b-[2px] border-b-[0px]">
+                {el}
+              </li>
+            </Link>
+          ))}
         </ul>
       </div>
     </section>

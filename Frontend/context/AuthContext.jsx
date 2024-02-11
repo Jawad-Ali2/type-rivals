@@ -1,19 +1,23 @@
 import { createContext, useEffect, useMemo, useState } from "react";
+import axios from "axios";
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userId, setUserId] = useState(() => {
+    const id = JSON.parse(localStorage.getItem("userId"));
+
+    return id ?? null;
+  });
   const [token, setToken] = useState(() => {
     const token = JSON.parse(localStorage.getItem("token"));
-    //console.log("from useState", token);
     if (token) {
       setIsAuthenticated(true);
     }
     return token;
   });
   const [csrfToken, setCsrfToken] = useState(null);
-  //console.log("csrf", csrfToken);
 
   useEffect(() => {
     getCsrfToken();
@@ -30,15 +34,12 @@ export function AuthProvider({ children }) {
     }
 
     const remainingMiliseconds = new Date(expiryDate) - new Date().getTime();
-    //console.log("in useEffect", storedToken);
     setToken(storedToken);
     setIsAuthenticated(true);
     autoLogout(remainingMiliseconds);
-  }, []);
+  }, [token]);
 
   const autoLogout = (miliseconds) => {
-    //console.log("inside auto-logout");
-    //console.log(miliseconds);
     setTimeout(() => {
       logout();
     }, miliseconds);
@@ -53,29 +54,30 @@ export function AuthProvider({ children }) {
 
   async function getCsrfToken() {
     try {
-      const response = await fetch("http://localhost:8000/csrf-token", {
-        credentials: "include",
+      const response = await axios.get("http://localhost:8000/csrf-token", {
+        withCredentials: "include",
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        //console.log(data);
+      if (response.status === 200) {
+        const data = await response.data;
         setCsrfToken(data.csrfToken);
       }
     } catch (err) {
-      //console.log(err);
+      console.log(err);
     }
   }
-  //console.log(csrfToken);
 
   const contextValue = useMemo(
     () => ({
       token,
       isAuthenticated,
       csrfToken,
-      login: async (storedToken) => {
+      userId,
+      login: async (storedToken, userId) => {
         setToken(storedToken);
+        setUserId(userId);
         localStorage.setItem("token", JSON.stringify(storedToken));
+        localStorage.setItem("userId", JSON.stringify(userId));
         const remainingMiliseconds = 60 * 60 * 1000; // miliseconds
         const expiryDate = new Date(
           new Date().getTime() + remainingMiliseconds
