@@ -4,19 +4,20 @@ const { Schema } = mongoose;
 
 const paragraphSchema = new Schema({
   genre: {
-    quotes: {
-      type: String,
-      author: String,
-      speech: {
-        type: String,
+    quotes: [
+      {
+        text: String,
+        author: String,
       },
-    },
-    jokes: {
-      type: String,
-      speech: {
+    ],
+    jokes: [
+      {
         type: String,
+        speech: {
+          type: String,
+        },
       },
-    },
+    ],
   },
 });
 
