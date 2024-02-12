@@ -9,7 +9,20 @@ const { doubleCsrf } = require("csrf-csrf");
 const userRoutes = require("./routes/user");
 const authRoutes = require("./routes/auth");
 
+const Paragraph = require("./models/paragraphs");
+const serviceAccount = require("./config/serviceAccountKey.json");
+const config = require("./config/firebase.config");
+const gtts = require("node-gtts")("en-us");
+
+const admin = require("firebase-admin");
+const { webScrape } = require("./utils/scrape");
+
 const app = express();
+// admin.initializeApp({
+// credential: admin.credential.cert(serviceAccount),
+// storageBucket: config.firebaseConfig.storageBucket,
+// });
+
 const {
   invalidCsrfTokenError,
   generateToken,

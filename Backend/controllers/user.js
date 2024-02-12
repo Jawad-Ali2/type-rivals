@@ -7,6 +7,7 @@ const serviceAccount = require("../config/serviceAccountKey.json");
 
 const { webScrape } = require("../utils/scrape");
 const config = require("../config/firebase.config");
+const Paragraph = require("../models/paragraphs");
 
 // Initialize firebase config
 admin.initializeApp({
@@ -26,21 +27,30 @@ exports.getUserDashboard = (req, res) => {
 };
 
 exports.quickRaceTrack = (req, res) => {
-  const url = "https://www.azquotes.com/top_quotes.html";
-  webScrape(url)
-    .then((content) => {
-      console.log("in");
-      const random = Math.floor(Math.random() * 100);
-      // Gets the first five words for the file name
-      const fileName = content[random].text
-        .split(" ")
-        .slice(0, 5)
-        .join("-")
-        .replace(",", "");
-      console.log(fileName);
+  const bucket = admin.storage().bucket();
 
-      const bucket = admin.storage().bucket();
-
+  Paragraph.aggregate([
+    {
+      $project: {
+        quotesCount: { $size: "$genre.quotes" },
+      },
+    },
+  ])
+    .then((result) => {
+      const { quotesCount } = result[0];
+      const randomValue = Math.floor(Math.random() * quotesCount);
+      // return Paragraph.findOne().skip(randomValue);
+      return Paragraph.aggregate([
+        { $unwind: "$genre.quotes" },
+        { $skip: randomValue },
+        { $limit: 1 },
+      ]);
+    })
+    .then((quotes) => {
+      // console.log(quote);
+      const quote = quotes[0].genre.quotes;
+      const name = quote.text;
+      const fileName = name.split(" ").slice(0, 5).join("-").replace(",", "");
       // Upload file
       const file = bucket.file(`speech/${fileName}.mp3`);
 
@@ -49,7 +59,6 @@ exports.quickRaceTrack = (req, res) => {
           contentType: "audio/mpeg",
         },
       });
-
       fileStream.on("error", (err) => {
         console.error(err);
         res
@@ -62,16 +71,16 @@ exports.quickRaceTrack = (req, res) => {
         file
           .getSignedUrl({ action: "read", expires: "01-01-2025" })
           .then((url) => {
-            res.status(200).send({ content: content[random], url: url });
+            res.status(200).send({ content: quote, url: url });
           })
           .catch((err) => {
             res.status(500).send({ message: err.message });
           });
       });
-      gtts.stream(content[random].text).pipe(fileStream);
+      gtts.stream(quote.text).pipe(fileStream);
     })
-    .catch((error) => {
-      res.status(500).send({ message: error.message });
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
     });
 };
 
