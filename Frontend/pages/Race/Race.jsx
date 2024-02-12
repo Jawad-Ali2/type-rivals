@@ -23,8 +23,8 @@ export const Race = () => {
 
   //Reload/Update Components
   const update = useEffect(() => {
-    resetData();
-    resetPrepareTimer();
+    resetData()
+    resetPrepareTimer()
   }, [replay]);
   //Prepare Timer
   useEffect(() => {
@@ -45,6 +45,7 @@ export const Race = () => {
             paragraph={paragraph}
             startRace={prepareTime <= 0}
             raceDuration={60}
+            setReplay={setReplay}
           />
         </div>
       </div>
