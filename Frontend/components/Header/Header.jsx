@@ -140,7 +140,7 @@ export const Header = () => {
               <div className="profile-dropdown absolute transition-all duration-300 right-[-1.5rem] top-[4rem] w-[8rem] overflow-hidden h-[0rem] rounded-lg web-gradient shadow-md shadow-[#031221] z-[500]">
                 <ul className="profile-btns-list  px-2">
                   <li className="web-text cursor-pointer">Leaderboard</li>
-                  <li className="web-text cursor-pointer"><Link to={"/dashboard"}>Dashboard</Link></li>
+                  <li className="web-text cursor-pointer"><Link to={"/dashboard"}>Dashboard</Link>z</li>
                   <li className="web-text cursor-pointer">Settings</li>
                   <li
                     className="text-red-600 hover:text-red-700 !border-none cursor-pointer"
