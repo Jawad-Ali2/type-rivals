@@ -19,6 +19,7 @@ exports.getUserDashboard = (req, res) => {
   console.log(req.userId);
   User.findById({ _id: req.userId })
     .then((user) => {
+      console.log(user);
       res.status(200).send(user);
     })
     .catch((err) => {
@@ -39,7 +40,7 @@ exports.quickRaceTrack = (req, res) => {
     .then((result) => {
       const { quotesCount } = result[0];
       const randomValue = Math.floor(Math.random() * quotesCount);
-      // return Paragraph.findOne().skip(randomValue);
+
       return Paragraph.aggregate([
         { $unwind: "$genre.quotes" },
         { $skip: randomValue },
