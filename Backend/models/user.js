@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
+  profilePic: {
+    type: String,
+  },
   name: {
     type: String,
     required: true,
@@ -17,7 +20,6 @@ const userSchema = new Schema({
   },
   age: {
     type: Number,
-    required: true,
   },
   raceDetail: {
     wins: {

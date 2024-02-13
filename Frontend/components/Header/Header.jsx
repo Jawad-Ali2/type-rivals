@@ -10,6 +10,7 @@ import axios from "axios";
 
 export const Header = () => {
   const [username, setUsername] = useState("John Doe");
+  const [profilePic, setProfilePic] = useState(display_pic);
   const [offset, setOffset] = useState(0);
   const dropDownRef = useRef();
   const { isAuthenticated, token, csrfToken, logout } = useContext(AuthContext);
@@ -41,6 +42,7 @@ export const Header = () => {
         const data = await response.data;
         console.log(data);
         setUsername(data.name);
+        setProfilePic(data.profilePic);
       }
     }
     getUserDashboard();
@@ -132,7 +134,7 @@ export const Header = () => {
               className="profile-navigation hidden md:block relative min-w-[8rem]  h-[3rem]"
             >
               <div className="profile-pic-container w-[3rem] h-[3rem] web-background rounded-[200%] absolute top-0 right-[1rem] z-50">
-                <img src={display_pic} className="w-full h-full p-2" />
+                <img src={profilePic} className="w-full h-full p-2" />
               </div>
               <div className="name-container transition-all duration-300 max-w-[10rem] absolute truncate text-nowrap web-background text-white z-10 top-[0.6rem] right-[2rem] opacity-0 p-1 text-sm rounded-lg">
                 {username}

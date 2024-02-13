@@ -2,7 +2,6 @@ const { body } = require("express-validator");
 const User = require("../models/user");
 
 exports.signUpValidator = [
-  // body("username").isLength
   body("name").trim().not().isEmpty(),
   body("email")
     .isEmail()
@@ -24,5 +23,4 @@ exports.signUpValidator = [
     }
     return true;
   }),
-  body("age").isNumeric(),
 ];

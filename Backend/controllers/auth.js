@@ -1,36 +1,65 @@
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const admin = require("firebase-admin");
+const fs = require("fs");
 const { validationResult } = require("express-validator");
 
-exports.postSignUp = (req, res) => {
-  const username = req.body.name;
-  const email = req.body.email;
-  const password = req.body.password;
-  const age = req.body.age;
+exports.postSignUp = async (req, res) => {
+  const { name, email, password, confirmPassword } = req.body;
+  const profilePicture = req.file;
+
   // Handle picture submission
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({ message: errors.array() });
   }
-  console.log(username, email, password, age);
+
+  if (password != confirmPassword) throw new Error("Passwords do not match");
+
+  const bucket = admin.storage().bucket();
+
+  const storagePath = `userProfilePicture/${profilePicture.filename}`;
+
+  const file = bucket.file(storagePath);
+
+  const fileStream = file.createWriteStream({
+    metadata: {
+      contentType: profilePicture.mimeType,
+    },
+  });
+
+  fs.createReadStream(profilePicture.path).pipe(fileStream);
+
+  let downloadUrl;
+  await new Promise((resolve, reject) => {
+    fileStream.on("finish", async () => {
+      downloadUrl = await file.getSignedUrl({
+        action: "read",
+        expires: "01-01-2026",
+      });
+      resolve();
+    });
+    fileStream.on("error", reject);
+  });
+  fs.unlinkSync(profilePicture.path);
 
   bcrypt
     .hash(password, 12)
     .then((hashedPassword) => {
       const user = new User({
-        name: username,
+        profilePic: downloadUrl[0],
+        name: name,
         email: email,
         password: hashedPassword,
-        age: age,
         raceDetail: {
           wins: 0,
-          losses: 0,
+          loses: 0,
           avgSpeed: 0,
           maxSpeed: 0,
+          races: 0,
         },
       });
-
       return user.save();
     })
     .then(() => {
