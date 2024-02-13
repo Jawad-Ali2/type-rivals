@@ -7,6 +7,13 @@ export const Narrator = ()=>{
     const [prepareTime, prepareTimerOn, resetPrepareTimer, setPrepareTimerOn, getPrepareFormattedTime] = useCountDown(5)
     const [paragraph, audioLink, errors, resetData] = useFetch("http://localhost:8000/user/quick-race/")
     const [trackDuration, setTrackDuration] = useState(null)
+    const [replay, setReplay] = useState(false)
+
+    //Reload/Update Components
+    useEffect(()=>{
+        resetPrepareTimer()
+        resetData()
+    }, [replay])
     //Meta Data Handlings
     useEffect(()=>{
         const audio = new Audio(audioLink)
@@ -26,7 +33,7 @@ export const Narrator = ()=>{
     return <section className="narrator-section w-full max-w-[45rem]">
         <RaceLoader loading={!audioLink} time={prepareTime} errors={errors}>Fetching Audio...</RaceLoader>
         <div className="narrator-container w-full pt-[5rem]">
-            {trackDuration && <AudioMap paragraph={paragraph} audioLink = {audioLink} startRace = {prepareTime <=0} trackDuration = {trackDuration}/>}
+            {trackDuration && <AudioMap paragraph={paragraph} audioLink = {audioLink} startRace = {prepareTime <=0} trackDuration = {trackDuration} setReplay={setReplay}/>}
         </div>
     </section>
 }

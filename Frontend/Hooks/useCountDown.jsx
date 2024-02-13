@@ -25,6 +25,10 @@ export const useCountDown = (time_in_seconds)=>{
     const getFormmatedTime = (time)=>{
         let minutes = Math.floor(time / 60);
         let seconds =Math.round(time % 60);
+        if(minutes<0)
+            minutes = 0
+        if(seconds<0)
+            seconds = 0
         let formatted_time = `${minutes < 10? "0" :""}${minutes}:${seconds<10? "0":""}${seconds}`   
         return formatted_time
     }

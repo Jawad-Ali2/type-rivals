@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { TrackInput } from "../TrackInput/TrackInput";
 import { RaceStats } from "../RaceStats/RaceStats";
 import { useCountDown } from "../../Hooks";
-export const RaceMap = ({ paragraph, startRace, raceDuration }) => {
+export const RaceMap = ({ paragraph, startRace, raceDuration,setReplay }) => {
   const success = "text-green-600";
   const error = "text-red-500";
   const [input, setInput] = useState("");
@@ -21,13 +21,22 @@ export const RaceMap = ({ paragraph, startRace, raceDuration }) => {
 
   //Focuses on Input on Race Start
   useEffect(() => {
-    console.log(raceTimerOn);
+
     if (raceTimerOn) {
       const inp = document.querySelector(".track-input");
       inp.focus();
     }
   }, [raceTimerOn]);
 
+  //Resets Hooks on Replay
+  useEffect(()=>{
+    if(!paragraph){
+      setRaceFinished(prev=>false)
+      setInput(prev=>"")
+      setMask(prev=>"")
+      resetRaceTimer()
+    }
+  }, [paragraph])
   useEffect(() => {
     if (startRace) {
       setRaceTimerOn((prev) => true);
@@ -58,6 +67,7 @@ export const RaceMap = ({ paragraph, startRace, raceDuration }) => {
         paragraph={paragraph}
         time={raceDuration - raceTime}
         raceFinisihed={raceFinished}
+        setReplay={setReplay}
       />
       <p className="absolute font-semibold web-text right-0 top-[-1.4rem]">
         {getRaceFormattedTime(raceTime)}

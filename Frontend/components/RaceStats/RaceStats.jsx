@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { saveUserData } from "../../utils";
 import { AuthContext } from "../../context/AuthContext";
-export const RaceStats = ({ input, paragraph, time, raceFinisihed }) => {
+export const RaceStats = ({ input, paragraph, time, raceFinisihed, setReplay }) => {
   const [speed, setSpeed] = useState(0);
   const { token, csrfToken, userId } = useContext(AuthContext);
 
@@ -22,7 +22,6 @@ export const RaceStats = ({ input, paragraph, time, raceFinisihed }) => {
       setSpeed((prev) => wordsPerMinute);
     }
     if (raceFinisihed && speed) {
-      //Save Speed Here Bro
       saveUserData(speed, userId, token, csrfToken);
     }
   }, [raceFinisihed, speed]);
@@ -35,14 +34,14 @@ export const RaceStats = ({ input, paragraph, time, raceFinisihed }) => {
     >
       <div
         className={
-          "stats-container transition-all duration-300 fixed  flex flex-col items-center justify-between p-2 w-[20rem]  h-[20rem] rounded-xl bg-gradient-to-b from-blue-950 via-violet-950 to bg-indigo-950 shadow-md shadow-blue-violet-950 " +
+          "stats-container text-[#6088b0] transition-all shadow-md border-[10px] border-[#072642e7] duration-300 fixed  flex flex-col items-center justify-between p-2 w-[20rem]  h-[20rem] rounded-xl web-gradient " +
           (raceFinisihed ? "top-[13rem]" : "top-[-25rem]")
         }
       >
-        <p className="text-white text-2xl font-semibold w-full text-center">
+        <p className=" text-2xl font-semibold w-full text-center">
           Statistics
         </p>
-        <table className="w-[90%] text-white mx-auto ml-[3rem] h-[8rem]">
+        <table className="w-[90%] mx-auto ml-[3rem] h-[8rem]">
           <thead>
             <tr>
               <th className="w-[10rem]"></th>
@@ -64,7 +63,7 @@ export const RaceStats = ({ input, paragraph, time, raceFinisihed }) => {
             </tr>
           </tbody>
         </table>
-        <button className="web-button">Replay</button>
+        <button onClick={()=>{setReplay(prev=>!prev)}} className="web-foreground-overlay py-2 px-4 m-2 rounded-lg hover:scale-110 transition-transform duration-200">Replay</button>
       </div>
     </div>
   );

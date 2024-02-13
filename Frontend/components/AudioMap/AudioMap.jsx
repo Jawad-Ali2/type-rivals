@@ -11,6 +11,7 @@ export const AudioMap = ({
   audioLink,
   startRace,
   trackDuration,
+  setReplay
 }) => {
   const audioRef = useRef();
   const [input, setInput] = useState("");
@@ -38,20 +39,29 @@ export const AudioMap = ({
     }
     setIsPlaying((prev) => !prev);
   };
+  useEffect(()=>{
+  
+      resetRaceTimer()
+      setIsPlaying(prev=>false)
+      setRaceFinsihed(prev=>false)
+      setCurrentTime(prev=>0)
+      setInput(prev=>"")
+    
+  },[trackDuration, audioLink])
   useEffect(() => {
     if (startRace) {
-      setRaceTimerOn((prev) => true);
+      setRaceTimerOn((prev) => true)
     }
   }, [startRace]);
   useEffect(() => {
-    if (raceTime <= 0 && !raceTimerOn) {
-      setRaceFinsihed((prev) => true);
-      console.log("Finished");
+    if (raceTime <=0) {
+      setRaceFinsihed((prev) => true)
+      setRaceTimerOn(prev=>false)
     }
-  }, [raceTime, raceTimerOn]);
+  }, [raceTime]);
   useEffect(() => {
     if (raceFinsihed) {
-      setRaceTimerOn((prev) => false);
+      setRaceTimerOn((prev) => false)
     }
   }, [raceFinsihed]);
   const handleVolumeChange = useEffect(() => {
@@ -103,6 +113,7 @@ export const AudioMap = ({
         paragraph={paragraph}
         time={trackDuration - raceTime}
         raceFinisihed={raceFinsihed}
+        setReplay={setReplay}
       />
       <div className="timer absolute right-[3rem] top-[0rem] web-text text-md font-semibold">
         {getRaceFormattedTime(raceTime)}
