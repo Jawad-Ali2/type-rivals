@@ -28,17 +28,17 @@ export const RaceStats = ({ input, paragraph, time, raceFinisihed, setReplay }) 
   return (
     <div
       className={
-        "lock-screen transition-all duration-300 fixed w-full flex flex-col items-center justify-center left-0 top-[5rem]   h-full bg-black " +
+        "lock-screen transition-all duration-300 fixed w-full flex flex-col items-center justify-center left-0 top-[5rem]   h-full bg-skin-opaque " +
         (raceFinisihed ? "bg-opacity-40 z-[40]" : "bg-opacity-0 z-[-10]")
       }
     >
       <div
         className={
-          "stats-container text-[#6088b0] transition-all shadow-md border-[10px] border-[#072642e7] duration-300 fixed  flex flex-col items-center justify-between p-2 w-[20rem]  h-[20rem] rounded-xl web-gradient " +
+          "stats-container  rounded-sm text-skin-base transition-all shadow-md shadow-skin-base bg-skin-overlayBG  duration-300 fixed  flex flex-col items-center justify-between p-2 w-[20rem]  h-[20rem] " +
           (raceFinisihed ? "top-[13rem]" : "top-[-25rem]")
         }
       >
-        <p className=" text-2xl font-semibold w-full text-center">
+        <p className=" text-xl  w-full text-center">
           Statistics
         </p>
         <table className="w-[90%] mx-auto ml-[3rem] h-[8rem]">
@@ -63,7 +63,7 @@ export const RaceStats = ({ input, paragraph, time, raceFinisihed, setReplay }) 
             </tr>
           </tbody>
         </table>
-        <button onClick={()=>{setReplay(prev=>!prev)}} className="web-foreground-overlay py-2 px-4 m-2 rounded-lg hover:scale-110 transition-transform duration-200">Replay</button>
+        <button onClick={()=>{setReplay(prev=>!prev)}} className="text-skin-base shadow-md shadow-skin-base bg-skin-overlayBG  ui-button">Replay</button>
       </div>
     </div>
   );

@@ -12,3 +12,4 @@ export {Loader} from "./Loader/Loader";
 export {AudioMap} from "./AudioMap/AudioMap";
 export {TrackInput} from "./TrackInput/TrackInput";
 export {RaceStats} from "./RaceStats/RaceStats"
+export {ThemeSwitch} from "./ThemeSwitch/ThemeSwitch";

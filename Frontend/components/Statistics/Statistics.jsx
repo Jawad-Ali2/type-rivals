@@ -13,10 +13,10 @@ export const Statistics = ({ data }) => {
   return (
     <section className="statistics-section">
       <div className="statistics-container  w-full flex flex-col md:flex-row justify-center md:justify-between items-center">
-        <div className="dp-container h-[10rem] w-[10rem] md:w-[15rem] web-foreground">
+        <div className="dp-container h-[10rem] w-[10rem] md:w-[15rem] bg-skin-foreground">
           <img className="h-full" src={data.profilePic} />
         </div>
-        <div className="stats-container w-full min-w-[20rem] md:min-w-[28rem] h-[10rem] web-foreground mt-5 md:mt-0 md:ml-[2rem]  p-2">
+        <div className="stats-container w-full min-w-[20rem] md:min-w-[28rem] h-[10rem] bg-skin-foreground mt-5 md:mt-0 md:ml-[2rem]  p-2">
           <table>
             <tbody>
               <tr>

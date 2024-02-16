@@ -111,7 +111,7 @@ export const SignUp = ({ handleError }) => {
         />
       </div>
       <button
-        className="text-white p-2 web-foreground-overlay w-[5rem] rounded-lg mb-2"
+        className="text-white p-2 web-foreground-overlay "
         type="submit"
       >
         Register

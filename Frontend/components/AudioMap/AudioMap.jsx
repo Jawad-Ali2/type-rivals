@@ -118,7 +118,7 @@ export const AudioMap = ({
       <div className="timer absolute right-[3rem] top-[0rem] web-text text-md font-semibold">
         {getRaceFormattedTime(raceTime)}
       </div>
-      <div className="audio-box w-[90%] mx-auto max-w-[45rem] h-[10rem] rounded-xl web-foreground">
+      <div className="audio-box w-[90%] mx-auto max-w-[45rem] h-[10rem] rounded-xl bg-skin-foreground">
         <audio ref={audioRef} src={audioLink} type="audio/mp3"></audio>
         <div className="visual-audio flex flex-col rounded-l p-3 bg-blue-950 items-center justify-between h-full w-[50%] min-w-[20rem] float-left">
           <FadingDiv className="icon-flash">

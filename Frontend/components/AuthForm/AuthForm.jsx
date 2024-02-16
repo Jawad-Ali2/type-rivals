@@ -15,17 +15,17 @@ export const AuthForm = ({ signIn }) => {
   };
   return (
     <section className="authform-section">
-      <div className="authform-container w-[90%] mx-auto max-w-[25rem] h-[28rem]">
+      <div className="authform-container shadow-md shadow-skin-base bg-skin-overlayBG w-[90%] mx-auto max-w-[25rem] h-[28rem]">
         <div className="form-components w-full h-full flex flex-col justify-around items-center">
-            <div className="form-header web-gradient w-full text-center h-[3rem] ">
-              <p className="p-3 text-white text-lg">Sign {signingIn? "In": "Up"}</p>
+            <div className="form-header bg-skin-foreground w-full text-center h-[3rem] ">
+              <p className="p-3 text-skin-base text-lg">Sign {signingIn? "In": "Up"}</p>
             </div>
-            <div className="form-body web-foreground w-full h-[20rem]">
+            <div className="form-body bg-skin-foreground w-full h-[20rem]">
               {!signingIn &&<SignUp handleError={handleError}/>}
               {signingIn && <SignIn handleError={handleError}/>}
             </div>
-            <div className="form-footer web-gradient w-full h-[3rem] flex flex-row justify-between items-center px-2">
-                <button onClick={handleAuthSwitch} className=" text-white text-sm w-[10rem] text-left">
+            <div className="form-footer bg-skin-foreground w-full h-[3rem] flex flex-row justify-between items-center px-2">
+                <button onClick={handleAuthSwitch} className=" text-skin-base text-sm w-[10rem] text-left">
                     {signingIn? "Get Registered?":"Already Registered?"} 
                 </button>
                 <img src={website_logo} className="h-[3rem]"/>

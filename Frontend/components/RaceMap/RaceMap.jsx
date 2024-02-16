@@ -72,7 +72,7 @@ export const RaceMap = ({ paragraph, startRace, raceDuration,setReplay }) => {
       <p className="absolute font-semibold web-text right-0 top-[-1.4rem]">
         {getRaceFormattedTime(raceTime)}
       </p>
-      <div className="racemap w-full h-fit rounded web-foreground text-left web-text p-2 overflow-hidden">
+      <div className="racemap w-full h-fit rounded bg-skin-foreground text-left web-text p-2 overflow-hidden">
         {paragraph}
       </div>
       <div

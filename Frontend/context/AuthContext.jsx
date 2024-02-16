@@ -86,7 +86,7 @@ export function AuthProvider({ children }) {
         setIsAuthenticated(true);
 
         autoLogout(remainingMiliseconds);
-      },
+      }, 
       logout,
       autoLogout,
     }),

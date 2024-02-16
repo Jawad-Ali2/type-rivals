@@ -47,7 +47,7 @@ export const Dashboard = () => {
         <div className="rap-sheet w-full flex flex-col md:flex-row h-full items-center justify-center md:justify-between">
           <Statistics data={data} />
         </div>
-        <div className="profile-tools w-full mx-auto max-w-[20rem] md:max-w-full  h-[2rem] web-foreground pt-1 mt-2">
+        <div className="profile-tools w-full mx-auto max-w-[20rem] md:max-w-full  h-[2rem] bg-skin-foreground pt-1 mt-2">
           <ul className="w-full">
             {["Edit Profile", "Privacy & Security", "My Cars"].map(
               (user, i) => (
