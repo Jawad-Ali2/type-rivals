@@ -41,29 +41,29 @@ export const RaceStats = ({ input, paragraph, time, raceFinisihed, setReplay }) 
         <p className=" text-xl  w-full text-center">
           Statistics
         </p>
-        <table className="w-[90%] mx-auto ml-[3rem] h-[8rem]">
+        <table className="w-full h-full">
           <thead>
-            <tr>
-              <th className="w-[10rem]"></th>
-              <th className="w-[10rem]"></th>
+            <tr className="w-full">
+              <th className="float-left"></th>
+              <th className="float-right"></th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>Speed</td>
-              <td>{speed} WPM</td>
+          <tbody className="w-full h-full flex flex-col justify-around items-center">
+            <tr className="faded-border border-b-2 w-[10rem]">
+              <td className="float-left">Speed</td>
+              <td className="float-right">{speed} WPM</td>
             </tr>
-            <tr>
-              <td>Accuracy</td>
-              <td>100%</td>
+            <tr className="faded-border border-b-2 w-[10rem]">
+              <td className="float-left">Accuracy</td>
+              <td className="float-right">100%</td>
             </tr>
-            <tr>
-              <td>Time</td>
-              <td>hehe</td>
+            <tr className="faded-border border-b-2 w-[10rem]">
+              <td className="float-left">Time</td>
+              <td className="float-right">01:00</td>
             </tr>
           </tbody>
         </table>
-        <button onClick={()=>{setReplay(prev=>!prev)}} className="text-skin-base shadow-md shadow-skin-base bg-skin-overlayBG  ui-button">Replay</button>
+        <button onClick={()=>{setReplay(prev=>!prev)}} className="text-skin-base shadow-md shadow-skin-base bg-skin-button  ui-button">Replay</button>
       </div>
     </div>
   );

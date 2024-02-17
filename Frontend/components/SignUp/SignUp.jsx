@@ -66,7 +66,7 @@ export const SignUp = ({ handleError }) => {
       <div className="form-fields w-[90%] mx-auto">
         <div className="dp-input  w-full h-[5rem] flex flex-row justify-between items-center text-white my-2">
           <label
-            className="web-foreground-overlay cursor-pointer p-2"
+            className="bg-skin-overlayBG cursor-pointer p-2"
             htmlFor="profile-picture"
           >
             Select Profile Picture
@@ -86,32 +86,32 @@ export const SignUp = ({ handleError }) => {
           </div>
         </div>
         <input
-          className="web-input w-full faded-border border-b-2"
+          className="web-input bg-skin-foreground w-full faded-border border-b-2"
           autoComplete="off"
           placeholder="Alias"
           id="username"
         />
         <input
-          className="web-input w-full faded-border border-b-2"
+          className="web-input bg-skin-foreground w-full faded-border border-b-2"
           autoComplete="off"
           placeholder="Email"
           id="email"
         />
         <input
-          className="web-input w-full faded-border border-b-2"
+          className="web-input bg-skin-foreground w-full faded-border border-b-2"
           type="password"
           placeholder="Password"
           id="password"
         />
         <input
-          className="web-input w-full faded-border border-b-2"
+          className="web-input bg-skin-foreground w-full faded-border border-b-2"
           type="password"
           placeholder="Confirm Password"
           id="confirm-password"
         />
       </div>
       <button
-        className="text-white p-2 web-foreground-overlay "
+        className="text-skin-base shadow-md shadow-skin-base bg-skin-button  ui-button "
         type="submit"
       >
         Register

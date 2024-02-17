@@ -115,25 +115,25 @@ export const AudioMap = ({
         raceFinisihed={raceFinsihed}
         setReplay={setReplay}
       />
-      <div className="timer absolute right-[3rem] top-[0rem] web-text text-md font-semibold">
+      <div className="timer absolute right-[3rem] top-[0rem] text-skin-base text-md font-semibold">
         {getRaceFormattedTime(raceTime)}
       </div>
       <div className="audio-box w-[90%] mx-auto max-w-[45rem] h-[10rem] rounded-xl bg-skin-foreground">
         <audio ref={audioRef} src={audioLink} type="audio/mp3"></audio>
-        <div className="visual-audio flex flex-col rounded-l p-3 bg-blue-950 items-center justify-between h-full w-[50%] min-w-[20rem] float-left">
+        <div className="visual-audio flex flex-col rounded-l p-3 bg-skin-narrator items-center justify-between h-full w-[50%] min-w-[20rem] float-left">
           <FadingDiv className="icon-flash">
             <img
               src={narrator_icon}
               className="narrator-icon w-[100px] h-[100px]"
             />
           </FadingDiv>
-          <div className="duration-area relative">
-            <p className="web-icon text-sm absolute left-[-2.6rem] top-[6px]">
+          <div className="duration-area relative text-skin-invert">
+            <p className="text-sm absolute left-[-2.6rem] top-[6px]">
               {audioRef?.current
                 ? getRaceFormattedTime(audioRef.current.currentTime)
                 : 0}
             </p>
-            <p className="web-icon text-sm absolute right-[-2.6rem] top-[6px]">
+            <p className="text-sm absolute right-[-2.6rem] top-[6px]">
               {audioRef?.current
                 ? getRaceFormattedTime(audioRef.current.duration)
                 : 0}
@@ -149,20 +149,20 @@ export const AudioMap = ({
             />
           </div>
         </div>
-        <div className="playback-controls flex flex-col items-center justify-between p-3 h-full w-[50%] float-right">
+        <div className="playback-controls flex flex-col items-center justify-between bg-skin-bar p-3 h-full w-[50%] float-right">
           <button
             onClick={ToggleAudio}
             id="playback-control"
             className={
-              "fa-solid mt-[3rem] fa-2xl audio-btn " +
+              "fa-solid mt-[3rem] fa-2xl audio-btn text-skin-narrator " +
               (isPlaying ? "fa-pause" : "fa-play")
             }
           ></button>
           <div className="volume-area relative">
-            <i className="absolute web-icon fa-solid fa-volume-high left-[-2rem] top-[8px]"></i>
+            <i className="absolute text-skin-narrator fa-solid fa-volume-high left-[-2rem] top-[8px]"></i>
             <input
               id="volume-control"
-              className="w-[10rem]"
+              className="w-[10rem] invert-input"
               type="range"
               min={0}
               max={100}

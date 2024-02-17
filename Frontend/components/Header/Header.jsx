@@ -96,7 +96,7 @@ export const Header = () => {
   }
 
   return (
-    <section className="header-section">
+    <section className="header-section faded-border border-b-2">
       <div className="header-container fixed w-full h-[5rem] bg-skin-overlayBG z-[500] ">
         <div className="header-contents h-full w-[95%] m-auto flex flex-row justify-between items-center">
           <div className="logo-container h-full">
@@ -116,11 +116,11 @@ export const Header = () => {
               icon={cilMenu}
             />
           </div>
-          <div className="header-nav flex-row w-auto justify-between items-center hidden md:flex">
-            <ul className="nav-list  text-md  hidden md:inline-block">
+          <div className="header-nav flex-row  justify-between items-center w-[23rem] hidden md:flex">
+            <ul className="nav-list  text-md  hidden md:inline-block ">
               {headerBtns.map(([el, link], i) => (
                 <NavLink key={i} to={link} end>
-                  <li className="w-fit text-skin-base  cursor-pointer inline h-[2rem] transition-all duration-200 py-2 m-2">
+                  <li className="w-fit text-skin-base cursor-pointer inline h-[2rem] transition-all duration-200 py-2 m-2">
                     {el}
                   </li>
                 </NavLink>
@@ -133,17 +133,17 @@ export const Header = () => {
               onMouseLeave={handleMouseLeave}
               className="profile-navigation hidden md:block relative min-w-[8rem]  h-[3rem]"
             >
-              <div className="profile-pic-container w-[3rem] h-[3rem] web-background rounded-[200%] absolute top-0 right-[1rem] z-50">
+              <div className="profile-pic-container w-[3rem] h-[3rem]  rounded-[200%] absolute top-0 right-[1rem] z-50">
                 <img src={profilePic} className="w-full h-full p-[3px] rounded-[200%]" />
               </div>
-              <div className="name-container transition-all duration-300 max-w-[10rem] absolute truncate text-nowrap web-background text-white z-10 top-[0.6rem] right-[2rem] opacity-0 p-1 text-sm rounded-lg">
+              <div className="name-container transition-all duration-300 max-w-[10rem] absolute truncate text-nowrap text-skin-base bg-skin-bar z-10 top-[0.6rem] right-[2rem] opacity-0 p-1 text-sm rounded-lg">
                 {username}
               </div>
-              <div className="profile-dropdown absolute transition-all duration-300 right-[-1.5rem] top-[4rem] w-[8rem] overflow-hidden h-[0rem] rounded-lg web-gradient shadow-md shadow-[#031221] z-[500]">
+              <div className="profile-dropdown absolute transition-all duration-300 right-[-1.5rem] top-[4rem] w-[8rem] overflow-hidden h-[0rem] rounded-lg bg-skin-overlayBG shadow-md shadow-skin-base z-[500]">
                 <ul className="profile-btns-list  px-2">
-                  <li className="text-skin-base cursor-pointer">Leaderboard</li>
-                  <li className="text-skin-base cursor-pointer"><Link to={"/dashboard"}>Dashboard</Link></li>
-                  <li className="text-skin-base cursor-pointer">Settings</li>
+                  <li className="text-skin-base cursor-pointer hover:bg-skin-bar rounded-sm">Leaderboard</li>
+                  <li className="text-skin-base cursor-pointer hover:bg-skin-bar rounded-sm"><Link to={"/dashboard"}>Dashboard</Link></li>
+                  <li className="text-skin-base cursor-pointer hover:bg-skin-bar rounded-sm">Settings</li>
                   <li
                     className="text-red-600 hover:text-red-700 !border-none cursor-pointer"
                     onClick={handleLogout}
@@ -161,8 +161,8 @@ export const Header = () => {
             </Link>
           )}
         </div>
-        <div className="sub-header w-full hidden md:block h-[2rem] web-background">
-          <ul className="subheader-nav  w-full flex flex-row justify-center items-center mx-auto text-sm ">
+        <div className="sub-header w-full hidden md:block h-[2rem] ">
+          <ul className="subheader-nav shadow-md shadow-skin-base bg-skin-bar  w-full flex flex-row justify-center items-center mx-auto text-sm ">
             {subHeaderButtons.map(([el, link], i) => (
               <Link className="my-2" to={link} key={i}>
                 <li className="w-fit inline cursor-pointer transition-all duration-200 md:mx-2 lg:mx-4 xl:mx-6 text-skin-base">

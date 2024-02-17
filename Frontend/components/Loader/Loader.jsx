@@ -3,6 +3,12 @@ import { useContext } from "react"
 import { ThemeContext } from "../../context/ThemeContext"
 export const Loader = ({loading})=>{
     const {theme} = useContext(ThemeContext)
-    const color = theme==="light"? "dodgerblue":"white";
-    return <PulseLoader loading={loading}  color={color}/>
+    const getColor = ()=>{
+        if(theme==="light")
+            return "#000";
+        else if(theme==="dark")
+            return "#0d2844";
+        return "white";
+    }
+    return <PulseLoader loading={loading}  color={getColor()}/>
 }

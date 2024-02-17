@@ -15,15 +15,18 @@ export default {
           body: 'var(--body-color)',
           foreground : 'var(--foreground-color)',
           button: 'var(--button-color)',
-          opaque : 'var(--opaque-color)'
+          opaque : 'var(--opaque-color)',
+          bar: 'var(--bar-color)',
+          narrator: 'var(--narrator-color)',
         }
       },
       colors:{
         skin:{
           icon: 'var(--icon-color)',
           base: 'var(--text-color)',
-          hover : 'var(--hover-text-color)'
-          
+          hover : 'var(--hover-text-color)',
+          narrator: 'var(--narrator-color)',
+          invert: 'var(--invert-text-color)',
         }
       },
       boxShadowColor:{

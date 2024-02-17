@@ -6,7 +6,7 @@ export const ThemeContextProvider = ({children})=>{
     const [theme, setTheme] = useState(()=>{
         const currTheme = localStorage.getItem(THEME_KEY);
         if(currTheme)
-            return currTheme.toString();
+            return currTheme;
         return "light"
     })
     console.log("ACTIVE_THEME: "+theme);
@@ -21,6 +21,6 @@ export const ThemeContextProvider = ({children})=>{
          theme: theme,
          changeTheme: changeTheme 
         }
-    },[theme, setTheme])
-    return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+    },[theme])
+    return <ThemeContext.Provider value={{theme, changeTheme}}>{children}</ThemeContext.Provider>
 }

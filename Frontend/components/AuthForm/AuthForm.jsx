@@ -15,7 +15,7 @@ export const AuthForm = ({ signIn }) => {
   };
   return (
     <section className="authform-section">
-      <div className="authform-container shadow-md shadow-skin-base bg-skin-overlayBG w-[90%] mx-auto max-w-[25rem] h-[28rem]">
+      <div className="authform-container shadow-md shadow-skin-base bg-skin-foreground w-[90%] mx-auto max-w-[25rem] h-[28rem]">
         <div className="form-components w-full h-full flex flex-col justify-around items-center">
             <div className="form-header bg-skin-foreground w-full text-center h-[3rem] ">
               <p className="p-3 text-skin-base text-lg">Sign {signingIn? "In": "Up"}</p>

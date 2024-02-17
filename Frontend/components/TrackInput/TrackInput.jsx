@@ -15,6 +15,6 @@ export const TrackInput = ({paragraph,input,setInput, setCorrect, raceFinished, 
             setCorrect(prev=>false)
         }
     }
-    return <input disabled={raceFinished} value={input} onChange={handleInputChange} placeholder="Type Here..." className="track-input pr-6 web-body border-b-2 border-blue-950 outline-none web-text w-full"/>
+    return <input disabled={raceFinished} value={input} onChange={handleInputChange} placeholder="Type Here..." className="track-input pr-6 web-body border-b-2 border-skin-base outline-none web-text w-full"/>
 
 }

@@ -40,20 +40,20 @@ export const SignIn = ({ handleError }) => {
 
       <div className="form-fields w-[90%] mx-auto h-full p-2 ">
         <input
-          className="web-input text-skin-base w-full faded-border border-b-2"
+          className="web-input text-skin-base bg-skin-foreground w-full faded-border border-b-2"
           name="email"
           placeholder="Email"
           autoComplete="off"
         />
         <input
-          className="web-input text-skin-base w-full faded-border border-b-2 mt-5"
+          className="web-input text-skin-base bg-skin-foreground w-full faded-border border-b-2 mt-5"
           name="password"
           placeholder="Password"
           type="password"
         />
       </div>
       <button
-        className="text-skin-base shadow-md shadow-skin-base bg-skin-overlayBG  ui-button"
+        className="text-skin-base shadow-md shadow-skin-base bg-skin-button  ui-button"
         type="submit"
       >
         Submit
