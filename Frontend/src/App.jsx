@@ -1,16 +1,21 @@
 import "./App.css";
-import { Header, Hero, ThemeSwitch } from "../components";
+import { Header, ThemeSwitch } from "../components";
 import { ThemeContext } from "../context/ThemeContext";
-import { useContext,useState, useEffect } from "react";
+import { useContext } from "react";
+import { Outlet } from "react-router-dom";
 function App() {
-  const {theme} = useContext(ThemeContext)
-  
+  const { theme } = useContext(ThemeContext);
+
   const dynamicClass = `${theme} bg-skin-body w-full h-screen pb-[5rem]`;
   return (
     <div className={dynamicClass}>
       <Header />
-      <ThemeSwitch/>
-      <Hero />
+      <ThemeSwitch />
+      <section className="hero-section">
+        <div className="hero-container  min-w-full w-full flex flex-column justify-center pt-[5rem] md:pt-[5rem]">
+          <Outlet />
+        </div>
+      </section>
     </div>
   );
 }

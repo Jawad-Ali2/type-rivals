@@ -1,14 +1,41 @@
-import { Routes, Route } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import { Home, Dashboard, Landing, Race, Auth, Narrator } from "../pages";
-export const AllRoutes = () => {
-  return (
-    <Routes>
-      <Route path="" element={<Landing />} />
-      <Route path="/home" element={<Home />}></Route>
-      <Route path="/dashboard" element={<Dashboard />}></Route>
-      <Route path="/race" element={<Race />} />
-      <Route path="/auth" element={<Auth />} />
-      <Route path="/narrator" element={<Narrator/>}/>
-    </Routes>
-  );
-};
+import { RootLayout } from "../src/main";
+import axios from "axios";
+import { raceLoader } from "../pages/Race/Race";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootLayout />,
+    children: [
+      {
+        index: true,
+        element: <Landing />,
+      },
+      {
+        path: "home",
+        element: <Home />,
+      },
+      {
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "race",
+        element: <Race />,
+        // loader: raceLoader,
+      },
+      {
+        path: "auth",
+        element: <Auth />,
+      },
+      {
+        path: "narrator",
+        element: <Narrator />,
+      },
+    ],
+  },
+]);
+
+export default router;

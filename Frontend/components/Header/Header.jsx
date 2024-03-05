@@ -50,7 +50,7 @@ export const Header = () => {
     return () => {
       controller.abort();
     };
-  }, [username, token]);
+  }, [isAuthenticated]);
 
   const handleDropDown = () => {
     if (dropDownRef.current.classList.contains("left-0")) {
@@ -134,16 +134,25 @@ export const Header = () => {
               className="profile-navigation hidden md:block relative min-w-[8rem]  h-[3rem]"
             >
               <div className="profile-pic-container w-[3rem] h-[3rem]  rounded-[200%] absolute top-0 right-[1rem] z-50">
-                <img src={profilePic} className="w-full h-full p-[3px] rounded-[200%]" />
+                <img
+                  src={profilePic}
+                  className="w-full h-full p-[3px] rounded-[200%]"
+                />
               </div>
               <div className="name-container transition-all duration-300 max-w-[10rem] absolute truncate text-nowrap text-skin-base bg-skin-bar z-10 top-[0.6rem] right-[2rem] opacity-0 p-1 text-sm rounded-lg">
                 {username}
               </div>
               <div className="profile-dropdown absolute transition-all duration-300 right-[-1.5rem] top-[4rem] w-[8rem] overflow-hidden h-[0rem] rounded-lg bg-skin-overlayBG shadow-md shadow-skin-base z-[500]">
                 <ul className="profile-btns-list  px-2">
-                  <li className="text-skin-base cursor-pointer hover:bg-skin-bar rounded-sm">Leaderboard</li>
-                  <li className="text-skin-base cursor-pointer hover:bg-skin-bar rounded-sm"><Link to={"/dashboard"}>Dashboard</Link></li>
-                  <li className="text-skin-base cursor-pointer hover:bg-skin-bar rounded-sm">Settings</li>
+                  <li className="text-skin-base cursor-pointer hover:bg-skin-bar rounded-sm">
+                    Leaderboard
+                  </li>
+                  <li className="text-skin-base cursor-pointer hover:bg-skin-bar rounded-sm">
+                    <Link to={"/dashboard"}>Dashboard</Link>
+                  </li>
+                  <li className="text-skin-base cursor-pointer hover:bg-skin-bar rounded-sm">
+                    Settings
+                  </li>
                   <li
                     className="text-red-600 hover:text-red-700 !border-none cursor-pointer"
                     onClick={handleLogout}

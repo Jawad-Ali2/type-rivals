@@ -74,13 +74,13 @@ exports.postLogin = (req, res) => {
   console.log(req.body);
   const email = req.body.email;
   const password = req.body.password;
-  console.log(email, password);
   let loggedUser;
   User.findOne({ email: email })
     .then((user) => {
       if (!user) {
-        res.status(401).json({ message: "User not found" });
+        return Promise.reject({ status: 404, message: "User not found" });
       }
+      console.log("here");
       loggedUser = user;
       return bcrypt.compare(password, user.password);
     })
@@ -104,7 +104,8 @@ exports.postLogin = (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      const statusCode = err.status || 500;
+      res.status(statusCode).send({ message: err.message });
     });
 };
 

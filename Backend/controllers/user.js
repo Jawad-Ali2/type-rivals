@@ -1,13 +1,13 @@
 const User = require("../models/user");
 const gtts = require("node-gtts")("en-us");
 const path = require("path");
-// const { getStorage } = require("firebase/storage");
 const admin = require("firebase-admin");
 const serviceAccount = require("../config/serviceAccountKey.json");
 
 const { webScrape } = require("../utils/scrape");
 const config = require("../config/firebase.config");
 const Paragraph = require("../models/paragraphs");
+const io = require("../socket");
 
 // Initialize firebase config
 admin.initializeApp({
@@ -19,7 +19,6 @@ exports.getUserDashboard = (req, res) => {
   console.log(req.userId);
   User.findById({ _id: req.userId })
     .then((user) => {
-      console.log(user);
       res.status(200).send(user);
     })
     .catch((err) => {
