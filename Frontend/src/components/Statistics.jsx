@@ -1,5 +1,5 @@
 import default_dp from "/src/assets/Default_dp.png";
-export const Statistics = ({ data }) => {
+const Statistics = ({ data }) => {
   const statistics = Object.entries({
     Name: data.name,
     Email: data.email,
@@ -36,3 +36,4 @@ export const Statistics = ({ data }) => {
     </section>
   );
 };
+export default Statistics;

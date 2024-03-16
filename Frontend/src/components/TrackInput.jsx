@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-export const TrackInput = ({paragraph,input,setInput, setCorrect, raceFinished, setRaceFinished})=>{
+const TrackInput = ({paragraph,input,setInput, setCorrect, raceFinished, setRaceFinished})=>{
     
     const handleInputChange = (e)=>{
         const typedInput = e.target.value;
@@ -18,3 +18,4 @@ export const TrackInput = ({paragraph,input,setInput, setCorrect, raceFinished, 
     return <input disabled={raceFinished} value={input} onChange={handleInputChange} placeholder="Type Here..." className="track-input pr-6 web-body border-b-2 border-skin-base outline-none web-text w-full"/>
 
 }
+export default TrackInput;

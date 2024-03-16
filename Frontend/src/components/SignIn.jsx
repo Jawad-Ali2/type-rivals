@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-export const SignIn = ({ handleError }) => {
+const SignIn = ({ handleError }) => {
   document.title = "Sign In | Type Rivals"; 
   const { login, token, csrfToken } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -61,3 +61,4 @@ export const SignIn = ({ handleError }) => {
     </form>
   );
 };
+export default SignIn;

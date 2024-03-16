@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { saveUserData } from "../../utils";
 import { AuthContext } from "../../context/AuthContext";
-export const RaceStats = ({ input, paragraph, time, raceFinisihed, setReplay }) => {
+const RaceStats = ({ input, paragraph, time, raceFinisihed, setReplay }) => {
   const [speed, setSpeed] = useState(0);
   const { token, csrfToken, userId } = useContext(AuthContext);
 
@@ -68,3 +68,4 @@ export const RaceStats = ({ input, paragraph, time, raceFinisihed, setReplay }) 
     </div>
   );
 };
+export default RaceStats;

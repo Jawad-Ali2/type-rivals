@@ -8,7 +8,7 @@ import { NavLink, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 
-export const Header = () => {
+const Header = () => {
   const [username, setUsername] = useState("John Doe");
   const [profilePic, setProfilePic] = useState(display_pic);
   const [offset, setOffset] = useState(0);
@@ -214,3 +214,4 @@ export const Header = () => {
     </section>
   );
 };
+export default Header;

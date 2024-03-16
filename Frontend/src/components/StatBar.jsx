@@ -1,4 +1,4 @@
-export const StatBar = ({date_or_rank, title, speed})=>{
+const StatBar = ({date_or_rank, title, speed})=>{
 
     return <div className="stat-bar">
         <div className="stat-container w-[18rem] h-[3rem] bg-skin-overlayBG shadow-skin-base shadow-md pl-2 flex flex-row items-center justify-between">
@@ -10,3 +10,4 @@ export const StatBar = ({date_or_rank, title, speed})=>{
         </div>
     </div>
 }
+export default StatBar;

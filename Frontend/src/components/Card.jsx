@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-export const Card = ({title,body,link, button_text})=>{
+const Card = ({title,body,link, button_text})=>{
     const navigate = useNavigate()
     
     const handleClick = (e)=>{
@@ -20,3 +20,4 @@ export const Card = ({title,body,link, button_text})=>{
         </div>
     </div>
 }
+export default Card;

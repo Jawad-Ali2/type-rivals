@@ -2,7 +2,7 @@ import { useState } from "react";
 import { SignIn } from "../SignIn/SignIn";
 import { SignUp } from "../SignUp/SignUp";
 import website_logo from "/src/assets/website_logo.png"
-export const AuthForm = ({ signIn }) => {
+const AuthForm = ({ signIn }) => {
   const [signingIn, setSigningIn] = useState(signIn);
   const [errors, setErrors] = useState(null);
   const handleError = () => {};
@@ -35,3 +35,4 @@ export const AuthForm = ({ signIn }) => {
     </section>
   );
 };
+export default AuthForm;

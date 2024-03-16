@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { TrackInput } from "../TrackInput/TrackInput";
 import { RaceStats } from "../RaceStats/RaceStats";
 import { useCountDown } from "../../Hooks";
-export const RaceMap = ({ paragraph, startRace, raceDuration,setReplay }) => {
+const RaceMap = ({ paragraph, startRace, raceDuration,setReplay }) => {
   const success = "text-green-600";
   const error = "text-red-500";
   const [input, setInput] = useState("");
@@ -96,3 +96,4 @@ export const RaceMap = ({ paragraph, startRace, raceDuration,setReplay }) => {
     </section>
   );
 };
+export default RaceMap;

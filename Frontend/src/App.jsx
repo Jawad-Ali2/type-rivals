@@ -1,8 +1,19 @@
 import "./App.css";
+<<<<<<< Updated upstream
 import { Header, ThemeSwitch } from "../components";
 import { ThemeContext } from "../context/ThemeContext";
 import { useContext } from "react";
 import { Outlet } from "react-router-dom";
+=======
+
+import Header from "@/components/Header";
+import Hero from "@/components/Hero";
+import ThemeSwitch from "@/components/ThemeSwitch";
+
+import { ThemeContext } from "../context/ThemeContext";
+import { useContext} from "react";
+
+>>>>>>> Stashed changes
 function App() {
   const { theme } = useContext(ThemeContext);
 

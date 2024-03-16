@@ -1,7 +1,7 @@
 import { Loader } from "../Loader/Loader";
 import broken_link from "/src/assets/broken_link.png";
 
-export const RaceLoader = ({ children, loading, errors, time }) => {
+const RaceLoader = ({ children, loading, errors, time }) => {
   const dynamicClass = `race-loader-container text-skin-base bg-skin-opaque  flex flex-col justify-center items-center w-full z-[100] h-screen  bg-opacity-50 top[5rem] left-0 ${
     time <= 0 ? "hidden" : "fixed"
   }`;
@@ -27,3 +27,4 @@ export const RaceLoader = ({ children, loading, errors, time }) => {
     </div>
   );
 };
+export default RaceLoader;

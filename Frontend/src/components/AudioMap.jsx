@@ -6,7 +6,7 @@ import { useCountDown } from "../../Hooks";
 import { TrackInput } from "../TrackInput/TrackInput";
 import { RaceStats } from "../RaceStats/RaceStats";
 const VOLUME_KEY = "volume@typerivals";
-export const AudioMap = ({
+const AudioMap = ({
   paragraph,
   audioLink,
   startRace,
@@ -193,3 +193,4 @@ export const AudioMap = ({
     </div>
   );
 };
+export default AudioMap;

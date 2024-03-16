@@ -1,7 +1,7 @@
 import PulseLoader from "react-spinners/PulseLoader"
 import { useContext } from "react"
 import { ThemeContext } from "../../context/ThemeContext"
-export const Loader = ({loading})=>{
+const Loader = ({loading})=>{
     const {theme} = useContext(ThemeContext)
     const getColor = ()=>{
         if(theme==="light")
@@ -12,3 +12,4 @@ export const Loader = ({loading})=>{
     }
     return <PulseLoader loading={loading}  color={getColor()}/>
 }
+export default Loader;

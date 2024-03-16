@@ -1,6 +1,6 @@
 import { ThemeContext } from "../../context/ThemeContext"
 import { useContext, useState } from "react";
-export const ThemeSwitch = ()=>{
+const ThemeSwitch = ()=>{
     const {theme, changeTheme} = useContext(ThemeContext)
 
     const handleOnFocusEnter = ()=>{
@@ -38,3 +38,4 @@ export const ThemeSwitch = ()=>{
         <button className="theme-switch text-skin-base shadow-md  !w-full shadow-skin-base bg-skin-button  ui-button capitalize">Theme</button>
     </div>)
 }
+export default ThemeSwitch;

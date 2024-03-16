@@ -4,7 +4,7 @@ import default_dp from "/src/assets/Default_dp.png";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 
-export const SignUp = ({ handleError }) => {
+const SignUp = ({ handleError }) => {
   document.title = "Sign Up | Type Rivals";
   const [preview, setPreview] = useState(default_dp);
   const { csrfToken } = useContext(AuthContext);
@@ -119,3 +119,4 @@ export const SignUp = ({ handleError }) => {
     </form>
   );
 };
+export default SignUp;
