@@ -1,5 +1,6 @@
-import { StatBar } from "../../components";
-export const Home = () => {
+import  StatBar  from "@/components/StatBar";
+import { Button } from "@/components/ui/button";
+const Home = () => {
   document.title = "Home | Type Rivals";
   const top_racers = [
     { date_or_rank: "01", title: "Zaid Bin Zaheer", speed: 529 },
@@ -45,3 +46,4 @@ export const Home = () => {
     </section>
   );
 };
+export default Home;

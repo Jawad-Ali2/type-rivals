@@ -1,7 +1,7 @@
 import website_logo from "/src/assets/website_logo.png";
 import display_pic from "/src/assets/Default_dp.png";
 import CIcon from "@coreui/icons-react";
-import "./Header.css";
+import "@/styles/Header.css";
 import { cilMenu } from "@coreui/icons";
 import { useContext, useEffect, useRef, useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";

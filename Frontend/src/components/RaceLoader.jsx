@@ -1,4 +1,4 @@
-import { Loader } from "../Loader/Loader";
+import  Loader  from "./Loader";
 import broken_link from "/src/assets/broken_link.png";
 
 const RaceLoader = ({ children, loading, errors, time }) => {

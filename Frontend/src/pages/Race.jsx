@@ -1,13 +1,13 @@
-import { RaceMap } from "../../components";
+import  RaceMap  from "@/components/RaceMap";
+import  RaceLoader from "@/components/RaceLoader";
 import { useCountDown, useFetch } from "../../Hooks";
 import { useContext, useEffect, useRef, useState } from "react";
-import { RaceLoader } from "../../components";
 
 import createConnection from "../../utils/socket";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 
-export const Race = () => {
+const Race = () => {
   document.title = "Race | Type Rivals";
   const [
     prepareTime,
@@ -82,22 +82,5 @@ export const Race = () => {
   );
 };
 
-export const raceLoader = async () => {
-  const token = JSON.parse(localStorage.getItem("token"));
-  const url = "http://localhost:8000/user/quick-race";
-  const controller = new AbortController();
-  const signal = controller.signal;
-  const options = {
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-    signal,
-  };
 
-  const response = await axios.get(url, options);
-  let data;
-  if (response.status === 200) {
-    data = await response.data;
-  }
-  return { data };
-};
+export default Race;

@@ -1,8 +1,8 @@
-import { AudioMap } from "../../components"
+import  AudioMap  from "@/components/AudioMap"
+import  RaceLoader  from "@/components/RaceLoader"
 import { useFetch, useCountDown } from "../../Hooks"
-import { RaceLoader } from "../../components"
 import { useEffect, useState } from "react"
-export const Narrator = ()=>{
+const Narrator = ()=>{
     document.title = "Narrator | Type Rivals"
     const [prepareTime, prepareTimerOn, resetPrepareTimer, setPrepareTimerOn, getPrepareFormattedTime] = useCountDown(5)
     const [paragraph, audioLink, errors, resetData] = useFetch("http://localhost:8000/user/quick-race/")
@@ -37,3 +37,4 @@ export const Narrator = ()=>{
         </div>
     </section>
 }
+export default Narrator;

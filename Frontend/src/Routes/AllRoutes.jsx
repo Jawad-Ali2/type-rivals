@@ -1,8 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Home, Dashboard, Landing, Race, Auth, Narrator } from "../pages";
-import { RootLayout } from "../src/main";
+
+import Home from "@/pages/Home";
+import Dashboard from "@/pages/Dashboard";
+import Landing from "@/pages/Landing";
+import Race from "@/pages/Race";
+import Auth from "@/pages/Auth";
+import Narrator from "@/pages/Narrator";
+import { RootLayout } from "@/main";
 import axios from "axios";
-import { raceLoader } from "../pages/Race/Race";
+
 
 const router = createBrowserRouter([
   {

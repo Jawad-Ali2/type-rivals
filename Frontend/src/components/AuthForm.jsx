@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { SignIn } from "../SignIn/SignIn";
-import { SignUp } from "../SignUp/SignUp";
+import  SignIn  from "./SignIn";
+import  SignUp  from "./SignUp";
 import website_logo from "/src/assets/website_logo.png"
 const AuthForm = ({ signIn }) => {
   const [signingIn, setSigningIn] = useState(signIn);

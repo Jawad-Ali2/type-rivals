@@ -1,7 +1,7 @@
-import "./RaceMap.css";
-import { useState, useEffect, useContext } from "react";
-import { TrackInput } from "../TrackInput/TrackInput";
-import { RaceStats } from "../RaceStats/RaceStats";
+import "@/styles/RaceMap.css";
+import { useState, useEffect} from "react";
+import  TrackInput  from "@/components/TrackInput";
+import  RaceStats  from "@/components/RaceStats";
 import { useCountDown } from "../../Hooks";
 const RaceMap = ({ paragraph, startRace, raceDuration,setReplay }) => {
   const success = "text-green-600";

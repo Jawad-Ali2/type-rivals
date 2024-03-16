@@ -81,7 +81,7 @@ mongoose
         if (waitingPlayers.length >= 2) {
           const playersToStart = waitingPlayers.splice(0, 2);
           // * Generate session id
-          const sessionName = `session-${crypto.randomUUID().toString()}`;
+          //const sessionName = `session-${crypto.randomUUID().toString()}`;
 
           // * Send session join request to each selected player
           playersToStart.forEach((player) => {

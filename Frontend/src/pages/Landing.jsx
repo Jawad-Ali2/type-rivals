@@ -1,5 +1,5 @@
-import { Card } from "../../components"
-export const Landing = ()=>{
+import  Card  from "@/components/Card";
+const Landing = ()=>{
     document.title="Type Rivals"
     const Card1 = {
         title:"Improve Speed",
@@ -30,3 +30,4 @@ export const Landing = ()=>{
         </div>
     </section>
 }
+export default Landing;

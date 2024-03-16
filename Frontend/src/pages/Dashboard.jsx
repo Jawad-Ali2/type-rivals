@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { Statistics } from "../../components";
+import  Statistics  from "@/components/Statistics";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
-export const Dashboard = () => {
+const Dashboard = () => {
   document.title = "Dashboard | Type Rivals";
   const [data, setData] = useState({});
   const { token } = useContext(AuthContext);
@@ -65,3 +65,4 @@ export const Dashboard = () => {
     </section>
   );
 };
+export default Dashboard;

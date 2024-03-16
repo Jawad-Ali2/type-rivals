@@ -1,10 +1,10 @@
 import { useRef, useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
-import "./AudioMap.css";
+import "@/styles/AudioMap.css";
 import narrator_icon from "/src/assets/speaker.png";
 import { useCountDown } from "../../Hooks";
-import { TrackInput } from "../TrackInput/TrackInput";
-import { RaceStats } from "../RaceStats/RaceStats";
+import  TrackInput  from "@/components/TrackInput";
+import  RaceStats  from "@/components/RaceStats";
 const VOLUME_KEY = "volume@typerivals";
 const AudioMap = ({
   paragraph,
