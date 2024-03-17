@@ -17,49 +17,65 @@ const Race = () => {
     getPrepareFormattedTime,
   ] = useCountDown(5);
   const [replay, setReplay] = useState(false);
-  // const [paragraph, setParagraph] = useState("");
+  const [paragraph, setParagraph] = useState("");
   const { userId, token } = useContext(AuthContext);
-  const [startRace, setStartRace] = useState(false);
+  const [socketConnected, setSocketConnected] = useState(false);
   // const [currentSession, setCurrentSession] = useState(null);
   const currentSessionRef = useRef(null);
-  const [paragraph, audioLink, errors, resetData] = useFetch(
-    "http://localhost:8000/user/quick-race"
-  );
+  // const [paragraph, audioLink, errors, resetData] = useFetch(
+  //   "http://localhost:8000/user/quick-race"
+  // );
 
   //Reload/Update Components
-  useEffect(() => {
-    if (paragraph != "") resetData();
-    currentSessionRef.current = null;
-    resetPrepareTimer();
-  }, [replay]);
+  // useEffect(() => {
+  //   if (paragraph != "") resetData();
+  //   currentSessionRef.current = null;
+  //   resetPrepareTimer();
+  // }, [replay]);
 
   //Prepare Timer
   useEffect(() => {
-    //* When the paragraph first arrives
-    if (paragraph) {
-      const socket = createConnection(token);
-      //* Send signal to join the race
-      socket.emit("joinRace", { userId: userId }, (joinedPlayers) => {
-        // console.log("kjdg");
-        // TODO: wait till paragraph arives
-      });
+    // Flag to track if socket is connected
 
-      // * When 4 players has joined they all join a session
-      socket.on("session", (sessionName) => {
-        currentSessionRef.current = sessionName;
-        console.log("Joining session", sessionName);
-        socket.emit("joinSession", sessionName);
-      });
+    // When the paragraph first arrives
+    const socket = createConnection(token);
+    if (!paragraph && !socketConnected) {
+      // Set the flag to true to indicate the socket is connected
+      setSocketConnected(true);
 
-      if (paragraph) setPrepareTimerOn(true);
+      // Send signal to join the race
+      socket.emit("createOrJoinLobby", userId);
+
+      socket.on("message", (quote) => {
+        console.log("Aray bhaiiiiii!!!", quote);
+
+        setParagraph(quote.text);
+      });
 
       return () => {
-        // * Once the user leaves the page (Reset and leave the session)
+        // Once the user leaves the page (Reset and leave the session)
         socket.emit("leaveSession", currentSessionRef.current);
         currentSessionRef.current = null;
-        socket.disconnect();
+        // Set the flag back to false to indicate the socket is disconnected
+        setSocketConnected(false);
       };
     }
+
+    if (paragraph) setPrepareTimerOn(true);
+
+    // Return a cleanup function to prevent the effect from running again
+    return () => {
+      if (socketConnected) {
+        // If the socket is still connected when the component unmounts,
+        // emit leaveSession and disconnect the socket
+        socket.emit("leaveSession", currentSessionRef.current);
+        currentSessionRef.current = null;
+        // socket.disconnect();
+        socket.off();
+        // Set the flag back to false to indicate the socket is disconnected
+        setSocketConnected(false);
+      }
+    };
   }, [paragraph]);
 
   return (

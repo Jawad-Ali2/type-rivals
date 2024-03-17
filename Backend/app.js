@@ -64,72 +64,7 @@ mongoose
     const server = app.listen(8000, () => {
       console.log("Server listening ");
     });
-    const io = require("./socket").init(server);
-    // TODO: Make a class for waiting queues
-    const waitingPlayers = [];
-
-    // * When the user first connects
-    io.on("connection", (socket) => {
-      console.log("a user connected");
-
-      // * On receiving the signal join the race queue
-      socket.on("joinRace", ({ userId }, callback) => {
-        waitingPlayers.push({ socketId: socket.id, userId });
-        console.log(waitingPlayers);
-
-        // ! Currently players limit is 2 (Increase it to 4 in future)
-        if (waitingPlayers.length >= 2) {
-          const playersToStart = waitingPlayers.splice(0, 2);
-          // * Generate session id
-          //const sessionName = `session-${crypto.randomUUID().toString()}`;
-
-          // * Send session join request to each selected player
-          playersToStart.forEach((player) => {
-            io.to(player.socketId).emit("session", sessionName);
-          });
-
-          // * When required players has joined the session game will start
-          callback(playersToStart);
-        }
-
-        console.log(waitingPlayers);
-        console.log(`${userId} connected`);
-      });
-
-      socket.on("joinSession", (sessionName) => {
-        console.log("sessions joined", sessionName);
-        socket.join(sessionName);
-
-        // ! Remove in future
-        io.in(sessionName)
-          .allSockets()
-          .then((sockets) => {
-            const usersInSession = Array.from(sockets);
-            console.log("Users in session:", usersInSession);
-          });
-      });
-
-      socket.on("leaveSession", (currentSession) => {
-        // ! Remove in future
-        const peeps = io.sockets.adapter.rooms.get(currentSession);
-
-        console.log(peeps);
-        socket.leave(currentSession);
-        console.log(peeps);
-      });
-
-      socket.on("disconnect", () => {
-        console.log("User disconnected");
-
-        // * If user is in the queue and leaves before game starts, remove him from queue
-        const index = waitingPlayers.findIndex(
-          (player) => player.socket === socket
-        );
-        if (index !== -1) {
-          waitingPlayers.splice(index, 1);
-        }
-      });
-    });
+    require("./socket").init(server);
   })
   .catch((err) => {
     console.log(err);
