@@ -1,5 +1,5 @@
 const User = require("./models/user");
-const { createLobby, joinLobby, fetchQuote } = require("./utils/race");
+const { createLobby, joinLobby, fetchQuote, getLobby, updateLobby } = require("./utils/race");
 
 let io;
 
@@ -23,7 +23,7 @@ module.exports = {
           // If lobby has been joined
           if (lobby) {
             // Todo: Change player count to 4
-            if (lobby.players.length === 1) {
+            if (lobby.players.length === 2) {
               console.log("Lobby length: " + lobby.players.length);
               lobby.state = "in-progress";
             }
@@ -57,9 +57,14 @@ module.exports = {
           }
         });
 
-        socket.on("typingSpeedUpdate", (wpm) => {
-          // console.log(wpm);
-          socket.emit("speed", wpm);
+        socket.on("typingSpeedUpdate", (wpm, lobby, socketId) => {
+          console.log(wpm, lobby, socketId);
+          
+          if(lobby){
+            updateLobby(lobby, socketId, wpm)
+          }
+          // socket.emit("speed", wpm);
+          io.in(lobby).emit("speed", {wpm, socketId})
         });
 
         socket.on("disconnect", () => {

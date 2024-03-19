@@ -1,15 +1,26 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import createConnection from "../../utils/socket";
 
-export const RaceUser = ({ players, token }) => {
-  const [speed, setSpeed] = useState("");
+export const RaceUser = ({ players, setPlayers, token }) => {
   const socket = createConnection(token);
 
   useEffect(() => {
-    socket.on("speed", (wpm) => {
-      setSpeed(wpm);
+    socket.on("speed", ({ wpm, socketId }) => {
+      // setSpeed(wpm);
+      setPlayers(
+        players.map((player) => {
+          // console.log(player, socketId);
+          return player.socketId === socketId
+            ? { ...player, wpm: wpm }
+            : player;
+        })
+      );
     });
-  }, [socket]);
+
+    return () => {
+      socket.off("speed");
+    };
+  }, [socket, players]);
 
   return (
     <div className="bg-slate-800 w-full mt-10 mb-10 rounded-md">
@@ -27,7 +38,9 @@ export const RaceUser = ({ players, token }) => {
                   <p className="">
                     {player.username} ({player.email})
                   </p>
-                  <p>{speed}</p>
+                  <div>
+                    <p>{player.wpm}</p>
+                  </div>
                 </div>
               </div>
             </div>

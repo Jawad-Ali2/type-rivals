@@ -1,7 +1,24 @@
+const crypto = require('crypto');
 const Paragraph = require("../models/paragraphs");
 const User = require("../models/user");
 
 const lobbies = [];
+
+function getLobby(lobbyId){
+  const lobby = lobbies.find(lobby => lobby.id === lobbyId)
+
+  return lobby;
+}
+
+function updateLobby(lobbyId, socketId, wpm){
+  const lobby = getLobby(lobbyId);
+  // console.log(lobby);
+  const player = lobby.players.find(player => player.socketId === socketId);
+  // console.log("Player", player)
+
+  player.wpm = wpm;
+}
+
 function createLobby() {
   const lobby = {
     id: crypto.randomUUID().toString(),
@@ -28,9 +45,11 @@ function joinLobby(playerId, socket, io) {
 
         const player = {
           playerId: playerId,
+          socketId: socket.id,
           username: user.name,
           email: user.email,
           profilePic: user.profilePic,
+          wpm: 0
         };
         lobby.players.push(player);
         socket.join(lobby.id);
@@ -66,4 +85,4 @@ async function fetchQuote() {
   return quote;
 }
 
-module.exports = { createLobby, joinLobby, fetchQuote };
+module.exports = { createLobby, joinLobby, fetchQuote, getLobby, updateLobby };

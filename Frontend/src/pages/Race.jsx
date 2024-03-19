@@ -23,7 +23,7 @@ const Race = () => {
   const { userId, token } = useContext(AuthContext);
   const [socketConnected, setSocketConnected] = useState(false);
   // const [currentSession, setCurrentSession] = useState(null);
-  const currentSessionRef = useRef(null);
+  const currentLobbyRef = useRef(null);
   // const [paragraph, audioLink, errors, resetData] = useFetch(
   //   "http://localhost:8000/user/quick-race"
   // );
@@ -31,7 +31,7 @@ const Race = () => {
   //Reload/Update Components
   useEffect(() => {
     if (paragraph) setParagraph("");
-    currentSessionRef.current = null;
+    currentLobbyRef.current = null;
     resetPrepareTimer();
   }, [replay]);
 
@@ -50,14 +50,15 @@ const Race = () => {
 
       socket.on("message", (quote, lobby) => {
         console.log("Aray bhaiiiiii!!!", quote, lobby);
+        currentLobbyRef.current = lobby.id;
         setPlayers(lobby.players);
         setParagraph(quote.text);
       });
 
       return () => {
         // Once the user leaves the page (Reset and leave the session)
-        socket.emit("leaveSession", currentSessionRef.current);
-        currentSessionRef.current = null;
+        // socket.emit("leaveSession", currentLobbyRef.current);
+        // currentLobbyRef.current = null;
         // Set the flag back to false to indicate the socket is disconnected
         setSocketConnected(false);
       };
@@ -72,8 +73,8 @@ const Race = () => {
       if (socketConnected) {
         // If the socket is still connected when the component unmounts,
         // emit leaveSession and disconnect the socket
-        socket.emit("leaveSession", currentSessionRef.current);
-        currentSessionRef.current = null;
+        // socket.emit("leaveSession", currentLobbyRef.current);
+        currentLobbyRef.current = null;
         // socket.disconnect();
         socket.off();
         // Set the flag back to false to indicate the socket is disconnected
@@ -89,12 +90,13 @@ const Race = () => {
       </RaceLoader>
       <div className="race-container pt-[5rem] w-[90%] mx-auto">
         <div className="racemap-container w-full">
-          <RaceUser players={players} token={token} />
+          <RaceUser players={players} setPlayers={setPlayers} token={token} />
 
           <p className="web-text font-semibold">Race Map</p>
           <RaceMap
             paragraph={paragraph}
             startRace={prepareTime <= 0}
+            lobby={currentLobbyRef.current}
             raceDuration={60}
             setReplay={setReplay}
           />

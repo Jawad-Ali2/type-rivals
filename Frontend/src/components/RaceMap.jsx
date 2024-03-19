@@ -6,7 +6,7 @@ import { useCountDown } from "../../Hooks";
 import { calculateWPM } from "../../utils/calculateWPM";
 import { AuthContext } from "../../context/AuthContext";
 import createConnection from "../../utils/socket";
-const RaceMap = ({ paragraph, startRace, raceDuration, setReplay }) => {
+const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
   const success = "text-green-600";
   const error = "text-red-500";
   const { token } = useContext(AuthContext);
@@ -83,7 +83,7 @@ const RaceMap = ({ paragraph, startRace, raceDuration, setReplay }) => {
 
         // TODO: Emit signal to backend after every 2 sec with wpm calculation
         console.log("WPM calculation" + wpm);
-        socket.emit("typingSpeedUpdate", wpm);
+        socket.emit("typingSpeedUpdate", wpm, lobby, socket.id);
         // socket.on("lobbyUpdate", () => {
         //   console.log("lobbyUpdate");
         // });\
