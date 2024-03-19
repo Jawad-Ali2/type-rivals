@@ -8,7 +8,7 @@ import { Outlet } from "react-router-dom";
 function App() {
   const { theme } = useContext(ThemeContext);
 
-  const dynamicClass = `${theme}  bg-skin-body w-full h-screen pb-[5rem]`;
+  const dynamicClass = `${theme}  bg-skin-body w-full min-h-screen pb-[5rem]`;
   return (
     <div className={dynamicClass}>
       <Header />

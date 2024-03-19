@@ -1,0 +1,11 @@
+.modern-input{
+    box-shadow: none !important; 
+}
+.modern-input:-webkit-autofill,
+.modern-input:-webkit-autofill:hover, 
+.modern-input:-webkit-autofill:focus, 
+.modern-input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px var(--foreground-color) inset !important;
+    -webkit-text-fill-color: var(--text-color) !important;
+    
+}

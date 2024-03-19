@@ -35,7 +35,7 @@ const ThemeSwitch = ()=>{
                     </div>
                 ))}
         </div>
-        <button className="theme-switch text-skin-base shadow-md  !w-full shadow-skin-base bg-skin-button  ui-button capitalize">Theme</button>
+        <button className="theme-switch text-skin-base shadow-sm  !w-full shadow-skin-base bg-skin-button  ui-button capitalize">Theme</button>
     </div>)
 }
 export default ThemeSwitch;

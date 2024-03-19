@@ -1,16 +1,29 @@
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-
+import * as z from "zod";
+import { useForm, useFormContext } from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
+import { Input } from "./ui/input";
+import "@/styles/forms.css"
+const formSchema = z.object({
+  emailAddress : z.string().email(),
+  password: z.string().min(3)
+})
 const SignIn = ({ handleError }) => {
-  document.title = "Sign In | Type Rivals"; 
+  document.title = "Sign In | Type Rivals";
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues:{
+      emailAddress:""
+    }
+  }) 
   const { login, token, csrfToken } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  async function handleSignIn(e) {
-    e.preventDefault();
-
-    console.log(e.target.email.value, token, csrfToken);
+  async function handleSignIn() {
+    const { emailAddress , password} = form.getValues();
 
     const response = await fetch("http://localhost:8000/auth/signin", {
       method: "POST",
@@ -21,8 +34,8 @@ const SignIn = ({ handleError }) => {
         "X-Csrf-Token": csrfToken,
       },
       body: JSON.stringify({
-        email: e.target.email.value,
-        password: e.target.password.value,
+        email: emailAddress,
+        password: password,
       }),
     });
     if (response.ok) {
@@ -32,33 +45,42 @@ const SignIn = ({ handleError }) => {
     }
   }
   return (
+    <Form {...form}>
     <form
-      onSubmit={handleSignIn}
+      onSubmit={form.handleSubmit(handleSignIn)}
       method="POST"
-      className="flex flex-col justify-between items-center h-full w-full pt-5"
+      className="flex flex-col justify-between  px-4 items-center h-full w-full pt-5"
     >
 
-      <div className="form-fields w-[90%] mx-auto h-full p-2 ">
-        <input
-          className="web-input text-skin-base bg-skin-foreground w-full faded-border border-b-2"
-          name="email"
-          placeholder="Email"
-          autoComplete="off"
-        />
-        <input
-          className="web-input text-skin-base bg-skin-foreground w-full faded-border border-b-2 mt-5"
-          name="password"
-          placeholder="Password"
-          type="password"
-        />
+      <div className="form-fields w-full mx-auto h-full p-2 space-y-5">
+        <FormField control={form.control}  name="emailAddress" render = {({field})=>{
+          return <FormItem>
+            <FormLabel className="text-md">Email</FormLabel>
+            <FormControl>
+              <Input className="bg-skin-foreground border-skin-base modern-input"  placeholder="Enter Email Address" type="text" {...field}/>
+            </FormControl>
+            <FormMessage className="text-red-500"/>
+          </FormItem>
+        }} />
+        <FormField control={form.control}  name="password" render = {({field})=>{
+          return <FormItem>
+            <FormLabel className="text-md">Password</FormLabel>
+            <FormControl>
+              <Input className="bg-skin-foreground  border-skin-base modern-input" placeholder="Enter your password." type="password" {...field}/>
+            </FormControl>
+            <FormMessage className="text-red-500"/>
+          </FormItem>
+        }} />
+
       </div>
       <button
-        className="text-skin-base shadow-md shadow-skin-base bg-skin-button  ui-button"
+        className="text-skin-base shadow-sm  shadow-skin-base bg-skin-button !w-full  ui-button"
         type="submit"
       >
         Submit
       </button>
     </form>
+    </Form>
   );
 };
 export default SignIn;
