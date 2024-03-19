@@ -171,7 +171,7 @@ const Header = () => {
           )}
         </div>
         <div className="sub-header w-full hidden md:block h-[2rem] ">
-          <ul className="subheader-nav shadow-md shadow-skin-base bg-skin-bar  w-full flex flex-row justify-center items-center mx-auto text-sm ">
+          <ul className="subheader-nav shadow-sm shadow-skin-base bg-skin-bar  w-full flex flex-row justify-center items-center mx-auto text-sm ">
             {subHeaderButtons.map(([el, link], i) => (
               <Link className="my-2" to={link} key={i}>
                 <li className="w-fit inline cursor-pointer transition-all duration-200 md:mx-2 lg:mx-4 xl:mx-6 text-skin-base">

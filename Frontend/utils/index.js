@@ -8,7 +8,7 @@ export async function saveUserData(speed, userId, token, csrfToken) {
     {
       withCredentials: true,
       headers: {
-        //   "Content-Type": "application/json",
+        //   "Content-Type": "application/json",  
         Authorization: `Bearer ${token}`,
         "X-CSRF-Token": csrfToken,
       },
