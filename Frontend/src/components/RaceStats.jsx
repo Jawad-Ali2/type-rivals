@@ -1,25 +1,23 @@
 import { useContext, useEffect, useState } from "react";
 import { saveUserData } from "../../utils";
 import { AuthContext } from "../../context/AuthContext";
+import { calculateWPM } from "../../utils/calculateWPM";
 const RaceStats = ({ input, paragraph, time, raceFinisihed, setReplay }) => {
   const [speed, setSpeed] = useState(0);
   const { token, csrfToken, userId } = useContext(AuthContext);
 
-  const getValidInput = (input) => {
-    let counter = 0;
-    for (let i = 0; i < input.length; i++) {
-      if (input[i] === paragraph[i]) counter++;
-      else break;
-    }
-    return input.slice(0, counter);
-  };
+  // const getValidInput = (input) => {
+  //   let counter = 0;
+  //   for (let i = 0; i < input.length; i++) {
+  //     if (input[i] === paragraph[i]) counter++;
+  //     else break;
+  //   }
+  //   return input.slice(0, counter);
+  // };
   const handleSpeedMeasuring = useEffect(() => {
     if (raceFinisihed) {
-      const wordsTyped = getValidInput(input);
-      const correctlyTyped = wordsTyped.length / 5;
-      const timeTakenInMinutes = time / 60;
-      const wordsPerMinute = Math.round(correctlyTyped / timeTakenInMinutes);
-      setSpeed((prev) => wordsPerMinute);
+      const wpm = calculateWPM(input, time, paragraph);
+      setSpeed((prev) => wpm);
     }
     if (raceFinisihed && speed) {
       saveUserData(speed, userId, token, csrfToken);
@@ -38,9 +36,7 @@ const RaceStats = ({ input, paragraph, time, raceFinisihed, setReplay }) => {
           (raceFinisihed ? "top-[13rem]" : "top-[-25rem]")
         }
       >
-        <p className=" text-xl  w-full text-center">
-          Statistics
-        </p>
+        <p className=" text-xl  w-full text-center">Statistics</p>
         <table className="w-full h-full">
           <thead>
             <tr className="w-full">
@@ -63,7 +59,14 @@ const RaceStats = ({ input, paragraph, time, raceFinisihed, setReplay }) => {
             </tr>
           </tbody>
         </table>
-        <button onClick={()=>{setReplay(prev=>!prev)}} className="text-skin-base shadow-md shadow-skin-base bg-skin-button  ui-button">Replay</button>
+        <button
+          onClick={() => {
+            setReplay((prev) => !prev);
+          }}
+          className="text-skin-base shadow-md shadow-skin-base bg-skin-button  ui-button"
+        >
+          Replay
+        </button>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 const Paragraph = require("../models/paragraphs");
+const User = require("../models/user");
 
 const lobbies = [];
 function createLobby() {
@@ -13,17 +14,34 @@ function createLobby() {
 }
 
 function joinLobby(playerId, socket, io) {
-  let lobby = lobbies.find((lobby) => lobby.state === "waiting");
+  return new Promise((resolve, reject) => {
+    let lobby = lobbies.find((lobby) => lobby.state === "waiting");
 
-  // If there is no lobby in waiting state
-  if (!lobby) {
-    lobby = createLobby();
-  }
+    // If there is no lobby in waiting state
+    if (!lobby) {
+      lobby = createLobby();
+    }
 
-  lobby.players.push({ playerId, socketId: socket.id });
-  socket.join(lobby.id);
+    User.findById(playerId)
+      .then((user) => {
+        if (!user) throw new Error("User not found");
 
-  return lobby;
+        const player = {
+          playerId: playerId,
+          username: user.name,
+          email: user.email,
+          profilePic: user.profilePic,
+        };
+        lobby.players.push(player);
+        socket.join(lobby.id);
+
+        resolve(lobby);
+      })
+      .catch((error) => {
+        console.log("Internal error: " + error);
+        reject(error);
+      });
+  });
 }
 
 async function fetchQuote() {

@@ -1,3 +1,4 @@
+const User = require("./models/user");
 const { createLobby, joinLobby, fetchQuote } = require("./utils/race");
 
 let io;
@@ -17,43 +18,49 @@ module.exports = {
 
       socket.on("createOrJoinLobby", (playerId) => {
         // Creation or Joining of lobby
-        const lobby = joinLobby(playerId, socket, io);
+        joinLobby(playerId, socket, io).then((lobby) => {
+          // console.log(lobby);
+          // If lobby has been joined
+          if (lobby) {
+            // Todo: Change player count to 4
+            if (lobby.players.length === 1) {
+              console.log("Lobby length: " + lobby.players.length);
+              lobby.state = "in-progress";
+            }
 
-        // If lobby has been joined
-        if (lobby) {
-          // Todo: Change player count to 4
-          if (lobby.players.length === 2) {
-            console.log("Lobby length: " + lobby.players.length);
-            lobby.state = "in-progress";
-          }
-
-          // ! Just to check players in room
-          io.in(lobby.id)
-            .allSockets()
-            .then((sockets) => {
-              const usersInSession = Array.from(sockets);
-              console.log("Users in session:", usersInSession);
-            });
-
-          // If the state matches
-          if (lobby.state === "in-progress") {
-            // Each player in room is sent paragraph
-            fetchQuote()
-              .then((quote) => {
-                io.in(lobby.id).emit("message", quote);
-              })
-              .catch((err) => {
-                console.log(err);
+            // ! Just to check players in room
+            io.in(lobby.id)
+              .allSockets()
+              .then((sockets) => {
+                const usersInSession = Array.from(sockets);
+                console.log("Users in session:", usersInSession);
               });
-            // cb(lobby);
+
+            // If the state matches
+            if (lobby.state === "in-progress") {
+              // Each player in room is sent paragraph
+              fetchQuote()
+                .then((quote) => {
+                  io.in(lobby.id).emit("message", quote, lobby);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+              // cb(lobby);
+            }
+            // socket.to(`lobby-${lobby.id}`).emit("lobbyUpdate", lobby);
+          } else {
+            socket.emit(
+              "lobbyNotFound",
+              "No Available Lobby Found. Please try again later."
+            );
           }
-          // socket.to(`lobby-${lobby.id}`).emit("lobbyUpdate", lobby);
-        } else {
-          socket.emit(
-            "lobbyNotFound",
-            "No Available Lobby Found. Please try again later."
-          );
-        }
+        });
+
+        socket.on("typingSpeedUpdate", (wpm) => {
+          // console.log(wpm);
+          socket.emit("speed", wpm);
+        });
 
         socket.on("disconnect", () => {
           console.log("disconnect");
