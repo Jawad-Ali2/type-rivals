@@ -72,29 +72,34 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
 
   // Getting speed after short intervals
   useEffect(() => {
-    if (raceTime > 0) {
-      const calculateWPMInterval = () => {
-        const wpm = calculateWPM(
-          input,
-          raceDuration - raceTime,
-          paragraph,
-          raceDuration
-        );
+    if (raceTime > 0 && startRace) {
+      let wpmInterval;
+      const [wpm, percentage] = calculateWPM(
+        input,
+        raceDuration - raceTime,
+        paragraph,
+        raceDuration
+      );
+      if (!raceFinished) {
+        const calculateWPMInterval = () => {
+          // console.log(percentage);
 
-        // TODO: Emit signal to backend after every 2 sec with wpm calculation
-        console.log("WPM calculation" + wpm);
-        socket.emit("typingSpeedUpdate", wpm, lobby, socket.id);
-        // socket.on("lobbyUpdate", () => {
-        //   console.log("lobbyUpdate");
-        // });\
-        const newInterval = Math.max(2000 / wpm, 200);
-        setIntervalDuration(newInterval);
-      };
+          // TODO: Emit signal to backend after every 2 sec with wpm calculation
+          console.log("WPM calculation" + wpm, percentage);
+          socket.emit("typingSpeedUpdate", wpm, percentage, lobby, socket.id);
 
-      calculateWPMInterval();
+          const newInterval = Math.max(2000 / wpm, 200);
+          setIntervalDuration(newInterval);
+        };
 
-      const wpmInterval = setInterval(calculateWPMInterval, 2000);
-      if (raceFinished) clearInterval(wpmInterval);
+        calculateWPMInterval();
+
+        wpmInterval = setInterval(calculateWPMInterval, 2000);
+      } else {
+        // Sending one extra emit to get the right percentage when the race ends.
+        socket.emit("typingSpeedUpdate", wpm, percentage, lobby, socket.id);
+        clearInterval(wpmInterval);
+      }
 
       return () => {
         clearInterval(wpmInterval);

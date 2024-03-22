@@ -23,6 +23,7 @@ const Race = () => {
   const { userId, token } = useContext(AuthContext);
   const [socketConnected, setSocketConnected] = useState(false);
   // const [currentSession, setCurrentSession] = useState(null);
+  const socket = createConnection(token);
   const currentLobbyRef = useRef(null);
   // const [paragraph, audioLink, errors, resetData] = useFetch(
   //   `${backendUrl}/user/quick-race`
@@ -37,48 +38,37 @@ const Race = () => {
 
   //Prepare Timer
   useEffect(() => {
-    // Flag to track if socket is connected
-
-    // When the paragraph first arrives
-    const socket = createConnection(token);
-    if (!paragraph && !socketConnected) {
+    if (!paragraph) {
       // Set the flag to true to indicate the socket is connected
-      setSocketConnected(true);
+      // setSocketConnected(true);
 
       // Send signal to join the race
       socket.emit("createOrJoinLobby", userId);
 
       socket.on("message", (quote, lobby) => {
-        console.log("Aray bhaiiiiii!!!", quote, lobby);
         currentLobbyRef.current = lobby.id;
         setPlayers(lobby.players);
         setParagraph(quote.text);
       });
 
+      // Return a cleanup function to prevent the effect from running again
       return () => {
-        // Once the user leaves the page (Reset and leave the session)
-        // socket.emit("leaveSession", currentLobbyRef.current);
-        // currentLobbyRef.current = null;
-        // Set the flag back to false to indicate the socket is disconnected
-        setSocketConnected(false);
+        // console.log(socketConnected);
       };
     }
-
     if (paragraph) {
       setPrepareTimerOn(true);
     }
 
-    // Return a cleanup function to prevent the effect from running again
     return () => {
       if (socketConnected) {
+        socket.emit("leaveRace");
         // If the socket is still connected when the component unmounts,
-        // emit leaveSession and disconnect the socket
-        // socket.emit("leaveSession", currentLobbyRef.current);
+        console.log("Unmounting");
         currentLobbyRef.current = null;
-        // socket.disconnect();
         socket.off();
         // Set the flag back to false to indicate the socket is disconnected
-        setSocketConnected(false);
+        // setSocketConnected(false);
       }
     };
   }, [paragraph]);

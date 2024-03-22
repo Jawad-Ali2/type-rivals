@@ -1,22 +1,25 @@
-const crypto = require('crypto');
+const crypto = require("crypto");
 const Paragraph = require("../models/paragraphs");
 const User = require("../models/user");
 
 const lobbies = [];
 
-function getLobby(lobbyId){
-  const lobby = lobbies.find(lobby => lobby.id === lobbyId)
+function getLobby(lobbyId) {
+  const lobby = lobbies.find((lobby) => lobby.id === lobbyId);
 
   return lobby;
 }
 
-function updateLobby(lobbyId, socketId, wpm){
+function updateLobby(lobbyId, socketId, wpm, percentage) {
+  // First we find the lobby user is connected
   const lobby = getLobby(lobbyId);
-  // console.log(lobby);
-  const player = lobby.players.find(player => player.socketId === socketId);
-  // console.log("Player", player)
 
+  // Then finding the player using the socket
+  const player = lobby.players.find((player) => player.socketId === socketId);
+
+  // Updating the player's wpm
   player.wpm = wpm;
+  player.percentageCompleted = percentage;
 }
 
 function createLobby() {
@@ -49,7 +52,8 @@ function joinLobby(playerId, socket, io) {
           username: user.name,
           email: user.email,
           profilePic: user.profilePic,
-          wpm: 0
+          percentageCompleted: 0,
+          wpm: 0,
         };
         lobby.players.push(player);
         socket.join(lobby.id);
@@ -85,4 +89,31 @@ async function fetchQuote() {
   return quote;
 }
 
-module.exports = { createLobby, joinLobby, fetchQuote, getLobby, updateLobby };
+function disconnectUser(socketId) {
+  lobbies.forEach((lobby, index) => {
+    if (lobby.state === "waiting" || lobby.state === "in-progress") {
+      const idx = lobby.players.findIndex(
+        (player) => player.socketId === socketId
+      );
+
+      if (idx !== -1) {
+        lobby.players.splice(idx, 1);
+        // console.log("Lobby after disconnectin:", lobby);
+      }
+
+      if (lobby.players.length === 0) {
+        lobbies.splice(index, 1);
+        console.log("Lobbies after disconneting:", lobbies);
+      }
+    }
+  });
+}
+
+module.exports = {
+  createLobby,
+  joinLobby,
+  fetchQuote,
+  getLobby,
+  updateLobby,
+  disconnectUser,
+};

@@ -6,23 +6,14 @@ const RaceStats = ({ input, paragraph, time, raceFinisihed, setReplay }) => {
   const [speed, setSpeed] = useState(0);
   const { token, csrfToken, userId } = useContext(AuthContext);
 
-  // const getValidInput = (input) => {
-  //   let counter = 0;
-  //   for (let i = 0; i < input.length; i++) {
-  //     if (input[i] === paragraph[i]) counter++;
-  //     else break;
-  //   }
-  //   return input.slice(0, counter);
-  // };
-  const handleSpeedMeasuring = useEffect(() => {
+  useEffect(() => {
     if (raceFinisihed) {
-      const wpm = calculateWPM(input, time, paragraph);
+      const [wpm] = calculateWPM(input, time, paragraph);
       setSpeed((prev) => wpm);
-    }
-    if (raceFinisihed && speed) {
       saveUserData(speed, userId, token, csrfToken);
     }
-  }, [raceFinisihed, speed]);
+  }, [raceFinisihed]);
+
   return (
     <div
       className={
