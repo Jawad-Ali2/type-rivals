@@ -32,7 +32,7 @@ const SignIn = ({ handleError }) => {
 
   async function handleSignIn() {
     const { emailAddress, password } = form.getValues();
-
+    console.log(backendUrl);
     const response = await fetch(`${backendUrl}/auth/signin`, {
       method: "POST",
       credentials: "include",

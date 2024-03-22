@@ -1,4 +1,4 @@
-import { backendUrl } from "config/config";
+import { backendUrl } from "../config/config";
 import io from "socket.io-client";
 
 let socket = null;

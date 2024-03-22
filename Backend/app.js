@@ -8,7 +8,13 @@ const { doubleCsrf } = require("csrf-csrf");
 
 const userRoutes = require("./routes/user");
 const authRoutes = require("./routes/auth");
+
+// Production settings
 const PORT = process.env.PORT || 8000;
+const corsOrigin =
+  process.env.NODE_ENV === "production"
+    ? process.env.CORS_ORIGIN
+    : "http://localhost:5173";
 
 const app = express();
 
@@ -26,7 +32,7 @@ const {
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: corsOrigin,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true, // enable cookies and credentials
   })
@@ -53,10 +59,10 @@ const errorHandler = (err, req, res, next) => {
   }
 };
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   console.log(req);
-  return res.status(234).send("This page is Routed")
-})
+  return res.status(234).send("This page is Routed");
+});
 
 app.use("/auth", errorHandler, authRoutes);
 app.use("/user", errorHandler, userRoutes);
