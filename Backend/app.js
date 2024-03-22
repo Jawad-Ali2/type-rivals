@@ -32,7 +32,7 @@ const {
 
 app.use(
   cors({
-    origin: "*",
+    origin: [corsOrigin],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true, // enable cookies and credentials
   })
