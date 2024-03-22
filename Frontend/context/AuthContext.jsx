@@ -1,5 +1,6 @@
 import { createContext, useEffect, useMemo, useState } from "react";
 import axios from "axios";
+import { backendUrl } from "../config/config";
 
 export const AuthContext = createContext();
 
@@ -54,7 +55,7 @@ export function AuthProvider({ children }) {
 
   async function getCsrfToken() {
     try {
-      const response = await axios.get("http://localhost:8000/csrf-token", {
+      const response = await axios.get(`${backendUrl}/csrf-token`, {
         withCredentials: "include",
       });
 
@@ -86,7 +87,7 @@ export function AuthProvider({ children }) {
         setIsAuthenticated(true);
 
         autoLogout(remainingMiliseconds);
-      }, 
+      },
       logout,
       autoLogout,
     }),
