@@ -2,12 +2,11 @@ const User = require("../models/user");
 const gtts = require("node-gtts")("en-us");
 const path = require("path");
 const admin = require("firebase-admin");
-const serviceAccount = require("../config/serviceAccountKey.json");
+// const serviceAccount = require("../config/serviceAccountKey.json");
+const serviceAccount = require("../config/serviceAccountKey.js");
 
-const { webScrape } = require("../utils/scrape");
 const config = require("../config/firebase.config");
 const Paragraph = require("../models/paragraphs");
-const io = require("../socket");
 
 // Initialize firebase config
 admin.initializeApp({
