@@ -7,6 +7,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
+import { backendUrl } from "../../config/config";
 
 const Header = () => {
   const [username, setUsername] = useState("John Doe");
@@ -33,7 +34,7 @@ const Header = () => {
     const signal = controller.signal;
 
     async function getUserDashboard() {
-      const response = await axios.get("http://localhost:8000/user/dashboard", {
+      const response = await axios.get(`${backendUrl}/user/dashboard`, {
         headers: { Authorization: "Bearer " + token },
         signal,
       });
@@ -63,7 +64,7 @@ const Header = () => {
   };
 
   async function handleLogout() {
-    const response = await fetch("http://localhost:8000/auth/logout", {
+    const response = await fetch(`${backendUrl}/auth/logout`, {
       method: "POST",
       credentials: "include",
       headers: {

@@ -25,7 +25,7 @@ const Race = () => {
   // const [currentSession, setCurrentSession] = useState(null);
   const currentLobbyRef = useRef(null);
   // const [paragraph, audioLink, errors, resetData] = useFetch(
-  //   "http://localhost:8000/user/quick-race"
+  //   `${backendUrl}/user/quick-race`
   // );
 
   //Reload/Update Components

@@ -8,6 +8,7 @@ const { doubleCsrf } = require("csrf-csrf");
 
 const userRoutes = require("./routes/user");
 const authRoutes = require("./routes/auth");
+const PORT = process.env.PORT || 8000;
 
 const app = express();
 
@@ -25,7 +26,7 @@ const {
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CORS_ORIGIN,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true, // enable cookies and credentials
   })
@@ -61,7 +62,7 @@ mongoose
   )
   .then(() => {
     console.log("Database Connected");
-    const server = app.listen(8000, () => {
+    const server = app.listen(PORT, () => {
       console.log("Server listening ");
     });
     require("./socket").init(server);

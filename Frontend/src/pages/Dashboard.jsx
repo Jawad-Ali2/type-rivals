@@ -1,7 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import  Statistics  from "@/components/Statistics";
+import Statistics from "@/components/Statistics";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
+import { backendUrl } from "../../config/config";
 const Dashboard = () => {
   document.title = "Dashboard | Type Rivals";
   const [data, setData] = useState({});
@@ -19,10 +20,7 @@ const Dashboard = () => {
         signal,
       };
 
-      const response = await axios.get(
-        "http://localhost:8000/user/dashboard",
-        options
-      );
+      const response = await axios.get(`${backendUrl}/user/dashboard`, options);
 
       if (response.status === 200) {
         const data = await response.data;
