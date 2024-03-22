@@ -53,6 +53,11 @@ const errorHandler = (err, req, res, next) => {
   }
 };
 
+app.get('/', (req, res) => {
+  console.log(req);
+  return res.status(234).send("This page is Routed")
+})
+
 app.use("/auth", errorHandler, authRoutes);
 app.use("/user", errorHandler, userRoutes);
 
