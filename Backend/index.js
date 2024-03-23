@@ -16,6 +16,11 @@ const corsOrigin =
     ? process.env.CORS_ORIGIN
     : "http://localhost:5173";
 
+const cookiesOptions = {
+  secure: process.env.NODE_ENV === "production" ? true : false,
+  signed: true,
+  sameSite: process.env.NODE_ENV === "production" ? "none" : false,
+};
 const app = express();
 
 const {
@@ -26,7 +31,7 @@ const {
 } = doubleCsrf({
   getSecret: () => "Super secret",
   cookieName: "X-Csrf-Token",
-  cookieOptions: { secure: false, signed: true, sameSite: false },
+  cookieOptions: cookiesOptions,
   getTokenFromRequest: (req) => req.headers["x-csrf-token"],
 });
 
