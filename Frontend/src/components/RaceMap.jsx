@@ -85,7 +85,7 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
           // console.log(percentage);
 
           // TODO: Emit signal to backend after every 2 sec with wpm calculation
-          console.log("WPM calculation" + wpm, percentage);
+          // console.log("WPM calculation" + wpm, percentage);
           socket.emit("typingSpeedUpdate", wpm, percentage, lobby, socket.id);
 
           const newInterval = Math.max(2000 / wpm, 200);

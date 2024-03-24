@@ -90,6 +90,7 @@ async function fetchQuote() {
 }
 
 function disconnectUser(socketId) {
+  console.log(lobbies);
   lobbies.forEach((lobby, index) => {
     if (lobby.state === "waiting" || lobby.state === "in-progress") {
       const idx = lobby.players.findIndex(

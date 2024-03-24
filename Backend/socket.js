@@ -5,16 +5,27 @@ const {
   disconnectUser,
 } = require("./utils/race");
 
+const corsOrigin =
+  process.env.NODE_ENV === "production"
+    ? process.env.CORS_ORIGIN
+    : "http://localhost:5173";
+const cookiesOptions = {
+  secure: process.env.NODE_ENV === "production" ? true : false,
+  signed: true,
+  sameSite: process.env.NODE_ENV === "production" ? "none" : false,
+};
+
 let io;
 
 module.exports = {
   init: (httpServer) => {
     io = require("socket.io")(httpServer, {
       cors: {
-        origin: "http://localhost:5173",
-        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-        credentials: true, // enable cookies and credentials
+        origin: corsOrigin,
+        methods: ["GET", "POST"],
+        credentials: true,
       },
+      cookie: cookiesOptions,
     });
 
     io.on("connection", (socket) => {
@@ -26,7 +37,7 @@ module.exports = {
           // If lobby has been joined
           if (lobby) {
             // Todo: Change player count to 4
-            if (lobby.players.length === 1) {
+            if (lobby.players.length === 2) {
               console.log("Lobby length: " + lobby.players.length);
               lobby.state = "in-progress";
             }
@@ -66,6 +77,7 @@ module.exports = {
         });
 
         socket.on("leaveRace", () => {
+          console.log("leaveRace");
           disconnectUser(socket.id);
         });
 

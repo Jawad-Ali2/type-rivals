@@ -20,14 +20,11 @@ const Race = () => {
   const [replay, setReplay] = useState(false);
   const [paragraph, setParagraph] = useState("");
   const [players, setPlayers] = useState([]);
+  const [playersConnected, setPlayersConnected] = useState(false);
   const { userId, token } = useContext(AuthContext);
   const [socketConnected, setSocketConnected] = useState(false);
-  // const [currentSession, setCurrentSession] = useState(null);
   const socket = createConnection(token);
   const currentLobbyRef = useRef(null);
-  // const [paragraph, audioLink, errors, resetData] = useFetch(
-  //   `${backendUrl}/user/quick-race`
-  // );
 
   //Reload/Update Components
   useEffect(() => {
@@ -38,40 +35,65 @@ const Race = () => {
 
   //Prepare Timer
   useEffect(() => {
-    if (!paragraph) {
+    if (paragraph.length === 0) {
       // Set the flag to true to indicate the socket is connected
-      // setSocketConnected(true);
 
       // Send signal to join the race
       socket.emit("createOrJoinLobby", userId);
 
       socket.on("message", (quote, lobby) => {
         currentLobbyRef.current = lobby.id;
-        setPlayers(lobby.players);
+        setPlayers([...lobby.players]);
         setParagraph(quote.text);
+        setSocketConnected(true);
+
+        setPlayersConnected(true);
       });
 
       // Return a cleanup function to prevent the effect from running again
       return () => {
+        // Case1 : When the user is in waiting state and leave
+        if (paragraph.length === 0 && !currentLobbyRef) {
+          console.log("UNMOUNTING");
+          socket.emit("leaveRace");
+        }
         // console.log(socketConnected);
       };
     }
     if (paragraph) {
       setPrepareTimerOn(true);
     }
-
     return () => {
+      // Case 2: When the user is competing with players but leave before the race ends
       if (socketConnected) {
         socket.emit("leaveRace");
         // If the socket is still connected when the component unmounts,
         console.log("Unmounting");
         currentLobbyRef.current = null;
         socket.off();
+
         // Set the flag back to false to indicate the socket is disconnected
-        // setSocketConnected(false);
+        setSocketConnected(false);
       }
     };
   }, [paragraph]);
+
+  // Each player sees himself on top of the list always
+  useEffect(() => {
+    const updatedPlayers = [...players];
+
+    updatedPlayers.forEach((player, index) => {
+      if (player.playerId === userId && index > 0) {
+        console.log("in here");
+
+        const temp = updatedPlayers[0];
+        updatedPlayers[0] = player;
+        updatedPlayers[index] = temp;
+      }
+    });
+
+    setPlayers(updatedPlayers);
+  }, [playersConnected]);
 
   return (
     <section className="race-section w-full max-w-[45rem]">
