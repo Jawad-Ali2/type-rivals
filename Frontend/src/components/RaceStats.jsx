@@ -4,12 +4,18 @@ import { AuthContext } from "../../context/AuthContext";
 import { calculateWPM } from "../../utils/calculateWPM";
 const RaceStats = ({ input, paragraph, time, raceFinisihed, setReplay }) => {
   const [speed, setSpeed] = useState(0);
+  const [timeTaken, setTimeTaken] = useState("");
   const { token, csrfToken, userId } = useContext(AuthContext);
 
   useEffect(() => {
     if (raceFinisihed) {
       const [wpm] = calculateWPM(input, time, paragraph);
       setSpeed((prev) => wpm);
+
+      const minutes = Math.floor(time / 60);
+      let remainingTime = time % 60;
+      if (remainingTime === 0) remainingTime = "00";
+      setTimeTaken(minutes + ":" + remainingTime);
       saveUserData(speed, userId, token, csrfToken);
     }
   }, [raceFinisihed]);
@@ -46,7 +52,7 @@ const RaceStats = ({ input, paragraph, time, raceFinisihed, setReplay }) => {
             </tr>
             <tr className="faded-border border-b-2 w-[10rem]">
               <td className="float-left">Time</td>
-              <td className="float-right">01:00</td>
+              <td className="float-right">{timeTaken}</td>
             </tr>
           </tbody>
         </table>
