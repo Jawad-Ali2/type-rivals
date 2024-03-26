@@ -18,6 +18,8 @@ exports.getUserDashboard = (req, res) => {
   console.log(req.userId);
   User.findById({ _id: req.userId })
     .then((user) => {
+      if (!user) res.status(404).json({ message: "User not found" });
+
       res.status(200).send(user);
     })
     .catch((err) => {

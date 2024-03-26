@@ -5,20 +5,20 @@ const multer = require("multer");
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    return cb(null, "./public/images");
-  },
-  filename: (req, file, cb) => {
-    return cb(null, Date.now() + file.originalname);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     return cb(null, "./public/images");
+//   },
+//   filename: (req, file, cb) => {
+//     return cb(null, Date.now() + file.originalname);
+//   },
+// });
 
-const upload = multer({ storage });
+// const upload = multer({ storage });
 
 router.post(
   "/signup",
-  upload.single("profilePicture"),
+  // upload.single("profilePicture"),
   signUpValidator,
   postSignUp
 );

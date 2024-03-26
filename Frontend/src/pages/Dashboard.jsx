@@ -7,7 +7,7 @@ const Dashboard = () => {
   document.title = "Dashboard | Type Rivals";
   const [data, setData] = useState({});
   const { token } = useContext(AuthContext);
-  console.log(data);
+
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;

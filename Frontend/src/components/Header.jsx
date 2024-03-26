@@ -1,5 +1,4 @@
 import website_logo from "/src/assets/website_logo.png";
-import display_pic from "/src/assets/Default_dp.png";
 import CIcon from "@coreui/icons-react";
 import "@/styles/Header.css";
 import { cilMenu } from "@coreui/icons";
@@ -7,12 +6,12 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
+import defaultImage from "/anonymous-user.jpg";
 import { backendUrl } from "../../config/config";
 
 const Header = () => {
   const [username, setUsername] = useState("John Doe");
-  const [profilePic, setProfilePic] = useState(display_pic);
-  const [offset, setOffset] = useState(0);
+  const [profilePic, setProfilePic] = useState(defaultImage);
   const dropDownRef = useRef();
   const { isAuthenticated, token, csrfToken, logout } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -43,7 +42,13 @@ const Header = () => {
         const data = await response.data;
         console.log(data);
         setUsername(data.name);
-        setProfilePic(data.profilePic);
+
+        if (!data.profilePic) {
+          // console.log(data.profilePic);
+          setProfilePic(defaultImage);
+        } else {
+          setProfilePic(data.profilePic);
+        }
       }
     }
     getUserDashboard();
@@ -136,7 +141,7 @@ const Header = () => {
             >
               <div className="profile-pic-container w-[3rem] h-[3rem]  rounded-[200%] absolute top-0 right-[1rem] z-50">
                 <img
-                  src={profilePic}
+                  src={profilePic ? profilePic : defaultImage}
                   className="w-full h-full p-[3px] rounded-[200%]"
                 />
               </div>

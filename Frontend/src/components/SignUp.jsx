@@ -68,22 +68,31 @@ const SignUp = ({ handleError }) => {
     }
   };
 
-  async function handleSignup() {
-    const formData = new FormData();
+  async function handleSignup(data) {
+    // const formData = new FormData();
+    const { username, emailAddress, password, confirmPassword } = data;
+    // const profilePic = e.target["profile-picture"].files[0];
+    // const username = e.target.username.value;
+    // const email = e.target.email.value;
+    // const password = e.target.password.value;
+    // const confirmPassword = e.target["confirm-password"].value;
 
-    const profilePic = e.target["profile-picture"].files[0];
-    const username = e.target.username.value;
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-    const confirmPassword = e.target["confirm-password"].value;
+    const userData = {
+      name: username,
+      email: emailAddress,
+      password: password,
+      confirmPassword: confirmPassword,
+    };
 
-    formData.append("profilePicture", profilePic);
-    formData.append("name", username);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("confirmPassword", confirmPassword);
+    console.log(userData);
 
-    const response = await axios.post(`${backendUrl}/auth/signup`, formData, {
+    // formData.append("profilePicture", profilePic);
+    // formData.append("name", username);
+    // formData.append("email", email);
+    // formData.append("password", password);
+    // formData.append("confirmPassword", confirmPassword);
+
+    const response = await axios.post(`${backendUrl}/auth/signup`, userData, {
       withCredentials: true,
       headers: {
         "x-csrf-token": csrfToken,

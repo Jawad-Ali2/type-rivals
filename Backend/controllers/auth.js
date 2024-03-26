@@ -6,8 +6,9 @@ const fs = require("fs");
 const { validationResult } = require("express-validator");
 
 exports.postSignUp = async (req, res) => {
+  console.log(req.body);
   const { name, email, password, confirmPassword } = req.body;
-  const profilePicture = req.file;
+  // const profilePicture = req.file;
 
   // Handle picture submission
   const errors = validationResult(req);
@@ -17,38 +18,38 @@ exports.postSignUp = async (req, res) => {
 
   if (password != confirmPassword) throw new Error("Passwords do not match");
 
-  const bucket = admin.storage().bucket();
+  // const bucket = admin.storage().bucket();
 
-  const storagePath = `userProfilePicture/${profilePicture.filename}`;
+  // const storagePath = `userProfilePicture/${profilePicture.filename}`;
 
-  const file = bucket.file(storagePath);
+  // const file = bucket.file(storagePath);
 
-  const fileStream = file.createWriteStream({
-    metadata: {
-      contentType: profilePicture.mimeType,
-    },
-  });
+  // const fileStream = file.createWriteStream({
+  //   metadata: {
+  //     contentType: profilePicture.mimeType,
+  //   },
+  // });
 
-  fs.createReadStream(profilePicture.path).pipe(fileStream);
+  // fs.createReadStream(profilePicture.path).pipe(fileStream);
 
-  let downloadUrl;
-  await new Promise((resolve, reject) => {
-    fileStream.on("finish", async () => {
-      downloadUrl = await file.getSignedUrl({
-        action: "read",
-        expires: "01-01-2026",
-      });
-      resolve();
-    });
-    fileStream.on("error", reject);
-  });
-  fs.unlinkSync(profilePicture.path);
-
+  // let downloadUrl;
+  // await new Promise((resolve, reject) => {
+  //   fileStream.on("finish", async () => {
+  //     downloadUrl = await file.getSignedUrl({
+  //       action: "read",
+  //       expires: "01-01-2026",
+  //     });
+  //     resolve();
+  //   });
+  //   fileStream.on("error", reject);
+  // });
+  // fs.unlinkSync(profilePicture.path);
   bcrypt
     .hash(password, 12)
     .then((hashedPassword) => {
       const user = new User({
-        profilePic: downloadUrl[0],
+        // profilePic: downloadUrl[0],
+        profilePic: "",
         name: name,
         email: email,
         password: hashedPassword,
