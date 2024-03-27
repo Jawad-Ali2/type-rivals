@@ -1,20 +1,25 @@
-const { Schema } = require("mongoose");
+const mongoose = require("mongoose");
+
+const { Schema } = mongoose;
 
 const lobbySchema = new Schema({
-  lobby: {
-    players: [
-      {
-        playerId: String,
-        socketId: String,
-        username: String,
-        email: String,
-        profilePic: String,
-        wpm: Number,
-      },
-    ],
-    state: String,
-  },
+  players: [
+    {
+      playerId: String,
+      socketId: String,
+      username: String,
+      email: String,
+      profilePic: String,
+      percentageCompleted: Number,
+      wpm: Number,
+    },
+  ],
+  state: String,
+  expiresAt: { type: Date, default: Date.now, expires: 60 },
 });
+
+// TTL indexing for auto expiry of lobby
+lobbySchema.index({ "lobby.expiresAt": 1 }, { expireAfterSeconds: 0 }); // 1 means to sort in ascending order
 
 module.exports = mongoose.model("Lobby", lobbySchema);
 // const player = {

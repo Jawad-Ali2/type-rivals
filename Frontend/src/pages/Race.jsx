@@ -42,7 +42,7 @@ const Race = () => {
       socket.emit("createOrJoinLobby", userId);
 
       socket.on("message", (quote, lobby) => {
-        currentLobbyRef.current = lobby.id;
+        currentLobbyRef.current = lobby._id;
         setPlayers([...lobby.players]);
         setParagraph(quote.text);
         setSocketConnected(true);
@@ -53,7 +53,7 @@ const Race = () => {
       // Return a cleanup function to prevent the effect from running again
       return () => {
         // Case1 : When the user is in waiting state and leave
-        if (paragraph.length === 0 && !currentLobbyRef) {
+        if (paragraph.length === 0 && !currentLobbyRef.current) {
           console.log("UNMOUNTING");
           socket.emit("leaveRace");
         }

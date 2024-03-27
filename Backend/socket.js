@@ -3,6 +3,7 @@ const {
   fetchQuote,
   updateLobby,
   disconnectUser,
+  switchLobbyState,
 } = require("./utils/race");
 
 const corsOrigin =
@@ -40,10 +41,10 @@ module.exports = {
             if (lobby.players.length === 2) {
               console.log("Lobby length: " + lobby.players.length);
               lobby.state = "in-progress";
+              switchLobbyState("in-progress", lobby._id);
             }
-
             // ! Just to check players in room
-            io.in(lobby.id)
+            io.in(lobby._id.toString())
               .allSockets()
               .then((sockets) => {
                 const usersInSession = Array.from(sockets);
@@ -55,7 +56,8 @@ module.exports = {
               // Each player in room is sent paragraph
               fetchQuote()
                 .then((quote) => {
-                  io.in(lobby.id).emit("message", quote, lobby);
+                  console.log("Quote sent:", quote);
+                  io.in(lobby._id.toString()).emit("message", quote, lobby);
                 })
                 .catch((err) => {
                   console.log(err);
@@ -70,6 +72,7 @@ module.exports = {
         });
 
         socket.on("typingSpeedUpdate", (wpm, percentage, lobby, socketId) => {
+          console.log(lobby);
           if (lobby) {
             updateLobby(lobby, socketId, wpm, percentage);
           }
