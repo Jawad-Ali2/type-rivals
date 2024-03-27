@@ -55,6 +55,7 @@ const Race = () => {
         // Case1 : When the user is in waiting state and leave
         if (paragraph.length === 0 && !currentLobbyRef.current) {
           console.log("UNMOUNTING");
+
           socket.emit("leaveRace");
         }
         // console.log(socketConnected);
@@ -67,6 +68,14 @@ const Race = () => {
       // Case 2: When the user is competing with players but leave before the race ends
       if (socketConnected) {
         socket.emit("leaveRace");
+        setPlayers((prev) => {
+          prev.map((player) => {
+            if (player.playerId === userId) {
+              return { ...player, userLeft: true };
+            }
+            return player;
+          });
+        });
         // If the socket is still connected when the component unmounts,
         console.log("Unmounting");
         currentLobbyRef.current = null;
@@ -77,6 +86,7 @@ const Race = () => {
       }
     };
   }, [paragraph]);
+  console.log(players);
 
   // Each player sees himself on top of the list always
   useEffect(() => {

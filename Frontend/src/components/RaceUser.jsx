@@ -47,7 +47,7 @@ export const RaceUser = ({ players, setPlayers, token }) => {
       {players.map((player, index) => {
         return (
           <div className="text-white" key={index}>
-            <div className="p-5">
+            <div className={`p-5 ${player.userLeft && "text-blue"}`}>
               <div className="flex items-center gap-2">
                 <p className="">
                   {player.username} ({player.email})
@@ -66,9 +66,6 @@ export const RaceUser = ({ players, setPlayers, token }) => {
               <div className="pr-10">
                 <div className="bg-slate-500 w-full h-2 mt-2 rounded-full"></div>
               </div>
-            </div>
-            <div className="race-user-card-info">
-              {/* <div className="race-user-card-info-points">{player.points}</div> */}
             </div>
           </div>
         );

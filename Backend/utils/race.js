@@ -1,12 +1,8 @@
-const crypto = require("crypto");
 const Paragraph = require("../models/paragraphs");
 const User = require("../models/user");
 const Lobby = require("../models/lobby");
 
-const lobbies = [];
-
 function getLobby(lobbyId) {
-  // const lobby = lobbies.find((lobby) => lobby.id === lobbyId);
   return new Promise((resolve, reject) => {
     Lobby.findById(lobbyId)
       .then((lobby) => {
@@ -66,7 +62,12 @@ function joinLobby(playerId, socket, io) {
     let lobby = await Lobby.findOne({ state: "waiting" });
 
     if (!lobby) lobby = await createLobby();
-    console.log(lobby.players, lobby.state);
+
+    const playerAlreadyJoined = lobby.players.find(
+      (player) => player.playerId === playerId
+    );
+
+    if (playerAlreadyJoined) return;
 
     User.findById(playerId)
       .then((user) => {
@@ -80,6 +81,7 @@ function joinLobby(playerId, socket, io) {
           profilePic: user.profilePic,
           percentageCompleted: 0,
           wpm: 0,
+          userLeft: false,
         };
         lobby.players.push(player);
         return lobby.save();

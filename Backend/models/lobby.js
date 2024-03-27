@@ -12,14 +12,15 @@ const lobbySchema = new Schema({
       profilePic: String,
       percentageCompleted: Number,
       wpm: Number,
+      userLeft: Boolean,
     },
   ],
   state: String,
-  expiresAt: { type: Date, default: Date.now, expires: 60 },
+  expiresAt: { type: Date, default: Date.now, expires: 3600 },
 });
 
 // TTL indexing for auto expiry of lobby
-lobbySchema.index({ "lobby.expiresAt": 1 }, { expireAfterSeconds: 0 }); // 1 means to sort in ascending order
+lobbySchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 }); // 1 means to sort in ascending order
 
 module.exports = mongoose.model("Lobby", lobbySchema);
 // const player = {
