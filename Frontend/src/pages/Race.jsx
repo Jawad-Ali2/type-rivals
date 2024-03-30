@@ -7,6 +7,7 @@ import createConnection from "../../utils/socket";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { RaceUser } from "@/components/RaceUser";
+import { RaceContext } from "../../context/RaceContext";
 
 const Race = () => {
   document.title = "Race | Type Rivals";
@@ -25,6 +26,7 @@ const Race = () => {
   const [socketConnected, setSocketConnected] = useState(false);
   const socket = createConnection(token);
   const currentLobbyRef = useRef(null);
+  const { signal, initiateSignal, stopSignal } = useContext(RaceContext);
 
   //Reload/Update Components
   useEffect(() => {
@@ -34,6 +36,7 @@ const Race = () => {
     console.log("RESET");
     setPlayersConnected(() => false);
     resetPrepareTimer();
+    stopSignal();
   }, [replay]);
 
   //Prepare Timer
@@ -51,6 +54,7 @@ const Race = () => {
         setSocketConnected(true);
 
         setPlayersConnected(() => true);
+        initiateSignal();
       });
 
       // Return a cleanup function to prevent the effect from running again
@@ -71,7 +75,7 @@ const Race = () => {
       // Case 2: When the user is competing with players but leave before the race ends
       if (socketConnected) {
         socket.emit("leaveRace");
-
+        stopSignal();
         // If the socket is still connected when the component unmounts,
         console.log("Unmounting");
         currentLobbyRef.current = null;
@@ -89,8 +93,6 @@ const Race = () => {
 
     updatedPlayers.forEach((player, index) => {
       if (player.playerId === userId && index > 0) {
-        console.log("in here");
-
         const temp = updatedPlayers[0];
         updatedPlayers[0] = player;
         updatedPlayers[index] = temp;

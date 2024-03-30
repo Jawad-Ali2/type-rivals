@@ -21,16 +21,35 @@ async function switchLobbyState(lobbyState, lobbyId) {
   await lobby.save();
 }
 
-async function updateLobby(lobbyId, socketId, wpm, percentage, raceFinished) {
+async function updateLobby(
+  lobbyId,
+  socketId,
+  wpm,
+  percentage,
+  raceTime,
+  raceDuration,
+  text
+) {
   try {
+    let raceHasFinished = true;
     const lobby = await getLobby(lobbyId);
     // console.log(lobby);
     const player = lobby.players.find((player) => player.socketId === socketId);
     player.wpm = wpm;
     player.percentageCompleted = percentage;
-    if (player.percentageCompleted === 100) {
-      console.log(raceFinished, "kgjadlgkjsalk");
-      // lobby.state = "finished";
+
+    lobby.players.forEach((player) => {
+      if (player.percentageCompleted !== 100) {
+        raceHasFinished = false;
+      }
+    });
+
+    if (raceHasFinished) {
+      console.log(raceHasFinished, "kgjadlgkjsalk");
+      lobby.state = "finished";
+    } else if (raceTime === raceDuration) {
+      console.log("else if");
+      lobby.state = "finished";
     }
 
     await lobby.save();
@@ -141,10 +160,12 @@ function disconnectUser(socketId) {
             await lobby.save();
           }
 
-          // if (lobby.players.length === 0) {
-          //   Lobby.findByIdAndDelete(lobby._id);
-          //   console.log("Lobbies after disconneting:", lobbies);
-          // }
+          // if there are no players in the lobby (and lobby is in-progress)
+          if (lobby.players.length === 0 && lobby.state === "in-progress") {
+            // Lobby.findByIdAndDelete(lobby._id);
+            lobby.state = "waiting";
+            console.log("Lobbies after disconneting:", lobbies);
+          }
         })
       );
     })

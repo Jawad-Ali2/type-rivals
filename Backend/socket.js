@@ -72,9 +72,17 @@ module.exports = {
 
         socket.on(
           "typingSpeedUpdate",
-          (wpm, percentage, lobby, socketId, raceFinished) => {
+          (wpm, percentage, lobby, socketId, raceTime, raceDuration, text) => {
             if (lobby) {
-              updateLobby(lobby, socketId, wpm, percentage, raceFinished);
+              updateLobby(
+                lobby,
+                socketId,
+                wpm,
+                percentage,
+                raceTime,
+                raceDuration,
+                text
+              );
             }
             io.in(lobby).emit("speed", { wpm, percentage, socketId });
           }

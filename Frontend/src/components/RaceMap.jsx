@@ -6,6 +6,7 @@ import { useCountDown } from "../../Hooks";
 import { calculateWPM } from "../../utils/calculateWPM";
 import { AuthContext } from "../../context/AuthContext";
 import createConnection from "../../utils/socket";
+import { RaceContext } from "../../context/RaceContext";
 const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
   const success = "text-green-600";
   const error = "text-red-500";
@@ -23,8 +24,9 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
   const [mask, setMask] = useState("");
   const [color, setColor] = useState(success);
   const [raceFinished, setRaceFinished] = useState(false);
-  const [sendSignal, setSendSignal] = useState(false);
-  const [signalInterval, setSignalInterval] = useState();
+  const { signal, initiateSignal, stopSignal } = useContext(RaceContext);
+  // const [sendSignal, setSendSignal] = useState(false);
+  // const [signalInterval, setSignalInterval] = useState();
 
   //Focuses on Input on Race Start
   useEffect(() => {
@@ -37,6 +39,7 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
   //Resets Hooks on Replay
   useEffect(() => {
     if (!paragraph) {
+      console.log("RESET");
       setRaceFinished((prev) => false);
       setInput((prev) => "");
       setMask((prev) => "");
@@ -69,7 +72,8 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
   useEffect(() => {
     if (raceTime <= 0 && !raceTimerOn) {
       setRaceFinished((prev) => true);
-      clearInterval(signalInterval);
+      // clearInterval(signalInterval);
+      stopSignal();
     }
   }, [raceTime, raceTimerOn]);
 
@@ -84,36 +88,47 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
       );
       if (!raceFinished) {
         // wpmInterval = setInterval(calculateWPMInterval, 3000);
-        console.log("INTERVALLL");
-        socket.emit("typingSpeedUpdate", wpm, percentage, lobby, socket.id);
+        console.log("INTERVALLL", raceTime);
+        socket.emit(
+          "typingSpeedUpdate",
+          wpm,
+          percentage,
+          lobby,
+          socket.id,
+          raceTime,
+          raceDuration
+        );
       } else {
         // Sending one extra emit to get the right percentage when the race ends.
-        console.log("RACE HAS BEEN FINISHED");
-        socket.emit("typingSpeedUpdate", wpm, percentage, lobby, socket.id);
+        socket.emit(
+          "typingSpeedUpdate",
+          wpm,
+          percentage,
+          lobby,
+          socket.id,
+          raceTime,
+          raceDuration,
+          "FINAL"
+        );
         setRaceFinished(() => true);
         setRaceTimerOn(() => false);
       }
     }
-  }, [raceFinished, startRace, sendSignal]);
+  }, [raceFinished, startRace, signal]);
 
-  useEffect(() => {
-    setSignalInterval(
-      setInterval(() => {
-        console.log("in here");
-        console.log(raceFinished);
-        setSendSignal((prev) => !prev);
-      }, [2000])
-    );
+  // useEffect(() => {
+  //   initiateSignal();
 
-    return () => {
-      clearInterval(signalInterval);
-    };
-  }, []);
+  //   return () => {
+  //     // clearInterval(signalInterval);
+  //     stopSignal();
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (raceFinished) {
-      clearInterval(signalInterval);
-      setSignalInterval(null);
+      // clearInterval(signalInterval);
+      stopSignal();
     }
   }, [raceFinished]);
 

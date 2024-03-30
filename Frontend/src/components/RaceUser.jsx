@@ -50,7 +50,6 @@ export const RaceUser = ({ players, setPlayers, token }) => {
                 <p className="">
                   {player.username} ({player.email})
                 </p>
-                <div></div>
               </div>
               <div className="flex justify-between items-center">
                 <img
