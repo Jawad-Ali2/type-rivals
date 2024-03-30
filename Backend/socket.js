@@ -56,7 +56,6 @@ module.exports = {
               // Each player in room is sent paragraph
               fetchQuote()
                 .then((quote) => {
-                  console.log("Quote sent:", quote);
                   io.in(lobby._id.toString()).emit("message", quote, lobby);
                 })
                 .catch((err) => {
@@ -71,16 +70,18 @@ module.exports = {
           }
         });
 
-        socket.on("typingSpeedUpdate", (wpm, percentage, lobby, socketId) => {
-          console.log(lobby);
-          if (lobby) {
-            updateLobby(lobby, socketId, wpm, percentage);
+        socket.on(
+          "typingSpeedUpdate",
+          (wpm, percentage, lobby, socketId, raceFinished) => {
+            if (lobby) {
+              updateLobby(lobby, socketId, wpm, percentage, raceFinished);
+            }
+            io.in(lobby).emit("speed", { wpm, percentage, socketId });
           }
-          io.in(lobby).emit("speed", { wpm, percentage, socketId });
-        });
+        );
 
-        socket.on("leaveRace", () => {
-          console.log("leaveRace");
+        socket.on("leaveRace", (text) => {
+          console.log("leaveRace", text);
           disconnectUser(socket.id);
         });
 

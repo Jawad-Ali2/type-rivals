@@ -30,6 +30,9 @@ const Race = () => {
   useEffect(() => {
     if (paragraph) setParagraph("");
     currentLobbyRef.current = null;
+    setPlayers(() => []);
+    console.log("RESET");
+    setPlayersConnected(() => false);
     resetPrepareTimer();
   }, [replay]);
 
@@ -47,7 +50,7 @@ const Race = () => {
         setParagraph(quote.text);
         setSocketConnected(true);
 
-        setPlayersConnected(true);
+        setPlayersConnected(() => true);
       });
 
       // Return a cleanup function to prevent the effect from running again
@@ -68,14 +71,7 @@ const Race = () => {
       // Case 2: When the user is competing with players but leave before the race ends
       if (socketConnected) {
         socket.emit("leaveRace");
-        setPlayers((prev) => {
-          prev.map((player) => {
-            if (player.playerId === userId) {
-              return { ...player, userLeft: true };
-            }
-            return player;
-          });
-        });
+
         // If the socket is still connected when the component unmounts,
         console.log("Unmounting");
         currentLobbyRef.current = null;
@@ -86,7 +82,6 @@ const Race = () => {
       }
     };
   }, [paragraph]);
-  console.log(players);
 
   // Each player sees himself on top of the list always
   useEffect(() => {

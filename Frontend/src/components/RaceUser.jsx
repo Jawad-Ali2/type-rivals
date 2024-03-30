@@ -3,7 +3,6 @@ import createConnection from "../../utils/socket";
 
 export const RaceUser = ({ players, setPlayers, token }) => {
   const [raceCompletion, setRaceCompletion] = useState(0);
-  const [picPosition, setPicPosition] = useState(0);
   const socket = createConnection(token);
 
   const calculateNewPos = (completion) => {
@@ -12,7 +11,7 @@ export const RaceUser = ({ players, setPlayers, token }) => {
 
   useEffect(() => {
     socket.on("speed", ({ wpm, percentage, socketId }) => {
-      setRaceCompletion(percentage);
+      setRaceCompletion(() => percentage);
 
       setPlayers(
         players.map((player) => {
@@ -34,7 +33,6 @@ export const RaceUser = ({ players, setPlayers, token }) => {
   useEffect(() => {
     players.forEach((player) => {
       const newPos = calculateNewPos(player.percentageCompleted);
-      setPicPosition(newPos);
 
       const image = document.querySelector(`#pfp-${player.playerId}`);
 

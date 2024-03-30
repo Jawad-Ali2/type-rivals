@@ -21,22 +21,22 @@ async function switchLobbyState(lobbyState, lobbyId) {
   await lobby.save();
 }
 
-function updateLobby(lobbyId, socketId, wpm, percentage) {
-  // First we find the lobby user is connected
-  getLobby(lobbyId)
-    .then((lobby) => {
-      // Then finding the player using the socket
-      const player = lobby.players.find(
-        (player) => player.socketId === socketId
-      );
+async function updateLobby(lobbyId, socketId, wpm, percentage, raceFinished) {
+  try {
+    const lobby = await getLobby(lobbyId);
+    // console.log(lobby);
+    const player = lobby.players.find((player) => player.socketId === socketId);
+    player.wpm = wpm;
+    player.percentageCompleted = percentage;
+    if (player.percentageCompleted === 100) {
+      console.log(raceFinished, "kgjadlgkjsalk");
+      // lobby.state = "finished";
+    }
 
-      // Updating the player's wpm
-      player.wpm = wpm;
-      player.percentageCompleted = percentage;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+    await lobby.save();
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 function createLobby() {
@@ -60,7 +60,6 @@ function createLobby() {
 function joinLobby(playerId, socket, io) {
   return new Promise(async (resolve, reject) => {
     let lobby = await Lobby.findOne({ state: "waiting" });
-
     if (!lobby) lobby = await createLobby();
 
     const playerAlreadyJoined = lobby.players.find(
@@ -128,9 +127,7 @@ async function fetchQuote() {
 }
 
 function disconnectUser(socketId) {
-  Lobby.find({
-    $or: [{ state: "waiting" }, { state: "in-progress" }],
-  })
+  Lobby.find({ state: "waiting" })
     .then((lobbies) => {
       console.log("in diconnectin", lobbies);
       return Promise.all(
@@ -144,10 +141,10 @@ function disconnectUser(socketId) {
             await lobby.save();
           }
 
-          if (lobby.players.length === 0) {
-            Lobby.findByIdAndDelete(lobby._id);
-            console.log("Lobbies after disconneting:", lobbies);
-          }
+          // if (lobby.players.length === 0) {
+          //   Lobby.findByIdAndDelete(lobby._id);
+          //   console.log("Lobbies after disconneting:", lobbies);
+          // }
         })
       );
     })

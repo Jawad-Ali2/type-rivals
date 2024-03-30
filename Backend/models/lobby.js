@@ -13,6 +13,7 @@ const lobbySchema = new Schema({
       percentageCompleted: Number,
       wpm: Number,
       userLeft: Boolean,
+      completionTime: String,
     },
   ],
   state: String,
@@ -23,16 +24,3 @@ const lobbySchema = new Schema({
 lobbySchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 }); // 1 means to sort in ascending order
 
 module.exports = mongoose.model("Lobby", lobbySchema);
-// const player = {
-//   playerId: playerId,
-//   socketId: socket.id,
-//   username: user.name,
-//   email: user.email,
-//   profilePic: user.profilePic,
-//   wpm: 0,
-// };
-// const lobby = {
-//   id: crypto.randomUUID().toString(),
-//   players: [],
-//   state: "waiting", // three states ('waiting', 'in_progress', 'finished')
-// };

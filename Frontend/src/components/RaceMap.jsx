@@ -23,7 +23,8 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
   const [mask, setMask] = useState("");
   const [color, setColor] = useState(success);
   const [raceFinished, setRaceFinished] = useState(false);
-  const [intervalDuration, setIntervalDuration] = useState(2000);
+  const [sendSignal, setSendSignal] = useState(false);
+  const [signalInterval, setSignalInterval] = useState();
 
   //Focuses on Input on Race Start
   useEffect(() => {
@@ -46,6 +47,7 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
   useEffect(() => {
     if (startRace) {
       setRaceTimerOn((prev) => true);
+      console.log("RaceTimer");
     }
   }, [startRace]);
 
@@ -67,13 +69,13 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
   useEffect(() => {
     if (raceTime <= 0 && !raceTimerOn) {
       setRaceFinished((prev) => true);
+      clearInterval(signalInterval);
     }
   }, [raceTime, raceTimerOn]);
 
   // Getting speed after short intervals
   useEffect(() => {
-    if (raceTime > 0 && startRace) {
-      let wpmInterval;
+    if (raceTimerOn) {
       const [wpm, percentage] = calculateWPM(
         input,
         raceDuration - raceTime,
@@ -81,31 +83,39 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
         raceDuration
       );
       if (!raceFinished) {
-        const calculateWPMInterval = () => {
-          // console.log(percentage);
-
-          // TODO: Emit signal to backend after every 2 sec with wpm calculation
-          // console.log("WPM calculation" + wpm, percentage);
-          socket.emit("typingSpeedUpdate", wpm, percentage, lobby, socket.id);
-
-          const newInterval = Math.max(2000 / wpm, 200);
-          setIntervalDuration(newInterval);
-        };
-
-        calculateWPMInterval();
-
-        wpmInterval = setInterval(calculateWPMInterval, 2000);
+        // wpmInterval = setInterval(calculateWPMInterval, 3000);
+        console.log("INTERVALLL");
+        socket.emit("typingSpeedUpdate", wpm, percentage, lobby, socket.id);
       } else {
         // Sending one extra emit to get the right percentage when the race ends.
+        console.log("RACE HAS BEEN FINISHED");
         socket.emit("typingSpeedUpdate", wpm, percentage, lobby, socket.id);
-        clearInterval(wpmInterval);
+        setRaceFinished(() => true);
+        setRaceTimerOn(() => false);
       }
-
-      return () => {
-        clearInterval(wpmInterval);
-      };
     }
-  }, [raceTime, raceFinished]);
+  }, [raceFinished, startRace, sendSignal]);
+
+  useEffect(() => {
+    setSignalInterval(
+      setInterval(() => {
+        console.log("in here");
+        console.log(raceFinished);
+        setSendSignal((prev) => !prev);
+      }, [2000])
+    );
+
+    return () => {
+      clearInterval(signalInterval);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (raceFinished) {
+      clearInterval(signalInterval);
+      setSignalInterval(null);
+    }
+  }, [raceFinished]);
 
   return (
     <section className="racemap-section relative">
