@@ -24,9 +24,17 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
   const [mask, setMask] = useState("");
   const [color, setColor] = useState(success);
   const [raceFinished, setRaceFinished] = useState(false);
-  const { signal, initiateSignal, stopSignal } = useContext(RaceContext);
-  // const [sendSignal, setSendSignal] = useState(false);
-  // const [signalInterval, setSignalInterval] = useState();
+  const {
+    resetContext,
+    signal,
+    initiateSignal,
+    stopSignal,
+    iHaveFinished,
+    setIhaveFinished,
+    raceHasFinished,
+    setRaceHasFinished,
+    changeUserFinishTimer,
+  } = useContext(RaceContext);
 
   //Focuses on Input on Race Start
   useEffect(() => {
@@ -39,17 +47,24 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
   //Resets Hooks on Replay
   useEffect(() => {
     if (!paragraph) {
-      console.log("RESET");
-      setRaceFinished((prev) => false);
+      // setRaceFinished((prev) => false);
+      setRaceHasFinished(() => false);
       setInput((prev) => "");
       setMask((prev) => "");
       resetRaceTimer();
+      resetContext();
     }
   }, [paragraph]);
 
   useEffect(() => {
     if (startRace) {
       setRaceTimerOn((prev) => true);
+      socket.on("raceFinished", (raceFinished1) => {
+        // TODO: SET USERHASFINISHED to true here so both players see their respective stats
+        console.log("raceFinished: " + raceFinished1);
+        setRaceHasFinished(() => raceFinished1);
+        setRaceTimerOn(() => false);
+      });
       console.log("RaceTimer");
     }
   }, [startRace]);
@@ -65,17 +80,23 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
   }, [correct]);
 
   useEffect(() => {
-    if (raceFinished) setRaceTimerOn((prev) => false);
-  }, [raceFinished]);
+    // console.log(iHaveFinished);
+    if (iHaveFinished) {
+      setRaceTimerOn((prev) => false);
+      changeUserFinishTimer(raceTime);
+    }
+  }, [iHaveFinished]);
 
   // If the time runs out
   useEffect(() => {
     if (raceTime <= 0 && !raceTimerOn) {
-      setRaceFinished((prev) => true);
-      // clearInterval(signalInterval);
+      // setRaceFinished((prev) => true);
+      setRaceHasFinished(() => true);
       stopSignal();
     }
   }, [raceTime, raceTimerOn]);
+
+  useEffect(() => {}, []);
 
   // Getting speed after short intervals
   useEffect(() => {
@@ -86,9 +107,7 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
         paragraph,
         raceDuration
       );
-      if (!raceFinished) {
-        // wpmInterval = setInterval(calculateWPMInterval, 3000);
-        console.log("INTERVALLL", raceTime);
+      if (!iHaveFinished) {
         socket.emit(
           "typingSpeedUpdate",
           wpm,
@@ -107,30 +126,19 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
           lobby,
           socket.id,
           raceTime,
-          raceDuration,
-          "FINAL"
+          raceDuration
         );
-        setRaceFinished(() => true);
-        setRaceTimerOn(() => false);
       }
     }
-  }, [raceFinished, startRace, signal]);
-
-  // useEffect(() => {
-  //   initiateSignal();
-
-  //   return () => {
-  //     // clearInterval(signalInterval);
-  //     stopSignal();
-  //   };
-  // }, []);
+  }, [iHaveFinished, startRace, signal]);
 
   useEffect(() => {
-    if (raceFinished) {
-      // clearInterval(signalInterval);
+    if (raceHasFinished) {
       stopSignal();
+
+      // TODO: First player doesn't get race finished screen until every player or timer has finished
     }
-  }, [raceFinished]);
+  }, [raceHasFinished]);
 
   return (
     <section className="racemap-section relative">
@@ -138,7 +146,7 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
         input={input}
         paragraph={paragraph}
         time={raceDuration - raceTime}
-        raceFinisihed={raceFinished}
+        raceFinished={raceHasFinished}
         setReplay={setReplay}
       />
       <p className="absolute font-semibold web-text right-0 top-[-1.4rem]">
@@ -159,10 +167,10 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
         <TrackInput
           input={input}
           setInput={setInput}
-          raceFinished={raceFinished}
+          raceFinished={raceHasFinished}
           paragraph={paragraph}
           setCorrect={setCorrect}
-          setRaceFinished={setRaceFinished}
+          setRaceFinished={setRaceHasFinished}
         />
       </div>
     </section>

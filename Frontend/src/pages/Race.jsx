@@ -26,16 +26,17 @@ const Race = () => {
   const [socketConnected, setSocketConnected] = useState(false);
   const socket = createConnection(token);
   const currentLobbyRef = useRef(null);
-  const { signal, initiateSignal, stopSignal } = useContext(RaceContext);
+  const { resetContext, signal, initiateSignal, stopSignal } =
+    useContext(RaceContext);
 
   //Reload/Update Components
   useEffect(() => {
     if (paragraph) setParagraph("");
     currentLobbyRef.current = null;
     setPlayers(() => []);
-    console.log("RESET");
     setPlayersConnected(() => false);
     resetPrepareTimer();
+    resetContext();
     stopSignal();
   }, [replay]);
 

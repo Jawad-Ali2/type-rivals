@@ -27,13 +27,12 @@ async function updateLobby(
   wpm,
   percentage,
   raceTime,
-  raceDuration,
-  text
+  raceDuration
 ) {
   try {
     let raceHasFinished = true;
     const lobby = await getLobby(lobbyId);
-    // console.log(lobby);
+
     const player = lobby.players.find((player) => player.socketId === socketId);
     player.wpm = wpm;
     player.percentageCompleted = percentage;
@@ -53,8 +52,11 @@ async function updateLobby(
     }
 
     await lobby.save();
+
+    return Promise.resolve(raceHasFinished);
   } catch (error) {
     console.error(error);
+    return Promise.reject(error);
   }
 }
 

@@ -72,17 +72,26 @@ module.exports = {
 
         socket.on(
           "typingSpeedUpdate",
-          (wpm, percentage, lobby, socketId, raceTime, raceDuration, text) => {
+          (wpm, percentage, lobby, socketId, raceTime, raceDuration) => {
             if (lobby) {
+              // If given conditions are met we get raceFinished as true
               updateLobby(
                 lobby,
                 socketId,
                 wpm,
                 percentage,
                 raceTime,
-                raceDuration,
-                text
-              );
+                raceDuration
+              )
+                .then((raceFinished1) => {
+                  if (raceFinished1) {
+                    // io.in(lobby).emit("raceFinished", raceFinished1);
+                    io.emit("raceFinished", raceFinished1); // TODO: If all users in game recieve signal uncomment and remove this line
+                  }
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
             }
             io.in(lobby).emit("speed", { wpm, percentage, socketId });
           }
