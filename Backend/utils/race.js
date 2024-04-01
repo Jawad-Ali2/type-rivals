@@ -42,12 +42,13 @@ async function updateLobby(
         raceHasFinished = false;
       }
     });
+    // console.log("AGD", raceTime, raceDuration, socketId);
 
     if (raceHasFinished) {
       console.log(raceHasFinished, "kgjadlgkjsalk");
       lobby.state = "finished";
-    } else if (raceTime === raceDuration) {
-      console.log("else if");
+    } else if (raceDuration - raceTime === raceDuration) {
+      console.log(raceTime, raceDuration, socketId);
       lobby.state = "finished";
     }
 
@@ -162,6 +163,7 @@ function disconnectUser(socketId) {
             await lobby.save();
           }
 
+          // TODO: ADD THIS FUNCTIONALITY
           // if there are no players in the lobby (and lobby is in-progress)
           if (lobby.players.length === 0 && lobby.state === "in-progress") {
             // Lobby.findByIdAndDelete(lobby._id);

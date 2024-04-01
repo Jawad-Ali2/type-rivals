@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 
 import Home from "@/pages/Home";
 import Dashboard from "@/pages/Dashboard";
@@ -8,7 +8,19 @@ import Auth from "@/pages/Auth";
 import Narrator from "@/pages/Narrator";
 import { RootLayout } from "@/main";
 import axios from "axios";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
+const ProtectedRoute = ({ element, path }) => {
+  const { isAuthenticated } = useContext(AuthContext);
+
+  console.log(isAuthenticated);
+  if (!isAuthenticated && path !== "/auth") {
+    return <Navigate to="/auth" />;
+  }
+
+  return element;
+};
 
 const router = createBrowserRouter([
   {
@@ -25,11 +37,13 @@ const router = createBrowserRouter([
       },
       {
         path: "dashboard",
-        element: <Dashboard />,
+        element: <ProtectedRoute element={<Dashboard />} path="/dashboard" />,
+        // element: <Dashboard />,
       },
       {
         path: "race",
-        element: <Race />,
+        element: <ProtectedRoute element={<Race />} path="/race" />,
+        // element: <Race />,
         // loader: raceLoader,
       },
       {
@@ -38,7 +52,8 @@ const router = createBrowserRouter([
       },
       {
         path: "narrator",
-        element: <Narrator />,
+        element: <ProtectedRoute element={<Narrator />} path="/narrator" />,
+        // element: <Narrator />,
       },
     ],
   },

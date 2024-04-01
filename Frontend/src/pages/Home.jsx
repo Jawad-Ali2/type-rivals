@@ -1,4 +1,4 @@
-import  StatBar  from "@/components/StatBar";
+import StatBar from "@/components/StatBar";
 import { Button } from "@/components/ui/button";
 const Home = () => {
   document.title = "Home | Type Rivals";

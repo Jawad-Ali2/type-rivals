@@ -51,7 +51,8 @@ const Header = () => {
         }
       }
     }
-    getUserDashboard();
+
+    if (isAuthenticated) getUserDashboard();
 
     return () => {
       controller.abort();
@@ -105,14 +106,16 @@ const Header = () => {
     <section className="header-section faded-border border-b-2">
       <div className="header-container fixed w-full h-[5rem] bg-skin-overlayBG z-[500] ">
         <div className="header-contents h-full w-[95%] m-auto flex flex-row justify-between items-center">
-          <div className="logo-container h-full">
+          <div className="logo-container h-full" onClick={() => navigate("/")}>
             <img
-              className="h-full inline-block"
+              className="h-full inline-block cursor-pointer"
               src={website_logo}
               alt="type rivals"
               id="web-logo"
             />
-            <p className="inline-block text-skin-base">Type Rivals</p>
+            <p className="inline-block text-skin-base cursor-pointer">
+              Type Rivals
+            </p>
           </div>
           <div className="dropddown-button h-[25px] md:hidden">
             <CIcon

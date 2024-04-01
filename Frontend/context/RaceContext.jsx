@@ -37,8 +37,7 @@ const RaceProvider = ({ children }) => {
     setSignalInterval(
       setInterval(() => {
         setSignal((prev) => !prev);
-        console.log("initSignal");
-      }, 3000)
+      }, 2000)
     );
   };
 
@@ -55,7 +54,6 @@ const RaceProvider = ({ children }) => {
     setUserFinishTimer(() => val);
   };
 
-  console.log(userFinishTimer);
   return (
     <RaceContext.Provider
       value={{

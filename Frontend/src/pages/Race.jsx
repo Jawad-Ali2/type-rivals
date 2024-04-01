@@ -26,7 +26,7 @@ const Race = () => {
   const [socketConnected, setSocketConnected] = useState(false);
   const socket = createConnection(token);
   const currentLobbyRef = useRef(null);
-  const { resetContext, signal, initiateSignal, stopSignal } =
+  const { resetContext, signal, initiateSignal, stopSignal, iHaveFinished } =
     useContext(RaceContext);
 
   //Reload/Update Components
@@ -47,9 +47,9 @@ const Race = () => {
 
       // Send signal to join the race
       socket.emit("createOrJoinLobby", userId);
-
       socket.on("message", (quote, lobby) => {
         currentLobbyRef.current = lobby._id;
+        console.log("HELLO");
         setPlayers([...lobby.players]);
         setParagraph(quote.text);
         setSocketConnected(true);
@@ -66,7 +66,6 @@ const Race = () => {
 
           socket.emit("leaveRace");
         }
-        // console.log(socketConnected);
       };
     }
     if (paragraph) {
@@ -120,6 +119,12 @@ const Race = () => {
             raceDuration={60}
             setReplay={setReplay}
           />
+          <button
+            className={`web-text web-button ${!iHaveFinished && "hidden"}`}
+            onClick={() => setReplay((prev) => !prev)}
+          >
+            Play Again
+          </button>
         </div>
       </div>
     </section>

@@ -107,7 +107,7 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
         paragraph,
         raceDuration
       );
-      if (!iHaveFinished) {
+      if (!iHaveFinished && raceTime !== 0) {
         socket.emit(
           "typingSpeedUpdate",
           wpm,
@@ -119,15 +119,17 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
         );
       } else {
         // Sending one extra emit to get the right percentage when the race ends.
-        socket.emit(
-          "typingSpeedUpdate",
-          wpm,
-          percentage,
-          lobby,
-          socket.id,
-          raceTime,
-          raceDuration
-        );
+        if (iHaveFinished || raceTime === 0) {
+          socket.emit(
+            "typingSpeedUpdate",
+            wpm,
+            percentage,
+            lobby,
+            socket.id,
+            raceTime,
+            raceDuration
+          );
+        }
       }
     }
   }, [iHaveFinished, startRace, signal]);
