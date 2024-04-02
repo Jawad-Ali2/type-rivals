@@ -9,7 +9,7 @@ import axios from "axios";
 import { RaceUser } from "@/components/RaceUser";
 import { RaceContext } from "../../context/RaceContext";
 
-const Race = () => {
+const Race = ({ noOfPlayers }) => {
   document.title = "Race | Type Rivals";
   const [
     prepareTime,
@@ -26,7 +26,7 @@ const Race = () => {
   const [socketConnected, setSocketConnected] = useState(false);
   const socket = createConnection(token);
   const currentLobbyRef = useRef(null);
-  const { resetContext, signal, initiateSignal, stopSignal, iHaveFinished } =
+  const { resetContext, initiateSignal, stopSignal, iHaveFinished } =
     useContext(RaceContext);
 
   //Reload/Update Components
@@ -46,7 +46,7 @@ const Race = () => {
       // Set the flag to true to indicate the socket is connected
 
       // Send signal to join the race
-      socket.emit("createOrJoinLobby", userId);
+      socket.emit("createOrJoinLobby", userId, noOfPlayers);
       socket.on("message", (quote, lobby) => {
         currentLobbyRef.current = lobby._id;
         console.log("HELLO");

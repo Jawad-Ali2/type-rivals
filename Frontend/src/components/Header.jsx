@@ -25,7 +25,7 @@ const Header = () => {
     ["Quick Race", "/race"],
     ["Race vs Narrator", "/narrator"],
     ["vs CPU", "/race"],
-    ["Death Match", "/race"],
+    ["Practice", "/practice"],
     ["Tournaments", "/race"],
   ];
   useEffect(() => {
