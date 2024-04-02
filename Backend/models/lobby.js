@@ -13,7 +13,7 @@ const lobbySchema = new Schema({
       percentageCompleted: Number,
       wpm: Number,
       userLeft: Boolean,
-      completionTime: String,
+      completionTime: Number,
     },
   ],
   state: String,

@@ -42,13 +42,10 @@ async function updateLobby(
         raceHasFinished = false;
       }
     });
-    // console.log("AGD", raceTime, raceDuration, socketId);
 
-    if (raceHasFinished) {
-      console.log(raceHasFinished, "kgjadlgkjsalk");
-      lobby.state = "finished";
-    } else if (raceDuration - raceTime === raceDuration) {
-      console.log(raceTime, raceDuration, socketId);
+    // ! Both the written and given paragraph must be same also to finish race!!!!
+    if (raceHasFinished || raceDuration - raceTime === raceDuration) {
+      player.completionTime = raceTime;
       lobby.state = "finished";
     }
 
@@ -71,6 +68,7 @@ function createLobby() {
     lobby
       .save()
       .then((lobby) => {
+        console.log(lobby);
         resolve(lobby);
       })
       .catch((err) => {
@@ -103,6 +101,7 @@ function joinLobby(playerId, socket, io) {
           percentageCompleted: 0,
           wpm: 0,
           userLeft: false,
+          completionTime: 0,
         };
         lobby.players.push(player);
         return lobby.save();

@@ -94,20 +94,17 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
       setRaceHasFinished(() => true);
       stopSignal();
     }
-  }, [raceTime, raceTimerOn]);
-
-  useEffect(() => {}, []);
-
+  }, [signal, raceTimerOn]);
   // Getting speed after short intervals
   useEffect(() => {
+    const [wpm, percentage] = calculateWPM(
+      input,
+      raceDuration - raceTime,
+      paragraph,
+      raceDuration
+    );
     if (raceTimerOn) {
-      const [wpm, percentage] = calculateWPM(
-        input,
-        raceDuration - raceTime,
-        paragraph,
-        raceDuration
-      );
-      if (!iHaveFinished && raceTime !== 0) {
+      if (!iHaveFinished) {
         socket.emit(
           "typingSpeedUpdate",
           wpm,
@@ -117,22 +114,21 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
           raceTime,
           raceDuration
         );
-      } else {
-        // Sending one extra emit to get the right percentage when the race ends.
-        if (iHaveFinished || raceTime === 0) {
-          socket.emit(
-            "typingSpeedUpdate",
-            wpm,
-            percentage,
-            lobby,
-            socket.id,
-            raceTime,
-            raceDuration
-          );
-        }
       }
     }
-  }, [iHaveFinished, startRace, signal]);
+    if (iHaveFinished || raceTime === 0) {
+      // Sending one extra emit to get the right percentage when the race ends.
+      socket.emit(
+        "typingSpeedUpdate",
+        wpm,
+        percentage,
+        lobby,
+        socket.id,
+        raceTime,
+        raceDuration
+      );
+    }
+  }, [iHaveFinished, startRace, signal, raceHasFinished]);
 
   useEffect(() => {
     if (raceHasFinished) {

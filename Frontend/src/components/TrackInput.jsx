@@ -17,6 +17,7 @@ const TrackInput = ({
     if (typedInput === progressedParagraph) {
       setCorrect((prev) => true);
       if (typedInput === paragraph) {
+        console.log("INPUT IS SAME");
         // TODO: If one player has completed the paragraph he waits for other players to complete
         // setRaceFinished((prev) => true);
         changeIHaveFinished(true);
