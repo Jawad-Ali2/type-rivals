@@ -25,6 +25,7 @@ const Header = () => {
     ["Quick Race", "/race"],
     ["Race vs Narrator", "/narrator"],
     ["vs CPU", "/race"],
+    ["vs Friends", "/play-with-friends"],
     ["Practice", "/practice"],
     ["Tournaments", "/race"],
   ];

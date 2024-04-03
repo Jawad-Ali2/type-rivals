@@ -7,14 +7,15 @@ import Race from "@/pages/Race";
 import Auth from "@/pages/Auth";
 import Narrator from "@/pages/Narrator";
 import { RootLayout } from "@/main";
-import axios from "axios";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { Modal } from "@/components/Modal";
 
 const ProtectedRoute = ({ element, path }) => {
   const { isAuthenticated } = useContext(AuthContext);
 
-  console.log(isAuthenticated);
+  if (isAuthenticated && path === "/auth") return <Navigate to="/" />;
+
   if (!isAuthenticated && path !== "/auth") {
     return <Navigate to="/auth" />;
   }
@@ -38,23 +39,28 @@ const router = createBrowserRouter([
       {
         path: "dashboard",
         element: <ProtectedRoute element={<Dashboard />} path="/dashboard" />,
-        // element: <Dashboard />,
       },
       {
         path: "race",
         element: (
           <ProtectedRoute element={<Race noOfPlayers={2} />} path="/race" />
         ),
-        // element: <Race />,
-        // loader: raceLoader,
       },
       {
         path: "practice",
         element: (
           <ProtectedRoute element={<Race noOfPlayers={1} />} path="/practice" />
         ),
-        // element: <Race />,
-        // loader: raceLoader,
+      },
+      {
+        path: "play-with-friends",
+        element: (
+          <ProtectedRoute element={<Modal />} path="/play-with-friends" />
+          // <ProtectedRoute
+          //   element={<Race noOfPlayers={1} />}
+          //   path="/play-with-friends"
+          // />
+        ),
       },
       {
         path: "auth",
@@ -63,7 +69,6 @@ const router = createBrowserRouter([
       {
         path: "narrator",
         element: <ProtectedRoute element={<Narrator />} path="/narrator" />,
-        // element: <Narrator />,
       },
     ],
   },

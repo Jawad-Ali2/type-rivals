@@ -49,7 +49,6 @@ const Race = ({ noOfPlayers }) => {
       socket.emit("createOrJoinLobby", userId, noOfPlayers);
       socket.on("message", (quote, lobby) => {
         currentLobbyRef.current = lobby._id;
-        console.log("HELLO");
         setPlayers([...lobby.players]);
         setParagraph(quote.text);
         setSocketConnected(true);

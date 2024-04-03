@@ -77,7 +77,7 @@ function createLobby() {
   });
 }
 
-function joinLobby(playerId, socket, lobbyId) {
+function joinLobby(playerId, socket, customLobbyId) {
   return new Promise(async (resolve, reject) => {
     // TODO: If lobbyID is not null we assume user is playing multiplayer
     // TODO: If lobbyID is null we assume user wants play in private lobby
