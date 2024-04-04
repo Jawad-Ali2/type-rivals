@@ -33,6 +33,7 @@ module.exports = {
       console.log(socket.id + " connected");
 
       socket.on("createOrJoinLobby", (playerId, noOfPlayers) => {
+        console.log("noOfPlayers", noOfPlayers);
         // Creation or Joining of lobby
         joinLobby(playerId, socket).then((lobby) => {
           // If lobby has been joined

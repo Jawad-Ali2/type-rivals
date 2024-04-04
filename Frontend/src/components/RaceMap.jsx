@@ -23,7 +23,6 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
   ] = useCountDown(raceDuration);
   const [mask, setMask] = useState("");
   const [color, setColor] = useState(success);
-  const [raceFinished, setRaceFinished] = useState(false);
   const {
     resetContext,
     signal,
@@ -46,8 +45,7 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
 
   //Resets Hooks on Replay
   useEffect(() => {
-    if (!paragraph) {
-      // setRaceFinished((prev) => false);
+    if (paragraph) {
       setRaceHasFinished(() => false);
       setInput((prev) => "");
       setMask((prev) => "");

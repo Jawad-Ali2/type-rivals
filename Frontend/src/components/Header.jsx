@@ -5,15 +5,18 @@ import { cilMenu } from "@coreui/icons";
 import { useContext, useEffect, useRef, useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import { ModalContext } from "../../context/ModalContext";
 import axios from "axios";
 import defaultImage from "/anonymous-user.jpg";
 import { backendUrl } from "../../config/config";
+import { Modal } from "./Modal";
 
 const Header = () => {
   const [username, setUsername] = useState("John Doe");
   const [profilePic, setProfilePic] = useState(defaultImage);
   const dropDownRef = useRef();
   const { isAuthenticated, token, csrfToken, logout } = useContext(AuthContext);
+  const { isOpen, setIsOpen } = useContext(ModalContext);
   const navigate = useNavigate();
 
   const headerBtns = [
@@ -21,14 +24,25 @@ const Header = () => {
     ["Collections", "/collections"],
     ["Dashboard", "/dashboard"],
   ];
-  const subHeaderButtons = [
-    ["Quick Race", "/race"],
-    ["Race vs Narrator", "/narrator"],
-    ["vs CPU", "/race"],
-    ["vs Friends", "/play-with-friends"],
-    ["Practice", "/practice"],
-    ["Tournaments", "/race"],
-  ];
+
+  // If user not authenticate he see other dashboard
+  const subHeaderButtons = isAuthenticated
+    ? [
+        ["Quick Race", "/race"],
+        ["Race vs Narrator", "/narrator"],
+        ["vs CPU", "/race"],
+        ["vs Friends", "#"],
+        ["Practice", "/practice"],
+        ["Tournaments", "/race"],
+      ]
+    : [
+        ["Quick Race", "/race"],
+        ["Race vs Narrator", "/narrator"],
+        ["vs CPU", "/race"],
+        ["Practice", "/practice"],
+        ["Tournaments", "/race"],
+      ];
+
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -59,6 +73,10 @@ const Header = () => {
       controller.abort();
     };
   }, [isAuthenticated]);
+
+  const handleLinkClick = (link) => {
+    if (link === "#") setIsOpen(() => true);
+  };
 
   const handleDropDown = () => {
     if (dropDownRef.current.classList.contains("left-0")) {
@@ -183,7 +201,12 @@ const Header = () => {
         <div className="sub-header w-full hidden md:block h-[2rem] ">
           <ul className="subheader-nav shadow-sm shadow-skin-base bg-skin-bar  w-full flex flex-row justify-center items-center mx-auto text-sm ">
             {subHeaderButtons.map(([el, link], i) => (
-              <Link className="my-2" to={link} key={i}>
+              <Link
+                className="my-2"
+                to={link}
+                key={i}
+                onClick={() => handleLinkClick(link)}
+              >
                 <li className="w-fit inline cursor-pointer transition-all duration-200 md:mx-2 lg:mx-4 xl:mx-6 text-skin-base">
                   {el}
                 </li>
@@ -221,6 +244,7 @@ const Header = () => {
           ))}
         </ul>
       </div>
+      <Modal isOpen={isOpen} />
     </section>
   );
 };

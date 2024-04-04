@@ -55,11 +55,11 @@ const router = createBrowserRouter([
       {
         path: "play-with-friends",
         element: (
-          <ProtectedRoute element={<Modal />} path="/play-with-friends" />
-          // <ProtectedRoute
-          //   element={<Race noOfPlayers={1} />}
-          //   path="/play-with-friends"
-          // />
+          // <ProtectedRoute element={<Modal />} path="/play-with-friends" />
+          <ProtectedRoute
+            element={<Race noOfPlayers={null} />}
+            path="/play-with-friends"
+          />
         ),
       },
       {

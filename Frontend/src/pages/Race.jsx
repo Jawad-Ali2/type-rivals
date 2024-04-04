@@ -26,27 +26,36 @@ const Race = ({ noOfPlayers }) => {
   const [socketConnected, setSocketConnected] = useState(false);
   const socket = createConnection(token);
   const currentLobbyRef = useRef(null);
-  const { resetContext, initiateSignal, stopSignal, iHaveFinished } =
-    useContext(RaceContext);
+  const {
+    resetContext,
+    initiateSignal,
+    stopSignal,
+    iHaveFinished,
+    lobbySizeRef,
+  } = useContext(RaceContext);
 
   //Reload/Update Components
   useEffect(() => {
-    if (paragraph) setParagraph("");
-    currentLobbyRef.current = null;
-    setPlayers(() => []);
-    setPlayersConnected(() => false);
-    resetPrepareTimer();
-    resetContext();
-    stopSignal();
+    if (paragraph) {
+      setParagraph("");
+      setPlayers(() => []);
+      setPlayersConnected(() => false);
+      resetPrepareTimer();
+      resetContext();
+      stopSignal();
+    }
   }, [replay]);
 
+  console.log(lobbySizeRef);
   //Prepare Timer
   useEffect(() => {
     if (paragraph.length === 0) {
-      // Set the flag to true to indicate the socket is connected
-
+      // * If noOfPlayers prop is defined that means its not a friendly match
+      if (noOfPlayers) {
+        lobbySizeRef.current = noOfPlayers;
+      }
       // Send signal to join the race
-      socket.emit("createOrJoinLobby", userId, noOfPlayers);
+      socket.emit("createOrJoinLobby", userId, lobbySizeRef.current);
       socket.on("message", (quote, lobby) => {
         currentLobbyRef.current = lobby._id;
         setPlayers([...lobby.players]);

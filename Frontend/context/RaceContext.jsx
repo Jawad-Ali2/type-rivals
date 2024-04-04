@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useRef, useState } from "react";
 
 const RaceContext = createContext();
 
@@ -9,15 +9,18 @@ const RaceProvider = ({ children }) => {
   const [iHaveFinished, setIHaveFinished] = useState(false);
   const [raceHasFinished, setRaceHasFinished] = useState(false);
   const [userFinishTimer, setUserFinishTimer] = useState(60);
+  // const [lobbySize, setLobbySize] = useState(null);
+  const lobbySizeRef = useRef(null);
 
   const resetContext = () => {
-    console.log("resetContext");
     setPlayers(() => []);
     setSignalInterval(null);
     setSignal(false);
     setIHaveFinished(false);
     setRaceHasFinished(false);
     setUserFinishTimer(60);
+    console.log("RESETING");
+    lobbySizeRef.current = null;
   };
 
   const getPlayers = () => {
@@ -49,9 +52,15 @@ const RaceProvider = ({ children }) => {
   const changeIHaveFinished = (val) => {
     setIHaveFinished(() => val);
   };
-
+  console.log("Update", lobbySizeRef);
   const changeUserFinishTimer = (val) => {
     setUserFinishTimer(() => val);
+  };
+
+  const updateLobbySize = (lobbySize) => {
+    console.log(lobbySize);
+    lobbySizeRef.current = lobbySize;
+    console.log(lobbySizeRef.current);
   };
 
   return (
@@ -68,6 +77,10 @@ const RaceProvider = ({ children }) => {
         setRaceHasFinished,
         userFinishTimer,
         changeUserFinishTimer,
+        // lobbySize,
+        // setLobbySize,
+        lobbySizeRef,
+        updateLobbySize,
       }}
     >
       {children}
