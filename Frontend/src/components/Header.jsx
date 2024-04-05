@@ -24,13 +24,25 @@ const Header = () => {
     ["Collections", "/collections"],
     ["Dashboard", "/dashboard"],
   ];
-  const subHeaderButtons = [
-    ["Quick Race", "/race"],
-    ["Race vs Narrator", "/narrator"],
-    ["vs CPU", "/race"],
-    ["Death Match", "/race"],
-    ["Tournaments", "/race"],
-  ];
+
+  // If user not authenticate he see other dashboard
+  const subHeaderButtons = isAuthenticated
+    ? [
+        ["Quick Race", "/race"],
+        ["Race vs Narrator", "/narrator"],
+        ["vs CPU", "/race"],
+        ["vs Friends", "#"],
+        ["Practice", "/practice"],
+        ["Tournaments", "/race"],
+      ]
+    : [
+        ["Quick Race", "/race"],
+        ["Race vs Narrator", "/narrator"],
+        ["vs CPU", "/race"],
+        ["Practice", "/practice"],
+        ["Tournaments", "/race"],
+      ];
+
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
