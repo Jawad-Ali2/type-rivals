@@ -77,10 +77,8 @@ function createLobby() {
   });
 }
 
-function joinLobby(playerId, socket, customLobbyId) {
+function joinLobby(playerId, socket, io) {
   return new Promise(async (resolve, reject) => {
-    // TODO: If lobbyID is not null we assume user is playing multiplayer
-    // TODO: If lobbyID is null we assume user wants play in private lobby
     let lobby = await Lobby.findOne({ state: "waiting" });
     if (!lobby) lobby = await createLobby();
 

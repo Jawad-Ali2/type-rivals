@@ -32,14 +32,13 @@ module.exports = {
     io.on("connection", (socket) => {
       console.log(socket.id + " connected");
 
-      socket.on("createOrJoinLobby", (playerId, noOfPlayers) => {
-        console.log("noOfPlayers", noOfPlayers);
+      socket.on("createOrJoinLobby", (playerId) => {
         // Creation or Joining of lobby
-        joinLobby(playerId, socket).then((lobby) => {
+        joinLobby(playerId, socket, io).then((lobby) => {
           // If lobby has been joined
           if (lobby) {
             // Todo: Change player count to 4
-            if (lobby.players.length === noOfPlayers) {
+            if (lobby.players.length === 2) {
               console.log("Lobby length: " + lobby.players.length);
               lobby.state = "in-progress";
               switchLobbyState("in-progress", lobby._id);
