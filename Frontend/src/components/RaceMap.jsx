@@ -45,7 +45,7 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
 
   //Resets Hooks on Replay
   useEffect(() => {
-    if (paragraph) {
+    if (!paragraph) {
       setRaceHasFinished(() => false);
       setInput((prev) => "");
       setMask((prev) => "");
@@ -58,7 +58,6 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
     if (startRace) {
       setRaceTimerOn((prev) => true);
       socket.on("raceFinished", (raceFinished1) => {
-        // TODO: SET USERHASFINISHED to true here so both players see their respective stats
         console.log("raceFinished: " + raceFinished1);
         setRaceHasFinished(() => raceFinished1);
         setRaceTimerOn(() => false);

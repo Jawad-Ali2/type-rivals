@@ -32,30 +32,40 @@ const Race = ({ noOfPlayers }) => {
     stopSignal,
     iHaveFinished,
     lobbySizeRef,
+    resetLobbySize,
+    isFriendlyMatch,
+    setIsFriendlyMatch,
   } = useContext(RaceContext);
 
   //Reload/Update Components
   useEffect(() => {
-    if (paragraph) {
-      setParagraph("");
-      setPlayers(() => []);
-      setPlayersConnected(() => false);
-      resetPrepareTimer();
-      resetContext();
-      stopSignal();
-    }
+    if (paragraph) setParagraph("");
+    setPlayers(() => []);
+    setPlayersConnected(() => false);
+    resetPrepareTimer();
+    resetContext();
+    stopSignal();
   }, [replay]);
 
-  console.log(lobbySizeRef);
   //Prepare Timer
   useEffect(() => {
+    let isFriendly = false;
     if (paragraph.length === 0) {
       // * If noOfPlayers prop is defined that means its not a friendly match
+      console.log(lobbySizeRef.current);
       if (noOfPlayers) {
         lobbySizeRef.current = noOfPlayers;
+      } else {
+        isFriendly = true;
+        setIsFriendlyMatch(() => true);
       }
       // Send signal to join the race
-      socket.emit("createOrJoinLobby", userId, lobbySizeRef.current);
+      socket.emit(
+        "createOrJoinLobby",
+        userId,
+        lobbySizeRef.current,
+        isFriendly
+      );
       socket.on("message", (quote, lobby) => {
         currentLobbyRef.current = lobby._id;
         setPlayers([...lobby.players]);
@@ -71,7 +81,7 @@ const Race = ({ noOfPlayers }) => {
         // Case1 : When the user is in waiting state and leave
         if (paragraph.length === 0 && !currentLobbyRef.current) {
           console.log("UNMOUNTING");
-
+          resetLobbySize();
           socket.emit("leaveRace");
         }
       };
@@ -83,6 +93,7 @@ const Race = ({ noOfPlayers }) => {
       // Case 2: When the user is competing with players but leave before the race ends
       if (socketConnected) {
         socket.emit("leaveRace");
+        resetLobbySize();
         stopSignal();
         // If the socket is still connected when the component unmounts,
         console.log("Unmounting");

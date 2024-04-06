@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "dotenv": "^16.4.1",
-    "express-validator": "^7.0.1",
-    "vite-plugin-svgr": "^4.2.0"
+    "express-validator": "^7.0.1"
   }
 }

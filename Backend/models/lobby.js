@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const lobbySchema = new Schema({
+  lobbyCode: String,
   players: [
     {
       playerId: String,
@@ -17,6 +18,7 @@ const lobbySchema = new Schema({
     },
   ],
   state: String,
+  lobbyType: String,
   expiresAt: { type: Date, default: Date.now, expires: 3600 },
 });
 

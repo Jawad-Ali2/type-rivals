@@ -15,7 +15,6 @@ admin.initializeApp({
 });
 
 exports.getUserDashboard = (req, res) => {
-  console.log(req.userId);
   User.findById({ _id: req.userId })
     .then((user) => {
       if (!user) res.status(404).json({ message: "User not found" });
@@ -48,7 +47,6 @@ exports.quickRaceTrack = (req, res) => {
       ]);
     })
     .then((quotes) => {
-      // console.log(quote);
       const quote = quotes[0].genre.quotes;
       const name = quote.text;
       const fileName = name.split(" ").slice(0, 5).join("-").replace(",", "");
@@ -98,7 +96,6 @@ exports.saveUserStats = (req, res) => {
 
   User.findById(userId)
     .then((user) => {
-      console.log(user.raceDetail.races);
       user.raceDetail.races += 1;
 
       user.raceDetail.avgSpeed = Math.round(
@@ -107,11 +104,6 @@ exports.saveUserStats = (req, res) => {
       );
 
       if (speed > user.raceDetail.maxSpeed) user.raceDetail.maxSpeed = speed;
-      console.log(
-        user.raceDetail.races,
-        user.raceDetail.avgSpeed,
-        user.raceDetail.maxSpeed
-      );
       return user.save();
     })
     .then(() => {
