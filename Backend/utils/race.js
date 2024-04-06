@@ -89,8 +89,6 @@ function createMultiplayerLobby() {
       lobbyType: "Multiplayer",
     });
 
-    // TODO: LObby type
-
     lobby
       .save()
       .then((lobby) => {
@@ -140,8 +138,9 @@ function joinLobby(
     } else {
       // When the user is just looking for a match
       lobby = await Lobby.findOne({
-        $and: [({ state: "waiting" }, { lobbyType: "Multiplayer" })],
+        $and: [{ state: "waiting" }, { lobbyType: "Multiplayer" }],
       });
+      console.log("In else statement", lobby);
       if (!lobby) lobby = await createMultiplayerLobby();
     }
 

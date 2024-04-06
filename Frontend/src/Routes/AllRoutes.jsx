@@ -14,6 +14,7 @@ import { Modal } from "@/components/Modal";
 const ProtectedRoute = ({ element, path }) => {
   const { isAuthenticated } = useContext(AuthContext);
 
+  console.log(isAuthenticated, "Authent");
   if (isAuthenticated && path === "/auth") return <Navigate to="/" />;
 
   if (!isAuthenticated && path !== "/auth") {
@@ -55,7 +56,6 @@ const router = createBrowserRouter([
       {
         path: "play-with-friends",
         element: (
-          // <ProtectedRoute element={<Modal />} path="/play-with-friends" />
           <ProtectedRoute
             element={<Race noOfPlayers={null} />}
             path="/play-with-friends"
@@ -64,7 +64,7 @@ const router = createBrowserRouter([
       },
       {
         path: "auth",
-        element: <Auth />,
+        element: <ProtectedRoute element={<Auth />} path={"/auth"} />,
       },
       {
         path: "narrator",

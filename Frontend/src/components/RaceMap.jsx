@@ -129,9 +129,8 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
 
   useEffect(() => {
     if (raceHasFinished) {
+      console.log("STOP SIGNAL");
       stopSignal();
-
-      // TODO: First player doesn't get race finished screen until every player or timer has finished
     }
   }, [raceHasFinished]);
 

@@ -47,18 +47,28 @@ const Race = ({ noOfPlayers }) => {
     stopSignal();
   }, [replay]);
 
+  // Specifically to detect and update the friendlyMatch state
+  useEffect(() => {
+    if (!noOfPlayers) {
+      setIsFriendlyMatch(() => true);
+    } else {
+      lobbySizeRef.current = noOfPlayers;
+    }
+
+    console.log("no of players", lobbySizeRef.current, isFriendlyMatch);
+  }, []);
+
   //Prepare Timer
   useEffect(() => {
     let isFriendly = false;
     if (paragraph.length === 0) {
       // * If noOfPlayers prop is defined that means its not a friendly match
-      console.log(lobbySizeRef.current);
-      if (noOfPlayers) {
-        lobbySizeRef.current = noOfPlayers;
-      } else {
-        isFriendly = true;
-        setIsFriendlyMatch(() => true);
-      }
+      // if (noOfPlayers) {
+      //   lobbySizeRef.current = noOfPlayers;
+      // } else {
+      //   isFriendly = true;
+      //   setIsFriendlyMatch(() => true);
+      // }
       // Send signal to join the race
       socket.emit(
         "createOrJoinLobby",
@@ -82,6 +92,7 @@ const Race = ({ noOfPlayers }) => {
         if (paragraph.length === 0 && !currentLobbyRef.current) {
           console.log("UNMOUNTING");
           resetLobbySize();
+          resetContext();
           socket.emit("leaveRace");
         }
       };
@@ -94,6 +105,7 @@ const Race = ({ noOfPlayers }) => {
       if (socketConnected) {
         socket.emit("leaveRace");
         resetLobbySize();
+        resetContext();
         stopSignal();
         // If the socket is still connected when the component unmounts,
         console.log("Unmounting");

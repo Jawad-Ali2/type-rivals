@@ -43,29 +43,27 @@ const RaceProvider = ({ children }) => {
   const initiateSignal = () => {
     setSignalInterval(
       setInterval(() => {
-        console.log("stopSignal");
+        console.log("SENDING SIGNAL");
         setSignal((prev) => !prev);
       }, 2000)
     );
   };
 
   const stopSignal = () => {
-    console.log("stopSignal");
     clearInterval(signalInterval);
   };
 
   const changeIHaveFinished = (val) => {
     setIHaveFinished(() => val);
   };
-  console.log("Update", lobbySizeRef);
+
   const changeUserFinishTimer = (val) => {
     setUserFinishTimer(() => val);
   };
 
   const updateLobbySize = (lobbySize) => {
-    console.log(lobbySize);
     lobbySizeRef.current = lobbySize;
-    console.log(lobbySizeRef.current);
+    console.log("Lobby size update", lobbySizeRef.current);
   };
 
   return (
