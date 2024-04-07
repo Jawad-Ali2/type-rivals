@@ -2,7 +2,6 @@ const Paragraph = require("../models/paragraphs");
 const User = require("../models/user");
 const Lobby = require("../models/lobby");
 const { generateLobbyCode } = require("./generateLobbyCode");
-const { ObjectId } = require("mongoose");
 
 function getLobby(lobbyId) {
   return new Promise((resolve, reject) => {
@@ -60,14 +59,17 @@ async function updateLobby(
   }
 }
 
-function createFriendlyLobby() {
+function createFriendlyLobby(noOfPlayers) {
   return new Promise((resolve, reject) => {
+    const lobbyID = generateLobbyCode();
     let lobby;
 
     lobby = new Lobby({
       players: [],
       state: "waiting", // three states ('waiting', 'in_progress', 'finished')
       lobbyType: "Friendly",
+      lobbySize: noOfPlayers,
+      lobbyCode: lobbyID,
     });
 
     lobby
@@ -81,12 +83,14 @@ function createFriendlyLobby() {
   });
 }
 
-function createMultiplayerLobby() {
+function createMultiplayerLobby(noOfPlayers) {
+  console.log(noOfPlayers);
   return new Promise((resolve, reject) => {
     const lobby = new Lobby({
       players: [],
       state: "waiting", // three states ('waiting', 'in_progress', 'finished')
       lobbyType: "Multiplayer",
+      lobbySize: noOfPlayers,
     });
 
     lobby
@@ -104,6 +108,7 @@ function createMultiplayerLobby() {
  * Joins a lobby
  * @param {string} playerId - The player ID
  * @param {Socket} socket - The socket object
+ * @param {int} noOfPlayers - The number of players
  * @param {boolean} isFriendlyMatch - Whether the match is a friendly match or not
  * @param {boolean} isFriendlyLobbyCreator - Whether the player is the creator of the lobby
  * @param {string} friendLobbyID - The ID of the friend's lobby, if it's a friendly match
@@ -112,36 +117,38 @@ function createMultiplayerLobby() {
 function joinLobby(
   playerId,
   socket,
+  noOfPlayers,
   isFriendlyMatch,
   isFriendlyLobbyCreator,
   friendLobbyID
 ) {
   return new Promise(async (resolve, reject) => {
     let lobby;
+    console.log(isFriendlyLobbyCreator, isFriendlyMatch);
 
     // * Case 1: When the player is the creator of lobby
     if (isFriendlyMatch && isFriendlyLobbyCreator) {
-      lobby = await createFriendlyLobby();
+      lobby = await createFriendlyLobby(noOfPlayers);
     } else if (isFriendlyMatch && friendLobbyID) {
       // * Case 2: When the player wants to join someone else's lobby
-      const searchIDPattern = new RegExp("^", friendLobbyID);
-
       lobby = await Lobby.findOne({
         $and: [
-          { _id: searchIDPattern },
+          { lobbyCode: friendLobbyID },
           { state: "waiting" },
           { lobbyType: "Friendly" },
         ],
       });
 
+      console.log(lobby);
+
       if (!lobby) throw new Error("Lobby ID is invalid");
     } else {
-      // When the user is just looking for a match
+      // * When the user is just looking for a match
       lobby = await Lobby.findOne({
         $and: [{ state: "waiting" }, { lobbyType: "Multiplayer" }],
       });
       console.log("In else statement", lobby);
-      if (!lobby) lobby = await createMultiplayerLobby();
+      if (!lobby) lobby = await createMultiplayerLobby(noOfPlayers);
     }
 
     // * At this point we have a lobby of specific type

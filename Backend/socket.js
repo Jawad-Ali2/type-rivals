@@ -4,6 +4,7 @@ const {
   updateLobby,
   disconnectUser,
   switchLobbyState,
+  checkIsValidLobbyCode,
 } = require("./utils/race");
 
 const corsOrigin =
@@ -46,6 +47,7 @@ module.exports = {
           joinLobby(
             playerId,
             socket,
+            noOfPlayers,
             isFriendlyMatch,
             isFriendlyLobbyCreator,
             friendLobbyID

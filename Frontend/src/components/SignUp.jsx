@@ -84,8 +84,6 @@ const SignUp = ({ handleError }) => {
       confirmPassword: confirmPassword,
     };
 
-    console.log(userData);
-
     // formData.append("profilePicture", profilePic);
     // formData.append("name", username);
     // formData.append("email", email);

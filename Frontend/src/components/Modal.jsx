@@ -8,11 +8,20 @@ import { useNavigate } from "react-router-dom";
 import { RaceContext } from "../../context/RaceContext";
 import { useLocation } from "react-router-dom";
 import { useRef } from "react";
+import axios from "axios";
+import { backendUrl } from "../../config/config";
+import { AuthContext } from "../../context/AuthContext";
 
 export const Modal = () => {
   const modalRoot = document.getElementById("modal-root");
   const { isOpen, setIsOpen } = useContext(ModalContext);
-  const { lobbySizeRef, updateLobbySize } = useContext(RaceContext);
+  const { csrfToken, token } = useContext(AuthContext);
+  const {
+    lobbySizeRef,
+    updateLobbySize,
+    setIsFriendlyLobbyCreator,
+    friendlyLobbyCodeRef,
+  } = useContext(RaceContext);
   const inputRefs = useRef(
     Array.from({ length: 6 }, () => React.createRef(null))
   );
@@ -32,7 +41,6 @@ export const Modal = () => {
   }, [location.pathname]);
 
   const handleClose = () => {
-    console.log("KDSHGHJ");
     setIsOpen(false);
     setShowCreate(false);
     setShowJoin(false);
@@ -50,9 +58,8 @@ export const Modal = () => {
     setShowJoin((prev) => !prev);
   };
 
-  console.log(showCreate, showJoin);
-
   const handleClick = (lobbySize) => {
+    setIsFriendlyLobbyCreator(() => true);
     updateLobbySize(lobbySize);
     console.log(lobbySizeRef);
     navigate("/play-with-friends");
@@ -83,6 +90,41 @@ export const Modal = () => {
     }
   };
 
+  const handleLobbyCodeSubmit = () => {
+    const lobbyCodeArray = inputRefs.current.map(
+      (inputRef) => inputRef.current.value
+    );
+
+    const lobbyCode = lobbyCodeArray.join("");
+    friendlyLobbyCodeRef.current = lobbyCode;
+    async function getLobbySize() {
+      const response = await axios.post(
+        `${backendUrl}/race/verifyLobbyCode`,
+        {
+          lobbyCode: friendlyLobbyCodeRef.current,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: "Bearer " + token,
+            "x-csrf-token": csrfToken,
+          },
+        }
+      );
+      if (response.status === 200) {
+        console.log("here");
+        const data = await response.data;
+
+        lobbySizeRef.current = data.lobbySize;
+
+        console.log(lobbyCode);
+        navigate("/play-with-friends");
+      }
+    }
+
+    getLobbySize();
+  };
+
   if (!isOpen) return null;
 
   return ReactDOM.createPortal(
@@ -90,10 +132,14 @@ export const Modal = () => {
       className="text-black fixed top-0 left-0 w-full h-full bg-black bg-opacity-50  flex justify-center items-center"
       onClick={handleOverlayClick}
     >
-      <div className="bg-web bg-white p-2 rounded-xl ">
+      <div
+        className={`bg-web bg-slate-200 p-2 rounded-xl ${
+          showCreate && "w-[60%]"
+        }`}
+      >
         {!showCreate && !showJoin && (
           <div className="text-center">
-            <button className="web-button" onClick={handleCreateClick}>
+            <button className=" web-button" onClick={handleCreateClick}>
               Create
             </button>
             <button className="web-button" onClick={handleJoinClick}>
@@ -110,14 +156,14 @@ export const Modal = () => {
               <p>Compete while enjoying with your friends!</p>
             </div>
             <hr />
-            <div className="flex justify-around mt-5 p-5">
+            <div className="flex justify-around mt-5 items-center">
               <div
                 onClick={() => {
                   handleClick(2);
                   setIsOpen(false);
                 }}
               >
-                <img className="w-[90%] m-auto" src={twoFriends} alt="" />
+                <img className="w-[60%] m-auto" src={twoFriends} alt="" />
                 <p className="text-center">2 Players</p>
               </div>
               <div
@@ -126,7 +172,7 @@ export const Modal = () => {
                   setIsOpen(false);
                 }}
               >
-                <img className="w-[90%] m-auto" src={threeFriends} alt="" />
+                <img className="w-[60%] m-auto" src={threeFriends} alt="" />
                 <p className="text-center">3 Players</p>
               </div>
               <div
@@ -135,7 +181,7 @@ export const Modal = () => {
                   setIsOpen(false);
                 }}
               >
-                <img className="w-[90%] m-auto" src={fourFriends} alt="" />
+                <img className="w-[60%] m-auto" src={fourFriends} alt="" />
                 <p className="text-center">4 Players</p>
               </div>
             </div>
@@ -170,7 +216,7 @@ export const Modal = () => {
               <button
                 className="web-button"
                 ref={submitButtonRef}
-                onClick={() => console.log("Form submitted")}
+                onClick={handleLobbyCodeSubmit}
               >
                 Submit
               </button>
@@ -178,7 +224,11 @@ export const Modal = () => {
             <div className="flex justify-around mt-5 p-5"></div>
           </>
         )}
-        <button onClick={handleClose}>Close</button>
+        <div className=" text-center">
+          <button className=" web-button" onClick={handleClose}>
+            Close
+          </button>
+        </div>
       </div>
     </div>,
     modalRoot

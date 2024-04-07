@@ -33,8 +33,9 @@ const Race = ({ noOfPlayers }) => {
     iHaveFinished,
     lobbySizeRef,
     resetLobbySize,
-    isFriendlyMatch,
-    setIsFriendlyMatch,
+    isFriendlyMatchRef,
+    isFriendlyLobbyCreator,
+    friendlyLobbyCodeRef,
   } = useContext(RaceContext);
 
   //Reload/Update Components
@@ -49,32 +50,33 @@ const Race = ({ noOfPlayers }) => {
 
   // Specifically to detect and update the friendlyMatch state
   useEffect(() => {
+    // * If noOfPlayers prop is defined that means its not a friendly match
     if (!noOfPlayers) {
-      setIsFriendlyMatch(() => true);
+      isFriendlyMatchRef.current = true;
     } else {
       lobbySizeRef.current = noOfPlayers;
     }
 
-    console.log("no of players", lobbySizeRef.current, isFriendlyMatch);
-  }, []);
+    console.log(
+      "no of players",
+      lobbySizeRef.current,
+      isFriendlyMatchRef.current,
+      friendlyLobbyCodeRef.current
+    );
+  }, [noOfPlayers]);
 
   //Prepare Timer
   useEffect(() => {
     let isFriendly = false;
     if (paragraph.length === 0) {
-      // * If noOfPlayers prop is defined that means its not a friendly match
-      // if (noOfPlayers) {
-      //   lobbySizeRef.current = noOfPlayers;
-      // } else {
-      //   isFriendly = true;
-      //   setIsFriendlyMatch(() => true);
-      // }
       // Send signal to join the race
       socket.emit(
         "createOrJoinLobby",
         userId,
         lobbySizeRef.current,
-        isFriendly
+        isFriendlyMatchRef.current,
+        isFriendlyLobbyCreator,
+        friendlyLobbyCodeRef.current
       );
       socket.on("message", (quote, lobby) => {
         currentLobbyRef.current = lobby._id;

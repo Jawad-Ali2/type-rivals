@@ -19,6 +19,8 @@ const lobbySchema = new Schema({
   ],
   state: String,
   lobbyType: String,
+  lobbySize: Number,
+  lobbyCode: { type: String, default: null },
   expiresAt: { type: Date, default: Date.now, expires: 3600 },
 });
 

@@ -9,7 +9,9 @@ const RaceProvider = ({ children }) => {
   const [iHaveFinished, setIHaveFinished] = useState(false);
   const [raceHasFinished, setRaceHasFinished] = useState(false);
   const [userFinishTimer, setUserFinishTimer] = useState(60);
-  const [isFriendlyMatch, setIsFriendlyMatch] = useState(null);
+  const [isFriendlyLobbyCreator, setIsFriendlyLobbyCreator] = useState(false);
+  const isFriendlyMatchRef = useRef(false);
+  const friendlyLobbyCodeRef = useRef(null);
   const lobbySizeRef = useRef(null);
 
   const resetContext = () => {
@@ -19,12 +21,14 @@ const RaceProvider = ({ children }) => {
     setIHaveFinished(false);
     setRaceHasFinished(false);
     setUserFinishTimer(60);
+    setIsFriendlyLobbyCreator(false);
     console.log("RESETING");
   };
 
   const resetLobbySize = () => {
     lobbySizeRef.current = null;
-    setIsFriendlyMatch(false);
+    isFriendlyMatchRef.current = false;
+    friendlyLobbyCodeRef.current = null;
   };
 
   const getPlayers = () => {
@@ -82,9 +86,11 @@ const RaceProvider = ({ children }) => {
         changeUserFinishTimer,
         lobbySizeRef,
         updateLobbySize,
-        isFriendlyMatch,
-        setIsFriendlyMatch,
         resetLobbySize,
+        isFriendlyMatchRef,
+        isFriendlyLobbyCreator,
+        setIsFriendlyLobbyCreator,
+        friendlyLobbyCodeRef,
       }}
     >
       {children}

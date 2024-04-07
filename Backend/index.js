@@ -8,6 +8,7 @@ const { doubleCsrf } = require("csrf-csrf");
 
 const userRoutes = require("./routes/user");
 const authRoutes = require("./routes/auth");
+const raceRoutes = require("./routes/race");
 
 // Production settings
 const PORT = process.env.PORT || 8000;
@@ -71,6 +72,7 @@ app.get("/", (req, res) => {
 
 app.use("/auth", errorHandler, authRoutes);
 app.use("/user", errorHandler, userRoutes);
+app.use("/race", errorHandler, raceRoutes);
 
 mongoose
   .connect(
