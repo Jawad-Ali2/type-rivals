@@ -95,7 +95,6 @@ exports.postLogin = (req, res) => {
           "secret",
           { expiresIn: "1h" }
         );
-        console.log(token);
         res.status(200).json({
           token,
           userId: loggedUser._id.toString(),

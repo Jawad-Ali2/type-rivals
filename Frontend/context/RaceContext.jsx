@@ -1,8 +1,12 @@
-import { createContext, useRef, useState } from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
+import createConnection from "../utils/socket";
+import { AuthContext } from "../context/AuthContext";
 
 const RaceContext = createContext();
 
 const RaceProvider = ({ children }) => {
+  const { token } = useContext(AuthContext);
+  const socket = React.useMemo(() => createConnection(token), [token]);
   const [players, setPlayers] = useState([]);
   const [signalInterval, setSignalInterval] = useState(null);
   const [signal, setSignal] = useState(false);
@@ -73,6 +77,7 @@ const RaceProvider = ({ children }) => {
   return (
     <RaceContext.Provider
       value={{
+        socket,
         resetContext,
         players,
         signal,

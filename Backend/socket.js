@@ -6,6 +6,9 @@ const {
   switchLobbyState,
   checkIsValidLobbyCode,
 } = require("./utils/race");
+const { Mutex } = require("async-mutex");
+
+const deleteMutex = new Mutex();
 
 const corsOrigin =
   process.env.NODE_ENV === "production"
@@ -42,7 +45,7 @@ module.exports = {
           isFriendlyLobbyCreator,
           friendLobbyID
         ) => {
-          console.log("noOfPlayers", noOfPlayers);
+          // console.log("noOfPlayers", noOfPlayers);
           // Creation or Joining of lobby
           joinLobby(
             playerId,
@@ -56,7 +59,7 @@ module.exports = {
             if (lobby) {
               // Todo: Change player count to 4
               if (lobby.players.length === noOfPlayers) {
-                console.log("Lobby length: " + lobby.players.length);
+                // console.log("Lobby length: " + lobby.players.length);
                 lobby.state = "in-progress";
                 switchLobbyState("in-progress", lobby._id);
               }
@@ -114,9 +117,15 @@ module.exports = {
             }
           );
 
-          socket.on("leaveRace", (text) => {
-            console.log("leaveRace", text);
-            disconnectUser(socket.id);
+          socket.on("leaveRace", async (socketid) => {
+            const release = await deleteMutex.acquire();
+
+            try {
+              console.log("leaveRace", socketid);
+              await disconnectUser(socket.id);
+            } finally {
+              release();
+            }
           });
 
           socket.on("disconnect", () => {

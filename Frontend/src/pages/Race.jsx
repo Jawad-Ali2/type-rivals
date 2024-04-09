@@ -24,9 +24,9 @@ const Race = ({ noOfPlayers }) => {
   const [playersConnected, setPlayersConnected] = useState(false);
   const { userId, token } = useContext(AuthContext);
   const [socketConnected, setSocketConnected] = useState(false);
-  const socket = createConnection(token);
   const currentLobbyRef = useRef(null);
   const {
+    socket,
     resetContext,
     initiateSignal,
     stopSignal,
@@ -67,7 +67,6 @@ const Race = ({ noOfPlayers }) => {
 
   //Prepare Timer
   useEffect(() => {
-    let isFriendly = false;
     if (paragraph.length === 0) {
       // Send signal to join the race
       socket.emit(
@@ -95,7 +94,7 @@ const Race = ({ noOfPlayers }) => {
           console.log("UNMOUNTING");
           resetLobbySize();
           resetContext();
-          socket.emit("leaveRace");
+          socket.emit("leaveRace", socket.id);
         }
       };
     }
@@ -105,7 +104,7 @@ const Race = ({ noOfPlayers }) => {
     return () => {
       // Case 2: When the user is competing with players but leave before the race ends
       if (socketConnected) {
-        socket.emit("leaveRace");
+        socket.emit("leaveRace", socket.id);
         resetLobbySize();
         resetContext();
         stopSignal();
@@ -159,6 +158,16 @@ const Race = ({ noOfPlayers }) => {
             Play Again
           </button>
         </div>
+      </div>
+      <div>
+        {
+          // Display the lobby code only if it is a friendly match
+          isFriendlyMatchRef.current && (
+            <p className="web-text text-center mt-2">
+              LOBBY CODE: {friendlyLobbyCodeRef.current}
+            </p>
+          )
+        }
       </div>
     </section>
   );
