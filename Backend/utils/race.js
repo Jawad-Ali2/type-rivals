@@ -2,6 +2,8 @@ const Paragraph = require("../models/paragraphs");
 const User = require("../models/user");
 const Lobby = require("../models/lobby");
 const { generateLobbyCode } = require("./generateLobbyCode");
+const { Mutex } = require("async-mutex");
+const joinLobbyMutex = new Mutex();
 
 function getLobby(lobbyId) {
   return new Promise((resolve, reject) => {
@@ -83,25 +85,37 @@ function createFriendlyLobby(noOfPlayers) {
   });
 }
 
-function createMultiplayerLobby(noOfPlayers) {
+async function createMultiplayerLobby(noOfPlayers) {
   // console.log(noOfPlayers);
-  return new Promise((resolve, reject) => {
-    const lobby = new Lobby({
-      players: [],
-      state: "waiting", // three states ('waiting', 'in_progress', 'finished')
-      lobbyType: "Multiplayer",
-      lobbySize: noOfPlayers,
-    });
+  // return new Promise((resolve, reject) => {
+  //   const lobby = new Lobby({
+  //     players: [],
+  //     state: "waiting", // three states ('waiting', 'in_progress', 'finished')
+  //     lobbyType: "Multiplayer",
+  //     lobbySize: noOfPlayers,
+  //   });
 
-    lobby
-      .save()
-      .then((lobby) => {
-        resolve(lobby);
-      })
-      .catch((err) => {
-        reject(err);
-      });
+  //   lobby
+  //     .save()
+  //     .then((lobby) => {
+  //       resolve(lobby);
+  //     })
+  //     .catch((err) => {
+  //       reject(err);
+  //     });
+  // });
+
+  let lobby = new Lobby({
+    players: [],
+    state: "waiting",
+    lobbyType: "Multiplayer",
+    lobbySize: noOfPlayers,
   });
+
+  // Save the lobby
+  lobby = await lobby.save();
+
+  return lobby;
 }
 
 /**
@@ -114,7 +128,7 @@ function createMultiplayerLobby(noOfPlayers) {
  * @param {string} friendLobbyID - The ID of the friend's lobby, if it's a friendly match
  * @returns {Promise<Lobby>} The updated lobby
  */
-function joinLobby(
+async function joinLobby(
   playerId,
   socket,
   noOfPlayers,
@@ -122,7 +136,7 @@ function joinLobby(
   isFriendlyLobbyCreator,
   friendLobbyID
 ) {
-  return new Promise(async (resolve, reject) => {
+  return await joinLobbyMutex.runExclusive(async () => {
     let lobby;
     // console.log(isFriendlyLobbyCreator, isFriendlyMatch);
 
@@ -139,15 +153,12 @@ function joinLobby(
         ],
       });
 
-      // console.log(lobby);
-
       if (!lobby) throw new Error("Lobby ID is invalid");
     } else {
       // * When the user is just looking for a match
       lobby = await Lobby.findOne({
         $and: [{ state: "waiting" }, { lobbyType: "Multiplayer" }],
       });
-      // console.log("In else statement", lobby);
       if (!lobby) lobby = await createMultiplayerLobby(noOfPlayers);
     }
 
@@ -159,33 +170,26 @@ function joinLobby(
 
     if (playerAlreadyJoined) return;
 
-    User.findById(playerId)
-      .then((user) => {
-        if (!user) throw new Error("User not found");
+    const user = await User.findById(playerId);
+    if (!user) throw new Error("User not found");
 
-        const player = {
-          playerId: playerId,
-          socketId: socket.id,
-          username: user.name,
-          email: user.email,
-          profilePic: user.profilePic,
-          percentageCompleted: 0,
-          wpm: 0,
-          userLeft: false,
-          completionTime: 0,
-        };
-        lobby.players.push(player);
-        return lobby.save();
-      })
-      .then((lobby) => {
-        socket.join(lobby.id);
+    const player = {
+      playerId: playerId,
+      socketId: socket.id,
+      username: user.name,
+      email: user.email,
+      profilePic: user.profilePic,
+      percentageCompleted: 0,
+      wpm: 0,
+      userLeft: false,
+      completionTime: 0,
+    };
+    lobby.players.push(player);
+    await lobby.save();
 
-        resolve(lobby);
-      })
-      .catch((error) => {
-        console.log("Internal error: " + error);
-        reject(error);
-      });
+    socket.join(lobby.id);
+
+    return lobby;
   });
 }
 
@@ -223,7 +227,7 @@ async function disconnectUser(socketId) {
     const lobbies = await Lobby.find({
       $or: [{ state: "waiting" }, { state: "in-progress" }],
     });
-    // console.log("in diconnectin", lobbies);
+    console.log("in diconnectin");
 
     for (const lobby of lobbies) {
       const idx = lobby.players.findIndex(
@@ -239,6 +243,7 @@ async function disconnectUser(socketId) {
         );
 
         if (lobby.players.length === 0) {
+          console.log("EMPTY LOBBY");
           // If the lobby was in-progress, delete it
           await Lobby.findByIdAndDelete(lobby._id);
         }

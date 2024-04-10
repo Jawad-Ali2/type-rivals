@@ -9,6 +9,8 @@ const {
 const { Mutex } = require("async-mutex");
 
 const deleteMutex = new Mutex();
+const createOrJoinLobbyMutex = new Mutex();
+const userLastRequestMap = new Map();
 
 const corsOrigin =
   process.env.NODE_ENV === "production"
@@ -38,31 +40,46 @@ module.exports = {
 
       socket.on(
         "createOrJoinLobby",
-        (
+        async (
           playerId,
           noOfPlayers,
           isFriendlyMatch,
           isFriendlyLobbyCreator,
           friendLobbyID
         ) => {
-          // console.log("noOfPlayers", noOfPlayers);
-          // Creation or Joining of lobby
-          joinLobby(
-            playerId,
-            socket,
-            noOfPlayers,
-            isFriendlyMatch,
-            isFriendlyLobbyCreator,
-            friendLobbyID
-          ).then((lobby) => {
+          const release = await createOrJoinLobbyMutex.acquire();
+          // const currentTime = Date.now();
+          // const lastRequestTime = userLastRequestMap.get(socket.id);
+
+          // if (lastRequestTime && currentTime - lastRequestTime < 10) {
+          //   console.log("Request cancelled in createOrJoin", socket.id);
+          //   return;
+          // }
+
+          // console.log("Request accepted in createOrJoin", socket.id);
+          // userLastRequestMap.set(socket.id, currentTime);
+
+          try {
+            // Creation or Joining of lobby
+
+            // TODO: I can pass socket to join and join function can send emit whenever a user joins
+            const lobby = await joinLobby(
+              playerId,
+              socket,
+              noOfPlayers,
+              isFriendlyMatch,
+              isFriendlyLobbyCreator,
+              friendLobbyID
+            );
             // If lobby has been joined
             if (lobby) {
-              // Todo: Change player count to 4
-              if (lobby.players.length === noOfPlayers) {
-                // console.log("Lobby length: " + lobby.players.length);
+              console.log("Request proceeded");
+              if (lobby.players.length == noOfPlayers) {
+                console.log("Lobby length: " + lobby.players.length);
                 lobby.state = "in-progress";
-                switchLobbyState("in-progress", lobby._id);
+                await switchLobbyState("in-progress", lobby._id);
               }
+              console.log(lobby.state);
               // ! Just to check players in room
               io.in(lobby._id.toString())
                 .allSockets()
@@ -74,13 +91,9 @@ module.exports = {
               // If the state matches
               if (lobby.state === "in-progress") {
                 // Each player in room is sent paragraph
-                fetchQuote()
-                  .then((quote) => {
-                    io.in(lobby._id.toString()).emit("message", quote, lobby);
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
+                const quote = await fetchQuote();
+
+                io.in(lobby._id.toString()).emit("message", quote, lobby);
               }
             } else {
               socket.emit(
@@ -88,7 +101,9 @@ module.exports = {
                 "No Available Lobby Found. Please try again later."
               );
             }
-          });
+          } finally {
+            release();
+          }
 
           socket.on(
             "typingSpeedUpdate",
@@ -106,7 +121,8 @@ module.exports = {
                   .then((raceFinished1) => {
                     if (raceFinished1) {
                       // io.in(lobby).emit("raceFinished", raceFinished1);
-                      io.emit("raceFinished", raceFinished1); // TODO: If all users in game recieve signal uncomment and remove this line
+                      // TODO: If all users in game recieve signal uncomment and remove this line
+                      io.emit("raceFinished", raceFinished1);
                     }
                   })
                   .catch((err) => {
@@ -118,11 +134,22 @@ module.exports = {
           );
 
           socket.on("leaveRace", async (socketid) => {
+            console.log("LEAVE RACE CALLED");
             const release = await deleteMutex.acquire();
+            const currentTime = Date.now();
+            const lastRequestTime = userLastRequestMap.get(socketid);
+
+            if (lastRequestTime && currentTime - lastRequestTime < 1000) {
+              console.log("Request cancelled", socketid);
+              return;
+            }
+
+            console.log("checking", socketid);
+            userLastRequestMap.set(socketid, currentTime);
 
             try {
               console.log("leaveRace", socketid);
-              await disconnectUser(socket.id);
+              await disconnectUser(socketid);
             } finally {
               release();
             }

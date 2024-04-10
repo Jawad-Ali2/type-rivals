@@ -43,9 +43,7 @@ const router = createBrowserRouter([
       },
       {
         path: "race",
-        element: (
-          <ProtectedRoute element={<Race noOfPlayers={2} />} path="/race" />
-        ),
+        element: <ProtectedRoute element={<Race />} path="/race" />,
       },
       {
         path: "practice",

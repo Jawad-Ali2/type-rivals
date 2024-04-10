@@ -2,14 +2,14 @@ import RaceMap from "@/components/RaceMap";
 import RaceLoader from "@/components/RaceLoader";
 import { useCountDown, useFetch } from "../../Hooks";
 import { useContext, useEffect, useRef, useState } from "react";
-
+import { useLocation } from "react-router-dom";
 import createConnection from "../../utils/socket";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { RaceUser } from "@/components/RaceUser";
 import { RaceContext } from "../../context/RaceContext";
 
-const Race = ({ noOfPlayers }) => {
+const Race = () => {
   document.title = "Race | Type Rivals";
   const [
     prepareTime,
@@ -18,6 +18,12 @@ const Race = ({ noOfPlayers }) => {
     setPrepareTimerOn,
     getPrepareFormattedTime,
   ] = useCountDown(5);
+  // Getting params query
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const noOfPlayers = queryParams.get("lobbySize");
+
+  // ! REFRESH ERROR IS BECAUSE WHEN REFRESH THE BACKEND HAS NOOFPLAYERS AS NULL
   const [replay, setReplay] = useState(false);
   const [paragraph, setParagraph] = useState("");
   const [players, setPlayers] = useState([]);
@@ -31,7 +37,6 @@ const Race = ({ noOfPlayers }) => {
     initiateSignal,
     stopSignal,
     iHaveFinished,
-    lobbySizeRef,
     resetLobbySize,
     isFriendlyMatchRef,
     isFriendlyLobbyCreator,
@@ -54,12 +59,12 @@ const Race = ({ noOfPlayers }) => {
     if (!noOfPlayers) {
       isFriendlyMatchRef.current = true;
     } else {
-      lobbySizeRef.current = noOfPlayers;
+      // lobbySizeRef.current = noOfPlayers;
     }
 
     console.log(
       "no of players",
-      lobbySizeRef.current,
+      // lobbySizeRef.current,
       isFriendlyMatchRef.current,
       friendlyLobbyCodeRef.current
     );
@@ -72,7 +77,7 @@ const Race = ({ noOfPlayers }) => {
       socket.emit(
         "createOrJoinLobby",
         userId,
-        lobbySizeRef.current,
+        noOfPlayers,
         isFriendlyMatchRef.current,
         isFriendlyLobbyCreator,
         friendlyLobbyCodeRef.current
@@ -104,7 +109,8 @@ const Race = ({ noOfPlayers }) => {
     return () => {
       // Case 2: When the user is competing with players but leave before the race ends
       if (socketConnected) {
-        socket.emit("leaveRace", socket.id);
+        // Only send this if user is typing and hasn't finished the race
+        if (!iHaveFinished) socket.emit("leaveRace", socket.id);
         resetLobbySize();
         resetContext();
         stopSignal();
