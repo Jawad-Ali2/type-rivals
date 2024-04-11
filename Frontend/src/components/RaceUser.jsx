@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import defaultImage from "/anonymous-user.jpg";
 import createConnection from "../../utils/socket";
 
 export const RaceUser = ({ players, setPlayers, token }) => {
@@ -56,7 +57,7 @@ export const RaceUser = ({ players, setPlayers, token }) => {
                   id={`pfp-${player.playerId}`}
                   className={`w-10 m-2 rounded-full transition-all duration-200 custom-image-${player.playerId}`}
                   src={player.profilePic}
-                  alt={player.profilePic}
+                  alt={defaultImage}
                 />
                 <p>{player.wpm}</p>
               </div>
