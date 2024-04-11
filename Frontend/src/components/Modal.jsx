@@ -17,10 +17,10 @@ export const Modal = () => {
   const { isOpen, setIsOpen } = useContext(ModalContext);
   const { csrfToken, token } = useContext(AuthContext);
   const {
-    lobbySizeRef,
-    updateLobbySize,
+    // lobbySizeRef,
+    // updateLobbySize,
+    setFriendlyLobbyCode,
     setIsFriendlyLobbyCreator,
-    friendlyLobbyCodeRef,
   } = useContext(RaceContext);
   const inputRefs = useRef(
     Array.from({ length: 6 }, () => React.createRef(null))
@@ -60,9 +60,7 @@ export const Modal = () => {
 
   const handleClick = (lobbySize) => {
     setIsFriendlyLobbyCreator(() => true);
-    updateLobbySize(lobbySize);
-    console.log(lobbySizeRef);
-    navigate("/play-with-friends");
+    navigate(`/play-with-friends?lobbySize=${lobbySize}&friendlyMatch=true`);
   };
 
   const handleInputChange = (index, e) => {
@@ -96,12 +94,13 @@ export const Modal = () => {
     );
 
     const lobbyCode = lobbyCodeArray.join("");
-    friendlyLobbyCodeRef.current = lobbyCode;
+    setFriendlyLobbyCode(lobbyCode);
+
     async function getLobbySize() {
       const response = await axios.post(
         `${backendUrl}/race/verifyLobbyCode`,
         {
-          lobbyCode: friendlyLobbyCodeRef.current,
+          lobbyCode: lobbyCode,
         },
         {
           withCredentials: true,
@@ -112,13 +111,13 @@ export const Modal = () => {
         }
       );
       if (response.status === 200) {
-        console.log("here");
         const data = await response.data;
 
-        lobbySizeRef.current = data.lobbySize;
+        const lobbySize = data.lobbySize;
 
-        console.log(lobbyCode);
-        navigate("/play-with-friends");
+        navigate(
+          `/play-with-friends?lobbySize=${lobbySize}&friendlyMatch=true`
+        );
       }
     }
 

@@ -55,11 +55,9 @@ const Header = () => {
 
       if (response.status === 200) {
         const data = await response.data;
-        console.log(data);
         setUsername(data.name);
 
         if (!data.profilePic) {
-          // console.log(data.profilePic);
           setProfilePic(defaultImage);
         } else {
           setProfilePic(data.profilePic);

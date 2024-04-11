@@ -58,11 +58,9 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
     if (startRace) {
       setRaceTimerOn((prev) => true);
       socket.on("raceFinished", (raceFinished1) => {
-        console.log("raceFinished: " + raceFinished1);
         setRaceHasFinished(() => raceFinished1);
         setRaceTimerOn(() => false);
       });
-      console.log("RaceTimer");
     }
   }, [startRace]);
 
@@ -77,7 +75,6 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
   }, [correct]);
 
   useEffect(() => {
-    // console.log(iHaveFinished);
     if (iHaveFinished) {
       setRaceTimerOn((prev) => false);
       changeUserFinishTimer(raceTime);
@@ -100,6 +97,7 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
       paragraph,
       raceDuration
     );
+    console.log(lobby);
     if (raceTimerOn) {
       if (!iHaveFinished) {
         socket.emit(
@@ -129,7 +127,6 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
 
   useEffect(() => {
     if (raceHasFinished) {
-      console.log("STOP SIGNAL");
       stopSignal();
     }
   }, [raceHasFinished]);

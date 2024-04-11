@@ -14,7 +14,6 @@ import { Modal } from "@/components/Modal";
 const ProtectedRoute = ({ element, path }) => {
   const { isAuthenticated } = useContext(AuthContext);
 
-  console.log(isAuthenticated, "Authent");
   if (isAuthenticated && path === "/auth") return <Navigate to="/" />;
 
   if (!isAuthenticated && path !== "/auth") {

@@ -168,7 +168,8 @@ async function joinLobby(
       (player) => player.playerId === playerId
     );
 
-    if (playerAlreadyJoined) return;
+    socket.join(lobby.id);
+    if (playerAlreadyJoined) return lobby;
 
     const user = await User.findById(playerId);
     if (!user) throw new Error("User not found");
@@ -186,8 +187,6 @@ async function joinLobby(
     };
     lobby.players.push(player);
     await lobby.save();
-
-    socket.join(lobby.id);
 
     return lobby;
   });

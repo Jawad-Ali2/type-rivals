@@ -60,6 +60,8 @@ module.exports = {
           // userLastRequestMap.set(socket.id, currentTime);
 
           try {
+            console.log("CREATE OR JOIN LOBBY", socket.id);
+            console.log("CREATOR", isFriendlyLobbyCreator, friendLobbyID);
             // Creation or Joining of lobby
 
             // TODO: I can pass socket to join and join function can send emit whenever a user joins
@@ -72,16 +74,26 @@ module.exports = {
               friendLobbyID
             );
             // If lobby has been joined
+            if (!lobby) {
+              console.log("Some error occured");
+              return;
+            }
+
             if (lobby) {
-              console.log("Request proceeded");
+              // * If the lobby is of friendly match type
+              if (lobby.lobbyCode) {
+                console.log("FRIENDLY LOBBY TYPE", lobby.lobbyCode);
+                io.in(lobby.id).emit("generatedLobbyCode", lobby.lobbyCode);
+              }
+              // console.log("Request proceeded");
               if (lobby.players.length == noOfPlayers) {
                 console.log("Lobby length: " + lobby.players.length);
                 lobby.state = "in-progress";
+                // socket.join(lobby.id);
                 await switchLobbyState("in-progress", lobby._id);
               }
-              console.log(lobby.state);
               // ! Just to check players in room
-              io.in(lobby._id.toString())
+              io.in(lobby.id)
                 .allSockets()
                 .then((sockets) => {
                   const usersInSession = Array.from(sockets);
@@ -93,7 +105,7 @@ module.exports = {
                 // Each player in room is sent paragraph
                 const quote = await fetchQuote();
 
-                io.in(lobby._id.toString()).emit("message", quote, lobby);
+                io.in(lobby.id).emit("message", quote, lobby);
               }
             } else {
               socket.emit(
@@ -144,7 +156,6 @@ module.exports = {
               return;
             }
 
-            console.log("checking", socketid);
             userLastRequestMap.set(socketid, currentTime);
 
             try {

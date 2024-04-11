@@ -22,6 +22,7 @@ const Race = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const noOfPlayers = queryParams.get("lobbySize");
+  const isFriendlyLobby = queryParams.get("friendlyMatch");
 
   // ! REFRESH ERROR IS BECAUSE WHEN REFRESH THE BACKEND HAS NOOFPLAYERS AS NULL
   const [replay, setReplay] = useState(false);
@@ -40,7 +41,8 @@ const Race = () => {
     resetLobbySize,
     isFriendlyMatchRef,
     isFriendlyLobbyCreator,
-    friendlyLobbyCodeRef,
+    friendlyLobbyCode,
+    setFriendlyLobbyCode,
   } = useContext(RaceContext);
 
   //Reload/Update Components
@@ -56,19 +58,17 @@ const Race = () => {
   // Specifically to detect and update the friendlyMatch state
   useEffect(() => {
     // * If noOfPlayers prop is defined that means its not a friendly match
-    if (!noOfPlayers) {
+    if (isFriendlyLobby) {
       isFriendlyMatchRef.current = true;
-    } else {
-      // lobbySizeRef.current = noOfPlayers;
     }
 
     console.log(
       "no of players",
-      // lobbySizeRef.current,
+      friendlyLobbyCode,
       isFriendlyMatchRef.current,
-      friendlyLobbyCodeRef.current
+      isFriendlyLobbyCreator
     );
-  }, [noOfPlayers]);
+  }, [isFriendlyLobby]);
 
   //Prepare Timer
   useEffect(() => {
@@ -80,7 +80,7 @@ const Race = () => {
         noOfPlayers,
         isFriendlyMatchRef.current,
         isFriendlyLobbyCreator,
-        friendlyLobbyCodeRef.current
+        friendlyLobbyCode
       );
       socket.on("message", (quote, lobby) => {
         currentLobbyRef.current = lobby._id;
@@ -90,6 +90,11 @@ const Race = () => {
 
         setPlayersConnected(() => true);
         initiateSignal();
+      });
+
+      // Current game is friendly we set the generated code
+      socket.on("generatedLobbyCode", (lobbyCode) => {
+        setFriendlyLobbyCode(lobbyCode);
       });
 
       // Return a cleanup function to prevent the effect from running again
@@ -170,7 +175,7 @@ const Race = () => {
           // Display the lobby code only if it is a friendly match
           isFriendlyMatchRef.current && (
             <p className="web-text text-center mt-2">
-              LOBBY CODE: {friendlyLobbyCodeRef.current}
+              LOBBY CODE: {friendlyLobbyCode}
             </p>
           )
         }
