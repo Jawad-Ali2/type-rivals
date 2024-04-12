@@ -60,10 +60,7 @@ module.exports = {
           // userLastRequestMap.set(socket.id, currentTime);
 
           try {
-            console.log("CREATE OR JOIN LOBBY", socket.id);
-            console.log("CREATOR", isFriendlyLobbyCreator, friendLobbyID);
             // Creation or Joining of lobby
-
             // TODO: I can pass socket to join and join function can send emit whenever a user joins
             const lobby = await joinLobby(
               playerId,
@@ -76,20 +73,22 @@ module.exports = {
             // If lobby has been joined
             if (!lobby) {
               console.log("Some error occured");
+              socket.emit(
+                "error",
+                "Something unexpected happened, Please try again!"
+              );
               return;
             }
 
             if (lobby) {
               // * If the lobby is of friendly match type
               if (lobby.lobbyCode) {
-                console.log("FRIENDLY LOBBY TYPE", lobby.lobbyCode);
                 io.in(lobby.id).emit("generatedLobbyCode", lobby.lobbyCode);
               }
               // console.log("Request proceeded");
               if (lobby.players.length == noOfPlayers) {
                 console.log("Lobby length: " + lobby.players.length);
                 lobby.state = "in-progress";
-                // socket.join(lobby.id);
                 await switchLobbyState("in-progress", lobby._id);
               }
               // ! Just to check players in room
@@ -109,7 +108,7 @@ module.exports = {
               }
             } else {
               socket.emit(
-                "lobbyNotFound",
+                "error",
                 "No Available Lobby Found. Please try again later."
               );
             }
@@ -139,6 +138,10 @@ module.exports = {
                   })
                   .catch((err) => {
                     console.log(err);
+                    socket.emit(
+                      "error",
+                      "Something went wrong, Please try again!"
+                    );
                   });
               }
               io.in(lobby).emit("speed", { wpm, percentage, socketId });
@@ -146,13 +149,16 @@ module.exports = {
           );
 
           socket.on("leaveRace", async (socketid) => {
-            console.log("LEAVE RACE CALLED");
             const release = await deleteMutex.acquire();
             const currentTime = Date.now();
             const lastRequestTime = userLastRequestMap.get(socketid);
 
             if (lastRequestTime && currentTime - lastRequestTime < 1000) {
               console.log("Request cancelled", socketid);
+              socket.emit(
+                "error",
+                "Request cancelled due to frequent requests"
+              );
               return;
             }
 

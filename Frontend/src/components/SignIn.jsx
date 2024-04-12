@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import * as z from "zod";
@@ -16,6 +16,7 @@ import { Input } from "./ui/input";
 import "@/styles/forms.css";
 import { backendUrl } from "../../config/config";
 import { toast } from "react-toastify";
+import Loader from "./Loader";
 
 const formSchema = z.object({
   emailAddress: z.string().email(),
@@ -31,10 +32,12 @@ const SignIn = ({ handleError }) => {
     },
   });
   const { login, token, csrfToken } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   async function onSubmit() {
     try {
+      setLoading(true);
       const { emailAddress, password } = form.getValues();
       const response = await fetch(`${backendUrl}/auth/signin`, {
         method: "POST",
@@ -61,6 +64,7 @@ const SignIn = ({ handleError }) => {
         throw new Error(errorData.message || "Some error occured");
       }
     } catch (err) {
+      setLoading(false);
       toast.error(err.message, {
         position: "top-right",
         className: "relative top-[8rem]",
@@ -117,10 +121,11 @@ const SignIn = ({ handleError }) => {
           />
         </div>
         <button
-          className="text-skin-base shadow-sm  shadow-skin-base bg-skin-button !w-full  ui-button"
+          disabled={loading}
+          className="text-skin-base shadow-sm shadow-skin-base bg-skin-button !w-full ui-button"
           type="submit"
         >
-          Submit
+          {loading ? <Loader loading={loading} /> : "Submit"}
         </button>
       </form>
     </Form>

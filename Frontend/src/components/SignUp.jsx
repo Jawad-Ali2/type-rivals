@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import "@/styles/forms.css";
 import { backendUrl } from "../../config/config";
 import { toast } from "react-toastify";
+import Loader from "./Loader";
 
 const formSchema = z
   .object({
@@ -52,9 +53,9 @@ const SignUp = ({ handleError }) => {
     },
   });
   const [preview, setPreview] = useState(default_dp);
+  const [loading, setLoading] = useState(false);
   const { csrfToken } = useContext(AuthContext);
   const navigate = useNavigate();
-  console.log(csrfToken);
 
   const handleImageChange = (e) => {
     const prev_img = e.target.files[0];
@@ -71,6 +72,7 @@ const SignUp = ({ handleError }) => {
 
   async function handleSignup(data) {
     try {
+      setLoading(true);
       // const formData = new FormData();
       const { username, emailAddress, password, confirmPassword } = data;
       // const profilePic = e.target["profile-picture"].files[0];
@@ -98,27 +100,30 @@ const SignUp = ({ handleError }) => {
           "x-csrf-token": csrfToken,
         },
       });
-      console.log(response);
-      if (response.status === 201) {
-        const data = await response.data;
-        console.log(data);
-        toast.success(data.message, {
+      const responseData = await response.data;
+      toast.success(responseData.message, {
+        position: "top-right",
+        className: "relative top-[8rem]",
+      });
+      navigate("/home");
+    } catch (err) {
+      setLoading(false);
+      if (err.response) {
+        toast.error(err.response.data.message, {
           position: "top-right",
-          className: "relative top-[45rem]",
+          className: "relative top-[8rem]",
         });
-        navigate("/home");
-      } else {
-        console.log(response.data);
-        toast.error(response.data.message, {
+      } else if (err.request) {
+        toast.error("No response received from the server", {
           position: "top-right",
-          className: "relative top-[45rem]",
+          className: "relative top-[8rem]",
+        });
+      } else {
+        toast.error("Error: ", err.message, {
+          position: "top-right",
+          className: "relative top-[8rem]",
         });
       }
-    } catch (err) {
-      toast.error(err.response.data.message, {
-        position: "top-right",
-        className: "relative top-[45rem]",
-      });
     }
   }
 
@@ -212,10 +217,11 @@ const SignUp = ({ handleError }) => {
           />
         </div>
         <button
+          disabled={loading}
           className="text-skin-base shadow-sm shadow-skin-base bg-skin-button mt-2 !w-full ui-button"
           type="submit"
         >
-          Submit
+          {loading ? <Loader loading={loading} /> : "Submit"}
         </button>
       </form>
     </Form>

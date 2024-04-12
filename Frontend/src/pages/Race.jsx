@@ -8,6 +8,7 @@ import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { RaceUser } from "@/components/RaceUser";
 import { RaceContext } from "../../context/RaceContext";
+import { toast } from "react-toastify";
 
 const Race = () => {
   document.title = "Race | Type Rivals";
@@ -18,13 +19,13 @@ const Race = () => {
     setPrepareTimerOn,
     getPrepareFormattedTime,
   ] = useCountDown(5);
+
   // Getting params query
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const noOfPlayers = queryParams.get("lobbySize");
   const isFriendlyLobby = queryParams.get("friendlyMatch");
 
-  // ! REFRESH ERROR IS BECAUSE WHEN REFRESH THE BACKEND HAS NOOFPLAYERS AS NULL
   const [replay, setReplay] = useState(false);
   const [paragraph, setParagraph] = useState("");
   const [players, setPlayers] = useState([]);
@@ -95,6 +96,20 @@ const Race = () => {
       // Current game is friendly we set the generated code
       socket.on("generatedLobbyCode", (lobbyCode) => {
         setFriendlyLobbyCode(lobbyCode);
+      });
+
+      // * Handle Errors
+      socket.on("error", (err) => {
+        // todo: Handle errors here
+        toast.error(err, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       });
 
       // Return a cleanup function to prevent the effect from running again
