@@ -15,10 +15,13 @@ import {
 import { Input } from "./ui/input";
 import "@/styles/forms.css";
 import { backendUrl } from "../../config/config";
+import { toast } from "react-toastify";
+
 const formSchema = z.object({
   emailAddress: z.string().email(),
   password: z.string().min(3),
 });
+
 const SignIn = ({ handleError }) => {
   document.title = "Sign In | Type Rivals";
   const form = useForm({
@@ -30,32 +33,44 @@ const SignIn = ({ handleError }) => {
   const { login, token, csrfToken } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  async function handleSignIn() {
-    const { emailAddress, password } = form.getValues();
-    console.log(backendUrl);
-    const response = await fetch(`${backendUrl}/auth/signin`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        // Authorization: "Bearer " + token,
-        "X-Csrf-Token": csrfToken,
-      },
-      body: JSON.stringify({
-        email: emailAddress,
-        password: password,
-      }),
-    });
-    if (response.ok) {
-      const result = await response.json();
-      login(result.token, result.userId);
-      navigate("/home");
+  async function onSubmit() {
+    try {
+      const { emailAddress, password } = form.getValues();
+      const response = await fetch(`${backendUrl}/auth/signin`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Csrf-Token": csrfToken,
+        },
+        body: JSON.stringify({
+          email: emailAddress,
+          password: password,
+        }),
+      });
+      if (response.ok) {
+        const result = await response.json();
+        login(result.token, result.userId);
+        toast.success("Logged in!", {
+          position: "top-right",
+          className: "relative top-[8rem]",
+        });
+        navigate("/home");
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Some error occured");
+      }
+    } catch (err) {
+      toast.error(err.message, {
+        position: "top-right",
+        className: "relative top-[8rem]",
+      });
     }
   }
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(handleSignIn)}
+        onSubmit={form.handleSubmit(onSubmit)}
         method="POST"
         className="flex flex-col justify-between  px-4 items-center h-full w-full pt-5"
       >

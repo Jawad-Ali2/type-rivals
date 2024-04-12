@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import "@/styles/forms.css";
 import { backendUrl } from "../../config/config";
+import { toast } from "react-toastify";
 
 const formSchema = z
   .object({
@@ -69,36 +70,55 @@ const SignUp = ({ handleError }) => {
   };
 
   async function handleSignup(data) {
-    // const formData = new FormData();
-    const { username, emailAddress, password, confirmPassword } = data;
-    // const profilePic = e.target["profile-picture"].files[0];
-    // const username = e.target.username.value;
-    // const email = e.target.email.value;
-    // const password = e.target.password.value;
-    // const confirmPassword = e.target["confirm-password"].value;
+    try {
+      // const formData = new FormData();
+      const { username, emailAddress, password, confirmPassword } = data;
+      // const profilePic = e.target["profile-picture"].files[0];
+      // const username = e.target.username.value;
+      // const email = e.target.email.value;
+      // const password = e.target.password.value;
+      // const confirmPassword = e.target["confirm-password"].value;
 
-    const userData = {
-      name: username,
-      email: emailAddress,
-      password: password,
-      confirmPassword: confirmPassword,
-    };
+      const userData = {
+        name: username,
+        email: emailAddress,
+        password: password,
+        confirmPassword: confirmPassword,
+      };
 
-    // formData.append("profilePicture", profilePic);
-    // formData.append("name", username);
-    // formData.append("email", email);
-    // formData.append("password", password);
-    // formData.append("confirmPassword", confirmPassword);
+      // formData.append("profilePicture", profilePic);
+      // formData.append("name", username);
+      // formData.append("email", email);
+      // formData.append("password", password);
+      // formData.append("confirmPassword", confirmPassword);
 
-    const response = await axios.post(`${backendUrl}/auth/signup`, userData, {
-      withCredentials: true,
-      headers: {
-        "x-csrf-token": csrfToken,
-      },
-    });
-    console.log(response.status);
-    if (response.status === 201) {
-      navigate("/home");
+      const response = await axios.post(`${backendUrl}/auth/signup`, userData, {
+        withCredentials: true,
+        headers: {
+          "x-csrf-token": csrfToken,
+        },
+      });
+      console.log(response);
+      if (response.status === 201) {
+        const data = await response.data;
+        console.log(data);
+        toast.success(data.message, {
+          position: "top-right",
+          className: "relative top-[45rem]",
+        });
+        navigate("/home");
+      } else {
+        console.log(response.data);
+        toast.error(response.data.message, {
+          position: "top-right",
+          className: "relative top-[45rem]",
+        });
+      }
+    } catch (err) {
+      toast.error(err.response.data.message, {
+        position: "top-right",
+        className: "relative top-[45rem]",
+      });
     }
   }
 

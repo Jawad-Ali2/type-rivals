@@ -6,6 +6,8 @@ import Hero from "@/components/Hero";
 import { useContext } from "react";
 import { Outlet } from "react-router-dom";
 import { ModalProvider } from "../context/ModalContext";
+import { ToastContainer } from "react-toastify";
+
 function App() {
   const { theme } = useContext(ThemeContext);
 
@@ -17,8 +19,10 @@ function App() {
         <ThemeSwitch />
         <section className="hero-section">
           <div className="hero-container  min-w-full w-full flex flex-column justify-center pt-[5rem] md:pt-[5rem]">
-            <Hero />
+            <ToastContainer />
+            {/* <Hero /> */}
             <Outlet />
+            {/* <ToastContainer /> */}
           </div>
         </section>
       </ModalProvider>
