@@ -130,9 +130,7 @@ const Header = () => {
               alt="type rivals"
               id="web-logo"
             />
-            <p className="inline-block  cursor-pointer">
-              Type Rivals
-            </p>
+            <p className="inline-block  cursor-pointer">Type Rivals</p>
           </div>
           <div className="dropddown-button h-[25px] md:hidden">
             <CIcon
@@ -148,6 +146,11 @@ const Header = () => {
                 <NavLink key={i} to={link} end>
                   <li className="w-fit  cursor-pointer inline h-[2rem] transition-all duration-200 py-2 m-2">
                     {el}
+                    {el === "Collections" && (
+                      <span className="bg-red-500 text-white text-[0.55rem] relative bottom-2 ms-1 font-medium px-2 py-0.1 rounded-full">
+                        Soon
+                      </span>
+                    )}
                   </li>
                 </NavLink>
               ))}
@@ -207,6 +210,11 @@ const Header = () => {
               >
                 <li className="w-fit inline cursor-pointer transition-all duration-200 md:mx-2 lg:mx-4 xl:mx-6 ">
                   {el}
+                  {(el === "vs CPU" || el === "Tournaments") && (
+                    <span className="bg-red-500 text-white text-[0.55rem] relative bottom-1 ms-1 font-medium px-2 py-0.1 rounded-full">
+                      Soon
+                    </span>
+                  )}
                 </li>
               </Link>
             ))}
@@ -223,6 +231,11 @@ const Header = () => {
             <NavLink key={i} to={link} end>
               <li className="w-fit h-[2rem] transition-all duration-200 py-2 m-2 border-b-[#3B6187] hover:border-b-[2px] border-b-[0px]">
                 {el}
+                {el === "Collections" && (
+                  <span className="bg-red-500 text-white text-[0.55rem] relative bottom-1 ms-1 font-medium px-2 py-0.1 rounded-full">
+                    Soon
+                  </span>
+                )}
               </li>
             </NavLink>
           ))}
