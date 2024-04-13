@@ -67,8 +67,8 @@ export const RaceUser = ({ players, setPlayers, token }) => {
                   <img
                     id={`pfp-${player.playerId}`}
                     className={`w-10 m-2 rounded-full transition-all duration-200 custom-image-${player.playerId}`}
-                    src={player.profilePic}
-                    alt={defaultImage}
+                    src={player.profilePic ? player.profilePic : defaultImage}
+                    alt={player.username}
                   />
                   <p>{player.wpm}</p>
                 </div>

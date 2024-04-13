@@ -11,6 +11,8 @@ import { useRef } from "react";
 import axios from "axios";
 import { backendUrl } from "../../config/config";
 import { AuthContext } from "../../context/AuthContext";
+import { toast } from "react-toastify";
+import Loader from "./Loader";
 
 export const Modal = () => {
   const modalRoot = document.getElementById("modal-root");
@@ -29,6 +31,7 @@ export const Modal = () => {
   const [showCreate, setShowCreate] = useState(false);
   const [showJoin, setShowJoin] = useState(false);
   const [hasRouteChanged, setHasRouteChanged] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -97,27 +100,47 @@ export const Modal = () => {
     setFriendlyLobbyCode(lobbyCode);
 
     async function getLobbySize() {
-      const response = await axios.post(
-        `${backendUrl}/race/verifyLobbyCode`,
-        {
-          lobbyCode: lobbyCode,
-        },
-        {
-          withCredentials: true,
-          headers: {
-            Authorization: "Bearer " + token,
-            "x-csrf-token": csrfToken,
+      try {
+        setLoading(true);
+        const response = await axios.post(
+          `${backendUrl}/race/verifyLobbyCode`,
+          {
+            lobbyCode: lobbyCode,
           },
-        }
-      );
-      if (response.status === 200) {
-        const data = await response.data;
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: "Bearer " + token,
+              "x-csrf-token": csrfToken,
+            },
+          }
+        );
 
+        const data = await response.data;
         const lobbySize = data.lobbySize;
 
+        setLoading(false);
         navigate(
           `/play-with-friends?lobbySize=${lobbySize}&friendlyMatch=true`
         );
+      } catch (err) {
+        setLoading(false);
+        if (err.response) {
+          toast.error(err.response.data.message, {
+            position: "top-right",
+            className: "relative top-[8rem]",
+          });
+        } else if (err.request) {
+          toast.error("No response received from the server", {
+            position: "top-right",
+            className: "relative top-[8rem]",
+          });
+        } else {
+          toast.error("Error: ", err.message, {
+            position: "top-right",
+            className: "relative top-[8rem]",
+          });
+        }
       }
     }
 
@@ -201,6 +224,7 @@ export const Modal = () => {
                 <React.Fragment key={index}>
                   <input
                     className="p-3 w-[3rem] rounded-md border text-sm ring-offset-background  border-skin-base text-center m-auto"
+                    disabled={loading}
                     ref={inputRef}
                     maxLength={1}
                     onChange={(e) => handleInputChange(index, e)}
@@ -213,11 +237,12 @@ export const Modal = () => {
             </div>
             <div className="text-center">
               <button
+                disabled={loading}
                 className="web-button"
                 ref={submitButtonRef}
                 onClick={handleLobbyCodeSubmit}
               >
-                Submit
+                {loading ? <Loader loading={loading} size={8} /> : "Submit"}
               </button>
             </div>
             <div className="flex justify-around mt-5 p-5"></div>

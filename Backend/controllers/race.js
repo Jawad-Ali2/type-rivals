@@ -3,7 +3,6 @@ const Lobby = require("../models/lobby");
 exports.verifyLobbyCode = (req, res) => {
   const { lobbyCode } = req.body;
 
-  console.log(lobbyCode);
   Lobby.findOne({ lobbyCode: lobbyCode })
     .then((lobby) => {
       if (!lobby) {
@@ -13,7 +12,6 @@ exports.verifyLobbyCode = (req, res) => {
       res.status(200).send({ lobbySize: lobby.lobbySize });
     })
     .catch((err) => {
-      console.log(err);
       const statusCode = err.status || 500;
       res.status(statusCode).send({ message: err.message });
     });
