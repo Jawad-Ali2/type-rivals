@@ -120,7 +120,7 @@ const SignUp = ({ handleError }) => {
                   <FormControl>
                     <Input
                       placeholder="Enter username"
-                      className="bg-skin-foreground border-skin-base modern-input"
+                      className="bg-primary-b  border-primary-c modern-input"
                       type="text"
                       {...field}
                     />
@@ -140,7 +140,7 @@ const SignUp = ({ handleError }) => {
                   <FormControl>
                     <Input
                       placeholder="Enter email address "
-                      className="bg-skin-foreground border-skin-base modern-input"
+                      className="bg-primary-b  border-primary-c modern-input"
                       type="text"
                       {...field}
                     />
@@ -160,7 +160,7 @@ const SignUp = ({ handleError }) => {
                   <FormControl>
                     <Input
                       placeholder="Enter password"
-                      className="bg-skin-foreground border-skin-base modern-input"
+                      className="bg-primary-b  border-primary-c modern-input"
                       type="password"
                       {...field}
                     />
@@ -180,7 +180,7 @@ const SignUp = ({ handleError }) => {
                   <FormControl>
                     <Input
                       placeholder="Confirm Password"
-                      className="bg-skin-foreground border-skin-base modern-input"
+                      className="bg-primary-b  border-primary-c modern-input"
                       type="password"
                       {...field}
                     />
@@ -192,7 +192,7 @@ const SignUp = ({ handleError }) => {
           />
         </div>
         <button
-          className="text-skin-base shadow-sm shadow-skin-base bg-skin-button mt-2 !w-full ui-button"
+          className="bg-primary-e mt-2 !w-full ui-button"
           type="submit"
         >
           Submit

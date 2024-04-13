@@ -8,35 +8,16 @@ export default {
   ],
   theme: {
     extend: {
-      backgroundColor:{
-        skin:{
-          icon: 'var(--icon-color)',
-          overlayBG: 'var(--background-color)',
-          body: 'var(--body-color)',
-          foreground : 'var(--foreground-color)',
-          button: 'var(--button-color)',
-          opaque : 'var(--opaque-color)',
-          bar: 'var(--bar-color)',
-          narrator: 'var(--narrator-color)',
-        }
-      },
       colors:{
-        skin:{
-          icon: 'var(--icon-color)',
-          base: 'var(--text-color)',
-          hover : 'var(--hover-text-color)',
-          narrator: 'var(--narrator-color)',
-          invert: 'var(--invert-text-color)',
-        }
-      },
-      boxShadowColor:{
-        skin:{
-          base: 'var(--shadow-color)',
-        }
-      },
-      borderColor:{
-        skin:{
-          base: 'var(--border-color)',
+        primary:{
+          a: "var(--color-a)",
+          b: "var(--color-b)",
+          c: "var(--color-c)",
+          e: "var(--color-e)",
+          f: "var(--color-f)",
+        },
+        secondary:{
+          d: "var(--color-d)",
         }
       }
     },

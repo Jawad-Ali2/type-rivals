@@ -22,12 +22,12 @@ const ThemeSwitch = ()=>{
             changeTheme(e.target.value)
         }
     }
-    const theme_names = ["light", "dark","slate"]
+    const theme_names = ["bright", "violet","navy"]
     return (
     <div onMouseEnter={handleOnFocusEnter} onMouseLeave={handleOnFocusExit} className="theme-switch-container fixed z-[1000] w-[10rem] right-[2rem] bottom-[1rem]">
-        <div className="options-container transition-all opacity-0 duration-300 w-[10rem]  fixed z-[1000] right-[2rem] bottom-[5rem] rounded-lg text-skin-base shadow-md shadow-skin-base bg-skin-overlayBG">
+        <div className="options-container transition-all opacity-0 duration-300 w-[10rem]  fixed z-[1000] right-[2rem] bottom-[5rem] rounded-lg  border-2 border-primary-b bg-primary-c">
                 {theme_names.map((el,i)=>(
-                    <div className="theme-btn mx-auto w-full p-2 m-2 rounded-sm hover:bg-skin-bar " key={i}>
+                    <div className="theme-btn mx-auto w-full p-2 m-2 rounded-sm hover:bg-primary-b " key={i}>
                         <label className="cursor-pointer w-full">
                         <input id={el+"-theme"} value={el} defaultChecked={theme===el} onChange={e=>getAndSetTheme(e)} name="theme-opt" className="cursor-pointer scale-[105%]" type="radio"/>
                             <p id="theme-name" className="ml-2 inline-block capitalize">{el}</p>
@@ -35,7 +35,7 @@ const ThemeSwitch = ()=>{
                     </div>
                 ))}
         </div>
-        <button className="theme-switch text-skin-base shadow-sm  !w-full shadow-skin-base bg-skin-button  ui-button capitalize">Theme</button>
+        <button className="theme-switch   !w-full  bg-primary-e  ui-button capitalize">Theme</button>
     </div>)
 }
 export default ThemeSwitch;

@@ -31,7 +31,7 @@ const RaceStats = ({ input, paragraph, time, raceFinished, setReplay }) => {
     >
       <div
         className={
-          "stats-container  rounded-sm text-skin-base transition-all shadow-md shadow-skin-base bg-skin-overlayBG  duration-300 fixed  flex flex-col items-center justify-between p-2 w-[20rem]  h-[20rem] " +
+          "stats-container  rounded-md border-2 border-primary-f  transition-all  bg-primary-c  duration-300 fixed  flex flex-col items-center justify-between p-2 w-[20rem]  h-[20rem] " +
           (raceFinished ? "top-[13rem]" : "top-[-25rem]")
         }
       >
@@ -44,15 +44,15 @@ const RaceStats = ({ input, paragraph, time, raceFinished, setReplay }) => {
             </tr>
           </thead>
           <tbody className="w-full h-full flex flex-col justify-around items-center">
-            <tr className="faded-border border-b-2 w-[10rem]">
+            <tr className="w-[10rem]">
               <td className="float-left">Speed</td>
               <td className="float-right">{speed} WPM</td>
             </tr>
-            <tr className="faded-border border-b-2 w-[10rem]">
+            <tr className="w-[10rem]">
               <td className="float-left">Accuracy</td>
               <td className="float-right">100%</td>
             </tr>
-            <tr className="faded-border border-b-2 w-[10rem]">
+            <tr className="w-[10rem]">
               <td className="float-left">Time</td>
               <td className="float-right">{timeTaken}</td>
             </tr>
@@ -62,7 +62,7 @@ const RaceStats = ({ input, paragraph, time, raceFinished, setReplay }) => {
           onClick={() => {
             setReplay((prev) => !prev);
           }}
-          className="text-skin-base shadow-md shadow-skin-base bg-skin-button  ui-button"
+          className="bg-primary-e  ui-button"
         >
           Replay
         </button>

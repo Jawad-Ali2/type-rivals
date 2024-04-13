@@ -32,7 +32,7 @@ const TrackInput = ({
       value={input}
       onChange={handleInputChange}
       placeholder="Type Here..."
-      className="track-input pr-6 web-body border-b-2 border-skin-base outline-none web-text w-full"
+      className="track-input pr-6 web-body border-b-4 border-primary-b outline-none web-text w-full"
     />
   );
 };

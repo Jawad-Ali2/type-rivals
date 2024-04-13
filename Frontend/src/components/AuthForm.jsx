@@ -16,7 +16,7 @@ const AuthForm = ({ signIn }) => {
   return (
     <section className="authform-section">
       <div
-        className={`authform-container shadow-sm shadow-skin-base text-skin-base rounded-lg w-[90%] duration-300 transition-all mx-auto max-w-[25rem] ${
+        className={`authform-container border-2 border-primary-b  rounded-lg w-[90%] duration-300 transition-all mx-auto max-w-[25rem] ${
           signingIn ? "h-[30rem]" : "h-[37rem]"
         }`}
       >
@@ -37,7 +37,7 @@ const AuthForm = ({ signIn }) => {
           <div className="form-footer  w-full h-[3rem] flex flex-row justify-between items-center px-2">
             <button
               onClick={handleAuthSwitch}
-              className=" text-skin-base text-sm w-[10rem] text-left"
+              className="text-sm w-[10rem] text-left"
             >
               {signingIn ? "Get Registered?" : "Already Registered?"}
             </button>

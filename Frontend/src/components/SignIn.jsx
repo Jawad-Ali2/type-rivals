@@ -69,7 +69,7 @@ const SignIn = ({ handleError }) => {
                   <FormLabel className="text-md">Email</FormLabel>
                   <FormControl>
                     <Input
-                      className="bg-skin-foreground border-skin-base modern-input"
+                      className="bg-primary-b  border-primary-c modern-input"
                       placeholder="Enter Email Address"
                       type="text"
                       {...field}
@@ -89,7 +89,7 @@ const SignIn = ({ handleError }) => {
                   <FormLabel className="text-md">Password</FormLabel>
                   <FormControl>
                     <Input
-                      className="bg-skin-foreground  border-skin-base modern-input"
+                      className="bg-primary-b  border-primary-c modern-input"
                       placeholder="Enter your password."
                       type="password"
                       {...field}
@@ -102,7 +102,7 @@ const SignIn = ({ handleError }) => {
           />
         </div>
         <button
-          className="text-skin-base shadow-sm  shadow-skin-base bg-skin-button !w-full  ui-button"
+          className="bg-primary-e !w-full  ui-button"
           type="submit"
         >
           Submit

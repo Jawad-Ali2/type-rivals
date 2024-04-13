@@ -9,7 +9,7 @@ import { ModalProvider } from "../context/ModalContext";
 function App() {
   const { theme } = useContext(ThemeContext);
 
-  const dynamicClass = `${theme} bg-skin-body w-full min-h-screen pb-[5rem]`;
+  const dynamicClass = `${theme} bg-primary-a text-secondary-d w-full min-h-screen pb-[5rem]`;
   return (
     <div className={dynamicClass}>
       <ModalProvider>

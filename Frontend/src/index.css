@@ -4,70 +4,24 @@
 @tailwind utilities;
 
 @layer base {
-  .dark {
-    --icon-color: #628bb4;
-    --faded-border: linear-gradient(to right, #0d2844, #3e6e9e5c, #0d2844);
-    --body-color: #081624;
-    --text-color: #3b6187;
-    --hover-text-color: #425c6d;
-    --foreground-color: #1c2936;
-    --shadow-color: #233345;
-    --background-color: #0d2844;
-    --figma-gradient: linear-gradient(to bottom, #072542, #021f3d);
-    --button-color: #0d2844;
-    --dark-text-color: #184d7f;
-    --transparent-background-color: #031221bb;
-    --border-color: #071d32;
-    --gradient-color: linear-gradient(to right, #274765, #273647);
-    --opaque-color: #0000007d;
-    --bar-color: #071422;
-    --narrator-color: #082f49;
-    --invert-text-color: #fff;
+  .violet {
+   --color-a : #130F41;
+   --color-b : #18144b;
+   --color-c : #110d42;
+   --color-d : #fff;
+   --color-e : #322C74;
+   --color-f : #424081;
   }
-  .light {
-    --icon-color: #628bb4;
-    --faded-border: linear-gradient(
-      to right,
-      #ffffffc6,
-      #0000002c,
-      rgba(255, 255, 255, 0.89)
-    );
-    --body-color: #ebe6e6;
-    --text-color: #000;
-    --hover-text-color: #000;
-    --foreground-color: #f8fbff;
-    --shadow-color: #b8bcc1;
-    --background-color: rgb(255, 255, 255);
-    --figma-gradient: linear-gradient(to bottom, #072542, #021f3d);
-    --button-color: #fff;
-    --dark-text-color: #184d7f;
-    --transparent-background-color: #031221bb;
-    --border-color: #d0d0d0;
-    --gradient-color: linear-gradient(to right, #274765, #273647);
-    --opaque-color: #b6b6b691;
-    --bar-color: #ece6e6;
-    --narrator-color: dodgerblue;
-    --invert-text-color: #fff;
+  .bright {
+   
   }
-  .slate {
-    --icon-color: #628bb4;
-    --faded-border: linear-gradient(to right, #404040, #544949d0, #404040);
-    --body-color: #1b1a1a;
-    --text-color: #fff;
-    --hover-text-color: #000;
-    --foreground-color: #404040;
-    --shadow-color: #515151;
-    --background-color: #262626;
-    --figma-gradient: linear-gradient(to bottom, #072542, #021f3d);
-    --button-color: #404040;
-    --dark-text-color: #184d7f;
-    --transparent-background-color: #031221bb;
-    --border-color: #7c7c7c;
-    --gradient-color: linear-gradient(to right, #274765, #273647);
-    --opaque-color: #262626af;
-    --bar-color: #171717;
-    --narrator-color: #393939;
-    --invert-text-color: #fff;
+  .navy {
+    --color-a : #081624;
+   --color-b : #0d2844;
+   --color-c : #071422;;
+   --color-d : #fff;
+   --color-e : #112f4f;
+   --color-f : #424081; 
   }
 }
 

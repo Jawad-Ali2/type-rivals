@@ -146,12 +146,12 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
       <p className="absolute font-semibold web-text right-0 top-[-1.4rem]">
         {getRaceFormattedTime(raceTime)}
       </p>
-      <div className="racemap w-full h-fit rounded bg-skin-foreground text-left web-text p-2 overflow-hidden">
+      <div className="racemap w-full h-fit rounded bg-primary-b border-2 border-primary-c text-left web-text p-2 overflow-hidden">
         {paragraph}
       </div>
       <div
         className={
-          "racemask absolute top-[0rem] w-full h-fit rounded  text-left  p-2 overflow-hidden " +
+          "racemask absolute top-[0rem] w-full h-fit rounded  text-left border-2 border-primary-c p-2 overflow-hidden " +
           color
         }
       >
