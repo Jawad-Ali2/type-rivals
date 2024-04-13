@@ -7,6 +7,7 @@ import { calculateWPM } from "../../utils/calculateWPM";
 import { AuthContext } from "../../context/AuthContext";
 import createConnection from "../../utils/socket";
 import { RaceContext } from "../../context/RaceContext";
+
 const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
   const success = "text-green-600";
   const error = "text-red-500";

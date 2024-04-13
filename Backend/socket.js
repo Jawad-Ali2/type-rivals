@@ -7,6 +7,7 @@ const {
 } = require("./utils/race");
 const { Mutex } = require("async-mutex");
 
+const createOrJoinLobbyMutex = new Mutex();
 const deleteMutex = new Mutex();
 const userLastRequestMap = new Map();
 
@@ -46,6 +47,7 @@ module.exports = {
           friendLobbyID
         ) => {
           const release = await createOrJoinLobbyMutex.acquire();
+
           try {
             // Creation or Joining of lobby
             // TODO: I can pass socket to join and join function can send emit whenever a user joins

@@ -169,7 +169,12 @@ const Race = () => {
 
   return (
     <section className="race-section w-full max-w-[45rem]">
-      <RaceLoader loading={!paragraph} errors={null} time={prepareTime}>
+      <RaceLoader
+        loading={!paragraph}
+        errors={null}
+        time={prepareTime}
+        size={20}
+      >
         Fetching Paragraph...
       </RaceLoader>
       <div className="race-container pt-[5rem] w-[90%] mx-auto">

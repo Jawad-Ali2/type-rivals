@@ -221,7 +221,7 @@ const SignUp = ({ handleError }) => {
           className="text-skin-base shadow-sm shadow-skin-base bg-skin-button mt-2 !w-full ui-button"
           type="submit"
         >
-          {loading ? <Loader loading={loading} /> : "Submit"}
+          {loading ? <Loader loading={loading} size={8} /> : "Submit"}
         </button>
       </form>
     </Form>

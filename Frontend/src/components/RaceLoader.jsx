@@ -1,7 +1,7 @@
-import  Loader  from "./Loader";
+import Loader from "./Loader";
 import broken_link from "/src/assets/broken_link.png";
 
-const RaceLoader = ({ children, loading, errors, time }) => {
+const RaceLoader = ({ children, loading, errors, time, size }) => {
   const dynamicClass = `race-loader-container text-skin-base bg-skin-opaque  flex flex-col justify-center items-center w-full z-[100] h-screen  bg-opacity-50 top[5rem] left-0 ${
     time <= 0 ? "hidden" : "fixed"
   }`;
@@ -9,8 +9,8 @@ const RaceLoader = ({ children, loading, errors, time }) => {
     <div className={dynamicClass}>
       {loading && !errors && (
         <>
-          <Loader loading={loading} />
-          <p className="mt-5">{children}</p> 
+          <Loader loading={loading} size={size} />
+          <p className="mt-5">{children}</p>
         </>
       )}
       {!loading && !errors && (
