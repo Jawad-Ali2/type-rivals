@@ -1,11 +1,9 @@
 import RaceMap from "@/components/RaceMap";
 import RaceLoader from "@/components/RaceLoader";
-import { useCountDown, useFetch } from "../../Hooks";
+import { useCountDown } from "../../Hooks";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import createConnection from "../../utils/socket";
 import { AuthContext } from "../../context/AuthContext";
-import axios from "axios";
 import { RaceUser } from "@/components/RaceUser";
 import { RaceContext } from "../../context/RaceContext";
 import { toast } from "react-toastify";
@@ -83,13 +81,22 @@ const Race = () => {
         isFriendlyLobbyCreator,
         friendlyLobbyCode
       );
+
+      socket.on("playerJoined", (lobby) => {
+        console.log(lobby.players);
+        const playersLength = lobby.players.length;
+        // setPlayers((prev) => [...prev, lobby.players[playersLength - 1]]);
+        setPlayers([...lobby.players]);
+        // setPlayersConnected(() => true);
+      });
+
       socket.on("message", (quote, lobby) => {
         currentLobbyRef.current = lobby._id;
-        setPlayers([...lobby.players]);
+        // setPlayers([...lobby.players]);
         setParagraph(quote.text);
         setSocketConnected(true);
 
-        setPlayersConnected(() => true);
+        // setPlayersConnected(() => true);
         initiateSignal();
       });
 
@@ -146,19 +153,19 @@ const Race = () => {
   }, [paragraph]);
 
   // Each player sees himself on top of the list always
-  useEffect(() => {
-    const updatedPlayers = [...players];
+  // useEffect(() => {
+  //   const updatedPlayers = [...players];
 
-    updatedPlayers.forEach((player, index) => {
-      if (player.playerId === userId && index > 0) {
-        const temp = updatedPlayers[0];
-        updatedPlayers[0] = player;
-        updatedPlayers[index] = temp;
-      }
-    });
+  //   updatedPlayers.forEach((player, index) => {
+  //     if (player.playerId === userId && index > 0) {
+  //       const temp = updatedPlayers[0];
+  //       updatedPlayers[0] = player;
+  //       updatedPlayers[index] = temp;
+  //     }
+  //   });
 
-    setPlayers(updatedPlayers);
-  }, [playersConnected]);
+  //   setPlayers(updatedPlayers);
+  // }, [playersConnected]);
 
   return (
     <section className="race-section w-full max-w-[45rem]">

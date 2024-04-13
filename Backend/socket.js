@@ -4,12 +4,10 @@ const {
   updateLobby,
   disconnectUser,
   switchLobbyState,
-  checkIsValidLobbyCode,
 } = require("./utils/race");
 const { Mutex } = require("async-mutex");
 
 const deleteMutex = new Mutex();
-const createOrJoinLobbyMutex = new Mutex();
 const userLastRequestMap = new Map();
 
 const corsOrigin =
@@ -48,17 +46,6 @@ module.exports = {
           friendLobbyID
         ) => {
           const release = await createOrJoinLobbyMutex.acquire();
-          // const currentTime = Date.now();
-          // const lastRequestTime = userLastRequestMap.get(socket.id);
-
-          // if (lastRequestTime && currentTime - lastRequestTime < 10) {
-          //   console.log("Request cancelled in createOrJoin", socket.id);
-          //   return;
-          // }
-
-          // console.log("Request accepted in createOrJoin", socket.id);
-          // userLastRequestMap.set(socket.id, currentTime);
-
           try {
             // Creation or Joining of lobby
             // TODO: I can pass socket to join and join function can send emit whenever a user joins
@@ -81,6 +68,10 @@ module.exports = {
             }
 
             if (lobby) {
+              // * Whenever we reach here that means the user has joined the lobby
+              // TODO: I can emit signal in lobby that will create effect of people joining one by one
+              io.in(lobby.id).emit("playerJoined", lobby);
+
               // * If the lobby is of friendly match type
               if (lobby.lobbyCode) {
                 io.in(lobby.id).emit("generatedLobbyCode", lobby.lobbyCode);
@@ -154,11 +145,6 @@ module.exports = {
             const lastRequestTime = userLastRequestMap.get(socketid);
 
             if (lastRequestTime && currentTime - lastRequestTime < 1000) {
-              console.log("Request cancelled", socketid);
-              socket.emit(
-                "error",
-                "Request cancelled due to frequent requests"
-              );
               return;
             }
 

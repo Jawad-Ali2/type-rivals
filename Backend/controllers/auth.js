@@ -7,7 +7,6 @@ const { validationResult } = require("express-validator");
 
 exports.postSignUp = async (req, res) => {
   try {
-    console.log(req.body);
     const { name, email, password, confirmPassword } = req.body;
     // const profilePicture = req.file;
 
@@ -66,7 +65,7 @@ exports.postSignUp = async (req, res) => {
         races: 0,
       },
     });
-    // await user.save();
+    await user.save();
     res.status(201).json({ message: "Account Created" });
   } catch (err) {
     const errStatus = err.statusCode || 500;

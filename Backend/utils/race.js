@@ -234,19 +234,18 @@ async function disconnectUser(socketId) {
       );
 
       if (idx !== -1) {
-        // lobby.players.splice(idx, 1);
         // if there are no players in the lobby (and lobby is in-progress)
-        await Lobby.findOneAndUpdate(
+        let updatedLobby = await Lobby.findOneAndUpdate(
           { _id: lobby._id },
-          { $pull: { players: { socketId: socketId } } }
+          { $pull: { players: { socketId: socketId } } },
+          { new: true } // This option makes findOneAndUpdate return the updated document
         );
 
-        if (lobby.players.length === 0) {
+        if (updatedLobby.players.length === 0) {
           console.log("EMPTY LOBBY");
           // If the lobby was in-progress, delete it
-          await Lobby.findByIdAndDelete(lobby._id);
+          await Lobby.findByIdAndDelete(updatedLobby._id);
         }
-        // await lobby.save();
       }
 
       // TODO: ADD THIS FUNCTIONALITY
