@@ -1,8 +1,12 @@
-import { createContext, useRef, useState } from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
+import createConnection from "../utils/socket";
+import { AuthContext } from "../context/AuthContext";
 
 const RaceContext = createContext();
 
 const RaceProvider = ({ children }) => {
+  const { token } = useContext(AuthContext);
+  const socket = React.useMemo(() => createConnection(token), [token]);
   const [players, setPlayers] = useState([]);
   const [signalInterval, setSignalInterval] = useState(null);
   const [signal, setSignal] = useState(false);
@@ -11,8 +15,8 @@ const RaceProvider = ({ children }) => {
   const [userFinishTimer, setUserFinishTimer] = useState(60);
   const [isFriendlyLobbyCreator, setIsFriendlyLobbyCreator] = useState(false);
   const isFriendlyMatchRef = useRef(false);
-  const friendlyLobbyCodeRef = useRef(null);
-  const lobbySizeRef = useRef(null);
+  const [friendlyLobbyCode, setFriendlyLobbyCode] = useState("");
+  // const lobbySizeRef = useRef(null);
 
   const resetContext = () => {
     setPlayers(() => []);
@@ -22,13 +26,12 @@ const RaceProvider = ({ children }) => {
     setRaceHasFinished(false);
     setUserFinishTimer(60);
     setIsFriendlyLobbyCreator(false);
-    console.log("RESETING");
   };
 
   const resetLobbySize = () => {
-    lobbySizeRef.current = null;
+    // lobbySizeRef.current = null;
     isFriendlyMatchRef.current = false;
-    friendlyLobbyCodeRef.current = null;
+    setFriendlyLobbyCode("");
   };
 
   const getPlayers = () => {
@@ -47,7 +50,6 @@ const RaceProvider = ({ children }) => {
   const initiateSignal = () => {
     setSignalInterval(
       setInterval(() => {
-        console.log("SENDING SIGNAL");
         setSignal((prev) => !prev);
       }, 2000)
     );
@@ -66,13 +68,14 @@ const RaceProvider = ({ children }) => {
   };
 
   const updateLobbySize = (lobbySize) => {
-    lobbySizeRef.current = lobbySize;
-    console.log("Lobby size update", lobbySizeRef.current);
+    // lobbySizeRef.current = lobbySize;
+    // console.log("Lobby size update", lobbySizeRef.current);
   };
 
   return (
     <RaceContext.Provider
       value={{
+        socket,
         resetContext,
         players,
         signal,
@@ -84,13 +87,14 @@ const RaceProvider = ({ children }) => {
         setRaceHasFinished,
         userFinishTimer,
         changeUserFinishTimer,
-        lobbySizeRef,
+        // lobbySizeRef,
         updateLobbySize,
         resetLobbySize,
         isFriendlyMatchRef,
         isFriendlyLobbyCreator,
         setIsFriendlyLobbyCreator,
-        friendlyLobbyCodeRef,
+        friendlyLobbyCode,
+        setFriendlyLobbyCode,
       }}
     >
       {children}

@@ -4,8 +4,12 @@ const {
   updateLobby,
   disconnectUser,
   switchLobbyState,
-  checkIsValidLobbyCode,
 } = require("./utils/race");
+const { Mutex } = require("async-mutex");
+
+const createOrJoinLobbyMutex = new Mutex();
+const deleteMutex = new Mutex();
+const userLastRequestMap = new Map();
 
 const corsOrigin =
   process.env.NODE_ENV === "production"
@@ -35,33 +39,53 @@ module.exports = {
 
       socket.on(
         "createOrJoinLobby",
-        (
+        async (
           playerId,
           noOfPlayers,
           isFriendlyMatch,
           isFriendlyLobbyCreator,
           friendLobbyID
         ) => {
-          console.log("noOfPlayers", noOfPlayers);
-          // Creation or Joining of lobby
-          joinLobby(
-            playerId,
-            socket,
-            noOfPlayers,
-            isFriendlyMatch,
-            isFriendlyLobbyCreator,
-            friendLobbyID
-          ).then((lobby) => {
+          const release = await createOrJoinLobbyMutex.acquire();
+
+          try {
+            // Creation or Joining of lobby
+            // TODO: I can pass socket to join and join function can send emit whenever a user joins
+            const lobby = await joinLobby(
+              playerId,
+              socket,
+              noOfPlayers,
+              isFriendlyMatch,
+              isFriendlyLobbyCreator,
+              friendLobbyID
+            );
             // If lobby has been joined
+            if (!lobby) {
+              console.log("Some error occured");
+              socket.emit(
+                "error",
+                "Something unexpected happened, Please try again!"
+              );
+              return;
+            }
+
             if (lobby) {
-              // Todo: Change player count to 4
-              if (lobby.players.length === noOfPlayers) {
+              // * Whenever we reach here that means the user has joined the lobby
+              // TODO: I can emit signal in lobby that will create effect of people joining one by one
+              io.in(lobby.id).emit("playerJoined", lobby);
+
+              // * If the lobby is of friendly match type
+              if (lobby.lobbyCode) {
+                io.in(lobby.id).emit("generatedLobbyCode", lobby.lobbyCode);
+              }
+              // console.log("Request proceeded");
+              if (lobby.players.length == noOfPlayers) {
                 console.log("Lobby length: " + lobby.players.length);
                 lobby.state = "in-progress";
-                switchLobbyState("in-progress", lobby._id);
+                await switchLobbyState("in-progress", lobby._id);
               }
               // ! Just to check players in room
-              io.in(lobby._id.toString())
+              io.in(lobby.id)
                 .allSockets()
                 .then((sockets) => {
                   const usersInSession = Array.from(sockets);
@@ -71,21 +95,19 @@ module.exports = {
               // If the state matches
               if (lobby.state === "in-progress") {
                 // Each player in room is sent paragraph
-                fetchQuote()
-                  .then((quote) => {
-                    io.in(lobby._id.toString()).emit("message", quote, lobby);
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
+                const quote = await fetchQuote();
+
+                io.in(lobby.id).emit("message", quote, lobby);
               }
             } else {
               socket.emit(
-                "lobbyNotFound",
+                "error",
                 "No Available Lobby Found. Please try again later."
               );
             }
-          });
+          } finally {
+            release();
+          }
 
           socket.on(
             "typingSpeedUpdate",
@@ -103,20 +125,39 @@ module.exports = {
                   .then((raceFinished1) => {
                     if (raceFinished1) {
                       // io.in(lobby).emit("raceFinished", raceFinished1);
-                      io.emit("raceFinished", raceFinished1); // TODO: If all users in game recieve signal uncomment and remove this line
+                      // TODO: If all users in game recieve signal uncomment and remove this line
+                      io.emit("raceFinished", raceFinished1);
                     }
                   })
                   .catch((err) => {
                     console.log(err);
+                    socket.emit(
+                      "error",
+                      "Something went wrong, Please try again!"
+                    );
                   });
               }
               io.in(lobby).emit("speed", { wpm, percentage, socketId });
             }
           );
 
-          socket.on("leaveRace", (text) => {
-            console.log("leaveRace", text);
-            disconnectUser(socket.id);
+          socket.on("leaveRace", async (socketid) => {
+            const release = await deleteMutex.acquire();
+            const currentTime = Date.now();
+            const lastRequestTime = userLastRequestMap.get(socketid);
+
+            if (lastRequestTime && currentTime - lastRequestTime < 1000) {
+              return;
+            }
+
+            userLastRequestMap.set(socketid, currentTime);
+
+            try {
+              console.log("leaveRace", socketid);
+              await disconnectUser(socketid);
+            } finally {
+              release();
+            }
           });
 
           socket.on("disconnect", () => {

@@ -10,19 +10,14 @@ export const useFetch = (url) => {
   const [refetch, setRefetch] = useState(false);
   const { isAuthenticated, token } = useContext(AuthContext);
   const navigate = useNavigate();
-  useEffect(() => {
-    console.log(paragraph, audioLink, errors, refetch);
-  }, []);
 
   const resetData = () => {
-    console.log("HJDKGHSG");
     setErrors((prev) => null);
     setParagraph((prev) => "");
     setAudioLink((prev) => null);
     setRefetch((prev) => !prev);
   };
   useEffect(() => {
-    console.log("Fetching data...", isAuthenticated, token, refetch);
     if (!isAuthenticated) {
       navigate("/auth");
     }

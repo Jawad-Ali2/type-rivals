@@ -2,6 +2,8 @@ const Paragraph = require("../models/paragraphs");
 const User = require("../models/user");
 const Lobby = require("../models/lobby");
 const { generateLobbyCode } = require("./generateLobbyCode");
+const { Mutex } = require("async-mutex");
+const joinLobbyMutex = new Mutex();
 
 function getLobby(lobbyId) {
   return new Promise((resolve, reject) => {
@@ -83,25 +85,37 @@ function createFriendlyLobby(noOfPlayers) {
   });
 }
 
-function createMultiplayerLobby(noOfPlayers) {
-  console.log(noOfPlayers);
-  return new Promise((resolve, reject) => {
-    const lobby = new Lobby({
-      players: [],
-      state: "waiting", // three states ('waiting', 'in_progress', 'finished')
-      lobbyType: "Multiplayer",
-      lobbySize: noOfPlayers,
-    });
+async function createMultiplayerLobby(noOfPlayers) {
+  // console.log(noOfPlayers);
+  // return new Promise((resolve, reject) => {
+  //   const lobby = new Lobby({
+  //     players: [],
+  //     state: "waiting", // three states ('waiting', 'in_progress', 'finished')
+  //     lobbyType: "Multiplayer",
+  //     lobbySize: noOfPlayers,
+  //   });
 
-    lobby
-      .save()
-      .then((lobby) => {
-        resolve(lobby);
-      })
-      .catch((err) => {
-        reject(err);
-      });
+  //   lobby
+  //     .save()
+  //     .then((lobby) => {
+  //       resolve(lobby);
+  //     })
+  //     .catch((err) => {
+  //       reject(err);
+  //     });
+  // });
+
+  let lobby = new Lobby({
+    players: [],
+    state: "waiting",
+    lobbyType: "Multiplayer",
+    lobbySize: noOfPlayers,
   });
+
+  // Save the lobby
+  lobby = await lobby.save();
+
+  return lobby;
 }
 
 /**
@@ -114,7 +128,7 @@ function createMultiplayerLobby(noOfPlayers) {
  * @param {string} friendLobbyID - The ID of the friend's lobby, if it's a friendly match
  * @returns {Promise<Lobby>} The updated lobby
  */
-function joinLobby(
+async function joinLobby(
   playerId,
   socket,
   noOfPlayers,
@@ -122,9 +136,9 @@ function joinLobby(
   isFriendlyLobbyCreator,
   friendLobbyID
 ) {
-  return new Promise(async (resolve, reject) => {
+  return await joinLobbyMutex.runExclusive(async () => {
     let lobby;
-    console.log(isFriendlyLobbyCreator, isFriendlyMatch);
+    // console.log(isFriendlyLobbyCreator, isFriendlyMatch);
 
     // * Case 1: When the player is the creator of lobby
     if (isFriendlyMatch && isFriendlyLobbyCreator) {
@@ -139,15 +153,12 @@ function joinLobby(
         ],
       });
 
-      console.log(lobby);
-
       if (!lobby) throw new Error("Lobby ID is invalid");
     } else {
       // * When the user is just looking for a match
       lobby = await Lobby.findOne({
         $and: [{ state: "waiting" }, { lobbyType: "Multiplayer" }],
       });
-      console.log("In else statement", lobby);
       if (!lobby) lobby = await createMultiplayerLobby(noOfPlayers);
     }
 
@@ -157,35 +168,27 @@ function joinLobby(
       (player) => player.playerId === playerId
     );
 
-    if (playerAlreadyJoined) return;
+    socket.join(lobby.id);
+    if (playerAlreadyJoined) return lobby;
 
-    User.findById(playerId)
-      .then((user) => {
-        if (!user) throw new Error("User not found");
+    const user = await User.findById(playerId);
+    if (!user) throw new Error("User not found");
 
-        const player = {
-          playerId: playerId,
-          socketId: socket.id,
-          username: user.name,
-          email: user.email,
-          profilePic: user.profilePic,
-          percentageCompleted: 0,
-          wpm: 0,
-          userLeft: false,
-          completionTime: 0,
-        };
-        lobby.players.push(player);
-        return lobby.save();
-      })
-      .then((lobby) => {
-        socket.join(lobby.id);
+    const player = {
+      playerId: playerId,
+      socketId: socket.id,
+      username: user.name,
+      email: user.email,
+      profilePic: user.profilePic,
+      percentageCompleted: 0,
+      wpm: 0,
+      userLeft: false,
+      completionTime: 0,
+    };
+    lobby.players.push(player);
+    await lobby.save();
 
-        resolve(lobby);
-      })
-      .catch((error) => {
-        console.log("Internal error: " + error);
-        reject(error);
-      });
+    return lobby;
   });
 }
 
@@ -218,37 +221,39 @@ async function fetchQuote() {
   });
 }
 
-function disconnectUser(socketId) {
-  Lobby.find({ state: "waiting" })
-    .then((lobbies) => {
-      console.log("in diconnectin", lobbies);
-      return Promise.all(
-        lobbies.map(async (lobby) => {
-          const idx = lobby.players.findIndex(
-            (player) => player.socketId === socketId
-          );
-
-          if (idx !== -1) {
-            lobby.players.splice(idx, 1);
-            await lobby.save();
-          }
-
-          // TODO: ADD THIS FUNCTIONALITY
-          // if there are no players in the lobby (and lobby is in-progress)
-          if (lobby.players.length === 0 && lobby.state === "in-progress") {
-            // Lobby.findByIdAndDelete(lobby._id);
-            lobby.state = "waiting";
-            console.log("Lobbies after disconneting:", lobbies);
-          }
-        })
-      );
-    })
-    .then(() => {
-      console.log("All lobbies updated");
-    })
-    .catch((err) => {
-      console.error(err);
+async function disconnectUser(socketId) {
+  try {
+    const lobbies = await Lobby.find({
+      $or: [{ state: "waiting" }, { state: "in-progress" }],
     });
+    console.log("in diconnectin");
+
+    for (const lobby of lobbies) {
+      const idx = lobby.players.findIndex(
+        (player) => player.socketId === socketId
+      );
+
+      if (idx !== -1) {
+        // if there are no players in the lobby (and lobby is in-progress)
+        let updatedLobby = await Lobby.findOneAndUpdate(
+          { _id: lobby._id },
+          { $pull: { players: { socketId: socketId } } },
+          { new: true } // This option makes findOneAndUpdate return the updated document
+        );
+
+        if (updatedLobby.players.length === 0) {
+          console.log("EMPTY LOBBY");
+          // If the lobby was in-progress, delete it
+          await Lobby.findByIdAndDelete(updatedLobby._id);
+        }
+      }
+
+      // TODO: ADD THIS FUNCTIONALITY
+    }
+    console.log("All lobbies updated");
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 module.exports = {

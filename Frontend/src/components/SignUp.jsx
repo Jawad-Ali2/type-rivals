@@ -17,6 +17,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import "@/styles/forms.css";
 import { backendUrl } from "../../config/config";
+import { toast } from "react-toastify";
+import Loader from "./Loader";
 
 const formSchema = z
   .object({
@@ -51,9 +53,9 @@ const SignUp = ({ handleError }) => {
     },
   });
   const [preview, setPreview] = useState(default_dp);
+  const [loading, setLoading] = useState(false);
   const { csrfToken } = useContext(AuthContext);
   const navigate = useNavigate();
-  console.log(csrfToken);
 
   const handleImageChange = (e) => {
     const prev_img = e.target.files[0];
@@ -69,36 +71,59 @@ const SignUp = ({ handleError }) => {
   };
 
   async function handleSignup(data) {
-    // const formData = new FormData();
-    const { username, emailAddress, password, confirmPassword } = data;
-    // const profilePic = e.target["profile-picture"].files[0];
-    // const username = e.target.username.value;
-    // const email = e.target.email.value;
-    // const password = e.target.password.value;
-    // const confirmPassword = e.target["confirm-password"].value;
+    try {
+      setLoading(true);
+      // const formData = new FormData();
+      const { username, emailAddress, password, confirmPassword } = data;
+      // const profilePic = e.target["profile-picture"].files[0];
+      // const username = e.target.username.value;
+      // const email = e.target.email.value;
+      // const password = e.target.password.value;
+      // const confirmPassword = e.target["confirm-password"].value;
 
-    const userData = {
-      name: username,
-      email: emailAddress,
-      password: password,
-      confirmPassword: confirmPassword,
-    };
+      const userData = {
+        name: username,
+        email: emailAddress,
+        password: password,
+        confirmPassword: confirmPassword,
+      };
 
-    // formData.append("profilePicture", profilePic);
-    // formData.append("name", username);
-    // formData.append("email", email);
-    // formData.append("password", password);
-    // formData.append("confirmPassword", confirmPassword);
+      // formData.append("profilePicture", profilePic);
+      // formData.append("name", username);
+      // formData.append("email", email);
+      // formData.append("password", password);
+      // formData.append("confirmPassword", confirmPassword);
 
-    const response = await axios.post(`${backendUrl}/auth/signup`, userData, {
-      withCredentials: true,
-      headers: {
-        "x-csrf-token": csrfToken,
-      },
-    });
-    console.log(response.status);
-    if (response.status === 201) {
+      const response = await axios.post(`${backendUrl}/auth/signup`, userData, {
+        withCredentials: true,
+        headers: {
+          "x-csrf-token": csrfToken,
+        },
+      });
+      const responseData = await response.data;
+      toast.success(responseData.message, {
+        position: "top-right",
+        className: "relative top-[8rem]",
+      });
       navigate("/home");
+    } catch (err) {
+      setLoading(false);
+      if (err.response) {
+        toast.error(err.response.data.message, {
+          position: "top-right",
+          className: "relative top-[8rem]",
+        });
+      } else if (err.request) {
+        toast.error("No response received from the server", {
+          position: "top-right",
+          className: "relative top-[8rem]",
+        });
+      } else {
+        toast.error("Error: ", err.message, {
+          position: "top-right",
+          className: "relative top-[8rem]",
+        });
+      }
     }
   }
 
@@ -195,7 +220,7 @@ const SignUp = ({ handleError }) => {
           className="bg-primary-e mt-2 !w-full ui-button"
           type="submit"
         >
-          Submit
+          {loading ? <Loader loading={loading} size={8} /> : "Submit"}
         </button>
       </form>
     </Form>

@@ -28,18 +28,18 @@ const Header = () => {
   // If user not authenticate he see other dashboard
   const subHeaderButtons = isAuthenticated
     ? [
-        ["Quick Race", "/race"],
+        ["Quick Race", "/race?lobbySize=2"],
         ["Race vs Narrator", "/narrator"],
         ["vs CPU", "/race"],
         ["vs Friends", "#"],
-        ["Practice", "/practice"],
+        ["Practice", "/practice?lobbySize=1"],
         ["Tournaments", "/race"],
       ]
     : [
-        ["Quick Race", "/race"],
+        ["Quick Race", "/race?lobbySize=2"],
         ["Race vs Narrator", "/narrator"],
         ["vs CPU", "/race"],
-        ["Practice", "/practice"],
+        ["Practice", "/practice?lobbySize=1"],
         ["Tournaments", "/race"],
       ];
 
@@ -55,11 +55,9 @@ const Header = () => {
 
       if (response.status === 200) {
         const data = await response.data;
-        console.log(data);
         setUsername(data.name);
 
         if (!data.profilePic) {
-          // console.log(data.profilePic);
           setProfilePic(defaultImage);
         } else {
           setProfilePic(data.profilePic);
