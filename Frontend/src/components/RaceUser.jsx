@@ -2,13 +2,12 @@ import { useEffect, useState } from "react";
 import defaultImage from "/anonymous-user.jpg";
 import createConnection from "../../utils/socket";
 import { BounceLoader } from "react-spinners";
-
-export const RaceUser = ({ players, setPlayers, token }) => {
+import { MdOutlineSpeed } from "react-icons/md";export const RaceUser = ({ players, setPlayers, token }) => {
   const [raceCompletion, setRaceCompletion] = useState(0);
   const socket = createConnection(token);
 
   const calculateNewPos = (completion) => {
-    return completion * 5.3; // random value to keep the pic in place
+    return completion * 5.45; // random value to keep the pic in place
   };
 
   useEffect(() => {
@@ -43,7 +42,7 @@ export const RaceUser = ({ players, setPlayers, token }) => {
   }, [raceCompletion]);
 
   return (
-    <div className="bg-slate-800 w-full mt-10 mb-10 rounded-md">
+    <div className="bg-primary-b border-2 border-primary-c w-full mt-10 mb-10 rounded-md">
       {!players.length ? (
         <div className="p-[2.5rem]">
           <BounceLoader
@@ -56,25 +55,31 @@ export const RaceUser = ({ players, setPlayers, token }) => {
       ) : (
         players.map((player, index) => {
           return (
-            <div className="text-white" key={index}>
-              <div className={`p-5 ${player.userLeft && "text-blue"}`}>
-                <div className="flex items-center gap-2">
+            <div className="text-white " key={index}>
+              <div className={`p-5 relative ${player.userLeft && "text-blue"}`}>
+                <div className="flex justify-between items-center gap-2 pb-3">
                   <p className="">
-                    {player.username} ({player.email})
+                    {player.username}
                   </p>
+                  <div className="speed-meter space-x-2 flex flex-row items-center">
+                    <p className="font-semibold text-sm">{player.wpm? player.wpm : 0 } WPM</p>
+                    <MdOutlineSpeed className="text-primary-e" size={30}/>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex flex-row relative h-full w-full my-5 items-center">
                   <img
                     id={`pfp-${player.playerId}`}
-                    className={`w-10 m-2 rounded-full transition-all duration-200 custom-image-${player.playerId}`}
+                    className={`w-10 h-10 m-2 rounded-full top-[-1.5rem] absolute z-50 transition-all  duration-200 custom-image-${player.playerId}`}
                     src={player.profilePic ? player.profilePic : defaultImage}
                     alt={player.username}
                   />
-                  <p>{player.wpm}</p>
+                  <div className="progress-bar pl-2  absolute w-full z-40 flex flex-row items-center ">
+                    <div className="bg-primary-e w-full h-1 mt-2 rounded-full"></div>
+                    <div className="bg-primary-e rounded-full w-3 h-3 mt-2"/>
+                  </div>
+                
                 </div>
-                <div className="pr-10">
-                  <div className="bg-slate-500 w-full h-2 mt-2 rounded-full"></div>
-                </div>
+                
               </div>
             </div>
           );

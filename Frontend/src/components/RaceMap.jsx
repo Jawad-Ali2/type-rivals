@@ -167,7 +167,7 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
           color
         }
       >
-        <p>
+        <p className="w-full text-left h-full">
         {mask}
         </p>
       </div>
