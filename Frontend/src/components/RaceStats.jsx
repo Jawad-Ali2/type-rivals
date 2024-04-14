@@ -7,11 +7,16 @@ const RaceStats = ({ input, paragraph, time, setReplay }) => {
   const [speed, setSpeed] = useState(0);
   const [timeTaken, setTimeTaken] = useState("");
   const { token, csrfToken, userId } = useContext(AuthContext);
-  const { userFinishTimer, raceHasFinished } = useContext(RaceContext);
+  const {
+    userFinishTimer,
+    raceHasFinished,
+    isFriendlyMatchRef,
+    iHaveFinished,
+  } = useContext(RaceContext);
 
   // console.log(raceHasFinished);
   useEffect(() => {
-    if (raceHasFinished) {
+    if (iHaveFinished) {
       const [wpm] = calculateWPM(input, time, paragraph, 60);
       setSpeed((prev) => wpm);
 
@@ -19,9 +24,12 @@ const RaceStats = ({ input, paragraph, time, setReplay }) => {
       let remainingTime = userFinishTimer % 60;
       if (remainingTime === 0) remainingTime = "00";
       setTimeTaken(minutes + ":" + remainingTime);
-      saveUserData(speed, userId, token, csrfToken);
+      console.log("save data");
+      if (!isFriendlyMatchRef.length && iHaveFinished) {
+        saveUserData(speed, userId, token, csrfToken);
+      }
     }
-  }, [raceHasFinished]);
+  }, [iHaveFinished]);
 
   return (
     <div

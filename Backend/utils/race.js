@@ -46,6 +46,10 @@ async function updateLobby(
       }
     });
 
+    if (raceDuration - raceTime === raceDuration) {
+      raceHasFinished = true;
+    }
+
     // ! Both the written and given paragraph must be same also to finish race!!!!
     if (raceHasFinished || raceDuration - raceTime === raceDuration) {
       player.completionTime = raceTime;
