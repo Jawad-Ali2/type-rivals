@@ -25,7 +25,7 @@ const ThemeSwitch = ()=>{
     const theme_names = ["bright", "violet","navy"]
     return (
     <div onMouseEnter={handleOnFocusEnter} onMouseLeave={handleOnFocusExit} className="theme-switch-container fixed z-[1000] w-[10rem] right-[2rem] bottom-[1rem]">
-        <div className="options-container transition-all opacity-0 duration-300 w-[10rem]  fixed z-[1000] right-[2rem] bottom-[5rem] rounded-lg  border-2 border-primary-b bg-primary-c">
+        <div className="options-container transition-all opacity-0 duration-300 w-[10rem]  fixed z-[1000] right-[2rem] bottom-[5rem] rounded-lg  border-2 border-primary-b bg-primary-e">
                 {theme_names.map((el,i)=>(
                     <div className="theme-btn mx-auto w-full p-2 m-2 rounded-sm hover:bg-primary-b " key={i}>
                         <label className="cursor-pointer w-full">
@@ -35,7 +35,7 @@ const ThemeSwitch = ()=>{
                     </div>
                 ))}
         </div>
-        <button className="theme-switch   !w-full  bg-primary-e  ui-button capitalize">Theme</button>
+        <button className="theme-switch !w-full  bg-primary-e  ui-button capitalize">Theme</button>
     </div>)
 }
 export default ThemeSwitch;

@@ -171,15 +171,15 @@ const Header = () => {
               <div className="name-container transition-all duration-300 max-w-[10rem] absolute truncate text-nowrap  bg-primary-c z-10 top-[0.6rem] right-[2rem] opacity-0 px-2 py-1 text-sm rounded-lg">
                 {username}
               </div>
-              <div className="profile-dropdown absolute transition-all duration-300 right-[-1.5rem] top-[4rem] w-[8rem] overflow-hidden h-[0rem] rounded-lg bg-primary-b z-[500]">
+              <div className="profile-dropdown absolute transition-all duration-300 right-[-1.5rem] top-[4rem] w-[8rem] overflow-hidden h-[0rem] rounded-lg bg-primary-e z-[500]">
                 <ul className="profile-btns-list  px-2">
-                  <li className=" cursor-pointer hover:bg-primary-c rounded-sm">
+                  <li className=" cursor-pointer hover:bg-primary-b rounded-sm">
                     Leaderboard
                   </li>
-                  <li className=" cursor-pointer hover:bg-primary-c rounded-sm">
+                  <li className=" cursor-pointer hover:bg-primary-b rounded-sm">
                     <Link to={"/dashboard"}>Dashboard</Link>
                   </li>
-                  <li className=" cursor-pointer hover:bg-primary-c rounded-sm">
+                  <li className=" cursor-pointer hover:bg-primary-b rounded-sm">
                     Settings
                   </li>
                   <li
@@ -200,7 +200,7 @@ const Header = () => {
           )}
         </div>
         <div className="sub-header w-full hidden md:block h-[2rem] ">
-          <ul className="subheader-nav shadow-sm shadow-skin-base bg-primary-c  w-full flex flex-row justify-center items-center mx-auto text-sm ">
+          <ul className="subheader-nav  bg-primary-c  w-full flex flex-row justify-center items-center mx-auto text-sm ">
             {subHeaderButtons.map(([el, link], i) => (
               <Link
                 className="my-2"
