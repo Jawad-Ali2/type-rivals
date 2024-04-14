@@ -126,7 +126,6 @@ module.exports = {
                     if (raceFinished1) {
                       // io.in(lobby).emit("raceFinished", raceFinished1);
                       // TODO: If all users in game recieve signal uncomment and remove this line
-                      console.log(raceFinished1);
                       io.emit("raceFinished", raceFinished1);
                     }
                   })

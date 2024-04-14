@@ -87,23 +87,25 @@ exports.saveUserStats = (req, res) => {
   const speed = req.body.speed;
   const userId = req.body.userId;
 
-  let currUser;
-  let updatedData = {
-    races: 0,
-    avgSpeed: 0,
-    maxSpeed: 0,
-  };
+  console.log(speed, userId);
 
   User.findById(userId)
     .then((user) => {
       user.raceDetail.races += 1;
 
-      user.raceDetail.avgSpeed = Math.round(
+      user.raceDetail.avgSpeed = Math.ceil(
+        (user.raceDetail.avgSpeed * (user.raceDetail.races - 1) + speed) /
+          user.raceDetail.races
+      );
+      console.log(
         (user.raceDetail.avgSpeed * (user.raceDetail.races - 1) + speed) /
           user.raceDetail.races
       );
 
       if (speed > user.raceDetail.maxSpeed) user.raceDetail.maxSpeed = speed;
+      // Mark the raceDetail path as modified
+      user.markModified("raceDetail");
+      console.log(user.raceDetail.maxSpeed, user.raceDetail.avgSpeed);
       return user.save();
     })
     .then(() => {

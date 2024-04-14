@@ -62,6 +62,7 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
       socket.on("raceFinished", (raceFinished1) => {
         console.log(raceFinished1);
         setRaceHasFinished(() => raceFinished1);
+        stopSignal();
         setRaceTimerOn(() => false);
       });
     }
