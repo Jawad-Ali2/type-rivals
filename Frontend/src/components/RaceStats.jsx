@@ -3,36 +3,37 @@ import { saveUserData } from "../../utils";
 import { AuthContext } from "../../context/AuthContext";
 import { calculateWPM } from "../../utils/calculateWPM";
 import { RaceContext } from "../../context/RaceContext";
-const RaceStats = ({ input, paragraph, time, raceFinished, setReplay }) => {
+const RaceStats = ({ input, paragraph, time, setReplay }) => {
   const [speed, setSpeed] = useState(0);
   const [timeTaken, setTimeTaken] = useState("");
   const { token, csrfToken, userId } = useContext(AuthContext);
-  const { userFinishTimer } = useContext(RaceContext);
+  const { userFinishTimer, raceHasFinished } = useContext(RaceContext);
 
+  // console.log(raceHasFinished);
   useEffect(() => {
-    if (raceFinished) {
-      const [wpm] = calculateWPM(input, time, paragraph);
+    if (raceHasFinished) {
+      const [wpm] = calculateWPM(input, time, paragraph, 60);
       setSpeed((prev) => wpm);
 
       const minutes = Math.floor(userFinishTimer / 60);
       let remainingTime = userFinishTimer % 60;
       if (remainingTime === 0) remainingTime = "00";
       setTimeTaken(minutes + ":" + remainingTime);
-      // saveUserData(speed, userId, token, csrfToken);
+      saveUserData(speed, userId, token, csrfToken);
     }
-  }, [raceFinished]);
+  }, [raceHasFinished]);
 
   return (
     <div
       className={
         "lock-screen transition-all duration-300 fixed w-full flex flex-col items-center justify-center left-0 top-[5rem]   h-full bg-slate-800 " +
-        (raceFinished ? "bg-opacity-50 z-[60]" : "bg-opacity-0 z-[-10]")
+        (raceHasFinished ? "bg-opacity-50 z-[60]" : "bg-opacity-0 z-[-10]")
       }
     >
       <div
         className={
-          "stats-container  rounded-md border-2 border-primary-f  transition-all  bg-primary-c  duration-300 fixed  flex flex-col items-center justify-between p-2 w-[20rem]  h-[20rem] " +
-          (raceFinished ? "top-[13rem]" : "top-[-25rem]")
+          "stats-container  rounded-md border-2 border-primary-f  transition-all  bg-primary-c  duration-300 fixed  flex flex-col items-center justify-between p-2 w-[20rem]  h-[20rem] z-60 " +
+          (raceHasFinished ? "top-[13rem]" : "top-[-25rem]")
         }
       >
         <p className=" text-xl  w-full text-center">Statistics</p>

@@ -1,5 +1,5 @@
 import "@/styles/RaceMap.css";
-import { useRef,useState, useEffect, useContext } from "react";
+import { useRef, useState, useEffect, useContext } from "react";
 import TrackInput from "@/components/TrackInput";
 import RaceStats from "@/components/RaceStats";
 import { useCountDown } from "../../Hooks";
@@ -37,7 +37,6 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
     changeUserFinishTimer,
   } = useContext(RaceContext);
 
-
   //Focuses on Input on Race Start
   useEffect(() => {
     if (raceTimerOn) {
@@ -61,6 +60,7 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
     if (startRace) {
       setRaceTimerOn((prev) => true);
       socket.on("raceFinished", (raceFinished1) => {
+        console.log(raceFinished1);
         setRaceHasFinished(() => raceFinished1);
         setRaceTimerOn(() => false);
       });
@@ -88,21 +88,37 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
   useEffect(() => {
     if (raceTime <= 0 && !raceTimerOn) {
       // setRaceFinished((prev) => true);
+      console.log("in here");
       setRaceHasFinished(() => true);
       stopSignal();
     }
   }, [signal, raceTimerOn]);
   // Getting speed after short intervals
   useEffect(() => {
-    const [wpm, percentage] = calculateWPM(
-      input,
-      raceDuration - raceTime,
-      paragraph,
-      raceDuration
-    );
-    console.log(lobby);
-    if (raceTimerOn) {
-      if (!iHaveFinished) {
+    // First we check if totalTime - currentTime is not 0 (to handle NAN case)
+    if (startRace && raceDuration - raceTime !== 0) {
+      const [wpm, percentage] = calculateWPM(
+        input,
+        raceDuration - raceTime,
+        paragraph,
+        raceDuration
+      );
+
+      if (raceTimerOn) {
+        if (!iHaveFinished) {
+          socket.emit(
+            "typingSpeedUpdate",
+            wpm,
+            percentage,
+            lobby,
+            socket.id,
+            raceTime,
+            raceDuration
+          );
+        }
+      }
+      if (iHaveFinished || raceTime === 0 || raceHasFinished) {
+        // Sending one extra emit to get the right percentage when the race ends.
         socket.emit(
           "typingSpeedUpdate",
           wpm,
@@ -114,18 +130,6 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
         );
       }
     }
-    if (iHaveFinished || raceTime === 0) {
-      // Sending one extra emit to get the right percentage when the race ends.
-      socket.emit(
-        "typingSpeedUpdate",
-        wpm,
-        percentage,
-        lobby,
-        socket.id,
-        raceTime,
-        raceDuration
-      );
-    }
   }, [iHaveFinished, startRace, signal, raceHasFinished]);
 
   useEffect(() => {
@@ -134,17 +138,17 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
     }
   }, [raceHasFinished]);
   const unselectable = {
-    resize:"none", 
-    WebkitTouchCallout : "none",
-    WebkitUserSelect : "none",
+    resize: "none",
+    WebkitTouchCallout: "none",
+    WebkitUserSelect: "none",
     KhtmlUserSelect: "none",
-    MozUserSelect:"none",
-    msUserSelect:"none",
-    userSelect:"none",
-  }
-  if(paragraphRef.current){
+    MozUserSelect: "none",
+    msUserSelect: "none",
+    userSelect: "none",
+  };
+  if (paragraphRef.current) {
     Object.assign(paragraphRef.current.style, unselectable);
-    paragraphRef.current.disabled=true;
+    paragraphRef.current.disabled = true;
   }
   return (
     <section className="racemap-section relative">
@@ -152,14 +156,18 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
         input={input}
         paragraph={paragraph}
         time={raceDuration - raceTime}
-        raceFinished={raceHasFinished}
         setReplay={setReplay}
       />
       <p className="absolute font-semibold web-text right-0 top-[-1.4rem]">
         {getRaceFormattedTime(raceTime)}
       </p>
       <div className="racemap w-full h-fit rounded bg-primary-b border-2 border-primary-c text-left  p-2 overflow-hidden">
-        <p ref={paragraphRef} className="w-full h-full bg-primary-b outline-none">{paragraph}</p>
+        <p
+          ref={paragraphRef}
+          className="w-full h-full bg-primary-b outline-none"
+        >
+          {paragraph}
+        </p>
       </div>
       <div
         className={
@@ -167,9 +175,7 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
           color
         }
       >
-        <p className="w-full text-left h-full">
-        {mask}
-        </p>
+        <p className="w-full text-left h-full">{mask}</p>
       </div>
       <div className="input-area w-full mt-5">
         <TrackInput
@@ -179,7 +185,6 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
           paragraph={paragraph}
           setCorrect={setCorrect}
           setRaceFinished={setRaceHasFinished}
-      
         />
       </div>
     </section>

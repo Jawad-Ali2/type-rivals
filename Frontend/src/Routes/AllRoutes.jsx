@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter, useLocation } from "react-router-dom";
 
 import Home from "@/pages/Home";
 import Dashboard from "@/pages/Dashboard";
@@ -13,6 +13,7 @@ import { Modal } from "@/components/Modal";
 
 const ProtectedRoute = ({ element, path }) => {
   const { isAuthenticated } = useContext(AuthContext);
+  const location = useLocation();
 
   if (isAuthenticated && path === "/auth") return <Navigate to="/" />;
 
@@ -42,11 +43,13 @@ const router = createBrowserRouter([
       },
       {
         path: "race",
-        element: <ProtectedRoute element={<Race />} path="/race" />,
+        element: <ProtectedRoute element={<Race key="/race" />} path="/race" />,
       },
       {
         path: "practice",
-        element: <ProtectedRoute element={<Race />} path="/practice" />,
+        element: (
+          <ProtectedRoute element={<Race key="/practice" />} path="/practice" />
+        ),
       },
       {
         path: "play-with-friends",

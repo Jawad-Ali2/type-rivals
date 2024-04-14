@@ -22,10 +22,10 @@ const getValidInput = (input, paragraph) => {
   const wordsTyped = input.slice(0, counter);
   return [wordsTyped, completePercentage];
 };
-export function calculateWPM(input, timePassedSoFar, paragraph) {
+export function calculateWPM(input, timePassedSoFar, paragraph, raceDuration) {
   const [wordsTyped, completePercentage] = getValidInput(input, paragraph);
   const correctlyTyped = wordsTyped.length / 5;
-  const timeTakenInMinutes = timePassedSoFar / 60;
+  const timeTakenInMinutes = timePassedSoFar / raceDuration;
   const wordsPerMinute = Math.round(correctlyTyped / timeTakenInMinutes);
   return [wordsPerMinute, completePercentage];
 }

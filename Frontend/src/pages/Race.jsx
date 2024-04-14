@@ -87,7 +87,7 @@ const Race = () => {
         const playersLength = lobby.players.length;
         // setPlayers((prev) => [...prev, lobby.players[playersLength - 1]]);
         setPlayers([...lobby.players]);
-        // setPlayersConnected(() => true);
+        setPlayersConnected(() => true);
       });
 
       socket.on("message", (quote, lobby) => {
@@ -153,19 +153,19 @@ const Race = () => {
   }, [paragraph]);
 
   // Each player sees himself on top of the list always
-  // useEffect(() => {
-  //   const updatedPlayers = [...players];
+  useEffect(() => {
+    const updatedPlayers = [...players];
 
-  //   updatedPlayers.forEach((player, index) => {
-  //     if (player.playerId === userId && index > 0) {
-  //       const temp = updatedPlayers[0];
-  //       updatedPlayers[0] = player;
-  //       updatedPlayers[index] = temp;
-  //     }
-  //   });
+    updatedPlayers.forEach((player, index) => {
+      if (player.playerId === userId && index > 0) {
+        const temp = updatedPlayers[0];
+        updatedPlayers[0] = player;
+        updatedPlayers[index] = temp;
+      }
+    });
 
-  //   setPlayers(updatedPlayers);
-  // }, [playersConnected]);
+    setPlayers(updatedPlayers);
+  }, [playersConnected]);
 
   return (
     <section className="race-section w-full max-w-[45rem]">
@@ -190,11 +190,16 @@ const Race = () => {
             setReplay={setReplay}
           />
           <button
-            className={`bg-primary-e ui-button space-x-2 mt-5 ${!iHaveFinished && "hidden"}`}
+            className={`bg-primary-e ui-button space-x-2 mt-5 ${
+              !iHaveFinished && "hidden"
+            }`}
             onClick={() => setReplay((prev) => !prev)}
           >
             <p className="inline">Play Again</p>
-            <MdOutlineReplayCircleFilled className="bg-primary-e inline" size={20}/>
+            <MdOutlineReplayCircleFilled
+              className="bg-primary-e inline"
+              size={20}
+            />
           </button>
         </div>
       </div>

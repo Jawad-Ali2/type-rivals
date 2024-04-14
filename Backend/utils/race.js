@@ -169,7 +169,13 @@ async function joinLobby(
     );
 
     socket.join(lobby.id);
-    if (playerAlreadyJoined) return lobby;
+    if (playerAlreadyJoined) {
+      // * User's socket id has changed now
+      playerAlreadyJoined.socketId = socket.id;
+
+      await lobby.save();
+      return lobby;
+    }
 
     const user = await User.findById(playerId);
     if (!user) throw new Error("User not found");
