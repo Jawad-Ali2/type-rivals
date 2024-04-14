@@ -25,8 +25,8 @@ const RaceStats = ({ input, paragraph, time, raceFinished, setReplay }) => {
   return (
     <div
       className={
-        "lock-screen transition-all duration-300 fixed w-full flex flex-col items-center justify-center left-0 top-[5rem]   h-full bg-skin-opaque " +
-        (raceFinished ? "bg-opacity-40 z-[40]" : "bg-opacity-0 z-[-10]")
+        "lock-screen transition-all duration-300 fixed w-full flex flex-col items-center justify-center left-0 top-[5rem]   h-full bg-slate-800 " +
+        (raceFinished ? "bg-opacity-50 z-[40]" : "bg-opacity-0 z-[-10]")
       }
     >
       <div

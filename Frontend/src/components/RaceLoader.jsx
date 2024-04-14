@@ -2,7 +2,7 @@ import Loader from "./Loader";
 import broken_link from "/src/assets/broken_link.png";
 
 const RaceLoader = ({ children, loading, errors, time, size }) => {
-  const dynamicClass = `race-loader-container text-skin-base bg-skin-opaque  flex flex-col justify-center items-center w-full z-[100] h-screen  bg-opacity-50 top[5rem] left-0 ${
+  const dynamicClass = `race-loader-container bg-slate-800  flex flex-col justify-center items-center w-full z-[100] h-screen  bg-opacity-75 top-[5rem] left-0 ${
     time <= 0 ? "hidden" : "fixed"
   }`;
   return (

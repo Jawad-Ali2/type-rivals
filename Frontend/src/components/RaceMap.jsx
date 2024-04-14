@@ -1,5 +1,5 @@
 import "@/styles/RaceMap.css";
-import { useState, useEffect, useContext } from "react";
+import { useRef,useState, useEffect, useContext } from "react";
 import TrackInput from "@/components/TrackInput";
 import RaceStats from "@/components/RaceStats";
 import { useCountDown } from "../../Hooks";
@@ -9,12 +9,13 @@ import createConnection from "../../utils/socket";
 import { RaceContext } from "../../context/RaceContext";
 
 const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
-  const success = "text-green-600";
+  const success = "text-green-500";
   const error = "text-red-500";
   const { token } = useContext(AuthContext);
   const socket = createConnection(token);
   const [input, setInput] = useState("");
   const [correct, setCorrect] = useState(false);
+  const paragraphRef = useRef();
   const [
     raceTime,
     raceTimerOn,
@@ -35,6 +36,7 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
     setRaceHasFinished,
     changeUserFinishTimer,
   } = useContext(RaceContext);
+
 
   //Focuses on Input on Race Start
   useEffect(() => {
@@ -131,7 +133,19 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
       stopSignal();
     }
   }, [raceHasFinished]);
-
+  const unselectable = {
+    resize:"none", 
+    WebkitTouchCallout : "none",
+    WebkitUserSelect : "none",
+    KhtmlUserSelect: "none",
+    MozUserSelect:"none",
+    msUserSelect:"none",
+    userSelect:"none",
+  }
+  if(paragraphRef.current){
+    Object.assign(paragraphRef.current.style, unselectable);
+    paragraphRef.current.disabled=true;
+  }
   return (
     <section className="racemap-section relative">
       <RaceStats
@@ -144,16 +158,18 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
       <p className="absolute font-semibold web-text right-0 top-[-1.4rem]">
         {getRaceFormattedTime(raceTime)}
       </p>
-      <div className="racemap w-full h-fit rounded bg-primary-b border-2 border-primary-c text-left web-text p-2 overflow-hidden">
-        {paragraph}
+      <div className="racemap w-full h-fit rounded bg-primary-b border-2 border-primary-c text-left  p-2 overflow-hidden">
+        <p ref={paragraphRef} className="w-full h-full bg-primary-b outline-none">{paragraph}</p>
       </div>
       <div
         className={
-          "racemask absolute top-[0rem] w-full h-fit rounded  text-left border-2 border-primary-c p-2 overflow-hidden " +
+          "racemask absolute top-[0rem] w-full  rounded  text-left border-t-2 border-l-2 border-primary-c p-2 overflow-hidden " +
           color
         }
       >
+        <p>
         {mask}
+        </p>
       </div>
       <div className="input-area w-full mt-5">
         <TrackInput
@@ -163,6 +179,7 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
           paragraph={paragraph}
           setCorrect={setCorrect}
           setRaceFinished={setRaceHasFinished}
+      
         />
       </div>
     </section>

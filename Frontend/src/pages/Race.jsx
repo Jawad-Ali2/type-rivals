@@ -7,7 +7,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { RaceUser } from "@/components/RaceUser";
 import { RaceContext } from "../../context/RaceContext";
 import { toast } from "react-toastify";
-
+import { MdOutlineReplayCircleFilled } from "react-icons/md";
 const Race = () => {
   document.title = "Race | Type Rivals";
   const [
@@ -190,10 +190,11 @@ const Race = () => {
             setReplay={setReplay}
           />
           <button
-            className={`web-text web-button ${!iHaveFinished && "hidden"}`}
+            className={`bg-primary-e ui-button space-x-2 mt-5 ${!iHaveFinished && "hidden"}`}
             onClick={() => setReplay((prev) => !prev)}
           >
-            Play Again
+            <p className="inline">Play Again</p>
+            <MdOutlineReplayCircleFilled className="bg-primary-e inline" size={20}/>
           </button>
         </div>
       </div>
