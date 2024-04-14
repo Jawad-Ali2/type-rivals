@@ -13,15 +13,20 @@
    --color-f : #424081;
   }
   .bright {
-   
+    --color-a : #fff;
+   --color-b : #ffffff;
+   --color-c : #dddddd;
+   --color-d : #000;
+   --color-e : #ffffff;
+   --color-f : #305eea;   
   }
   .navy {
-    --color-a : #081624;
-   --color-b : #0d2844;
-   --color-c : #0d2238;
+    --color-a : #072541;
+   --color-b : #0f3054;
+   --color-c : #1a3857;
    --color-d : #fff;
-   --color-e : #163556;
-   --color-f : #4743b9; 
+   --color-e : #275689;
+   --color-f : #5161ca; 
   }
 }
 
@@ -52,10 +57,10 @@
 }
 .ui-button {
   padding: 0.5rem;
-  
+  border: 2px solid var(--color-f);
   border-radius: 10px;
   margin-bottom: 0.5rem;
-  transition: all 0.1s ease-in;
+  transition: all 0.2s ease-in;
 }
 .ui-button:hover {
   scale: 105%;

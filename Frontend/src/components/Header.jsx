@@ -193,7 +193,7 @@ const Header = () => {
             </div>
           ) : (
             <Link className="hidden md:block" to={"/auth"}>
-              <button className="bg-primary-e shadow-md shadow-skin-base  rounded-xl hover:scale-105 transition-all duration-300 p-2">
+              <button className="bg-primary-e ui-button text-sm">
                 Sign In
               </button>
             </Link>

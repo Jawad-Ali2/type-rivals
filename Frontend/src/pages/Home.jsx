@@ -9,7 +9,7 @@ const Home = () => {
   ];
   const upcoming_events = [
     { date_or_rank: "May 26", title: "Weekly Cup" },
-    { date_or_rank: "Jun 28", title: "Ziest Triger III Cup" },
+    { date_or_rank: "Jun 28", title: "April 2024 Cup" },
     { date_or_rank: "Aug 14", title: "Punctuation Masters Cup" },
   ];
   return (
@@ -39,8 +39,8 @@ const Home = () => {
         </div>
         <div className="cta-btns mt-10 flex flex-col h-[10rem] w-full justify-between items-center md:items-start">
           <p className="web-text font-semibold">Join the Fun</p>
-          <button className="web-button">Quick Race &gt;</button>
-          <button className="web-button">Tournaments &gt;</button>
+          <button className="ui-button bg-primary-e">Quick Race &gt;</button>
+          <button className="ui-button bg-primary-e">Tournaments &gt;</button>
         </div>
       </div>
     </section>

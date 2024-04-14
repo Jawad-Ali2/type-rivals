@@ -7,7 +7,7 @@ export const ThemeContextProvider = ({children})=>{
         const currTheme = localStorage.getItem(THEME_KEY);
         if(currTheme)
             return currTheme;
-        return "light"
+        return "violet"
     })
     console.log("ACTIVE_THEME: "+theme);
     useEffect(()=>{

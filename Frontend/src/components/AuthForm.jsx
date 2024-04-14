@@ -16,7 +16,7 @@ const AuthForm = ({ signIn }) => {
   return (
     <section className="authform-section">
       <div
-        className={`authform-container border-2 border-primary-b  rounded-lg w-[90%] duration-300 transition-all mx-auto max-w-[25rem] ${
+        className={`authform-container border-2 border-primary-c  rounded-lg w-[90%] duration-300 transition-all mx-auto max-w-[25rem] ${
           signingIn ? "h-[30rem]" : "h-[37rem]"
         }`}
       >
