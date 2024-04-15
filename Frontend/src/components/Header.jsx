@@ -141,7 +141,7 @@ const Header = () => {
             />
           </div>
           <div className="header-nav flex-row  justify-between items-center w-[17rem] hidden md:flex">
-            <ul className="nav-list  text-md  hidden md:inline-block ">
+            <ul className="nav-list  text-md  hidden md:inline-block relative right-10">
               {headerBtns.map(([el, link], i) => (
                 <NavLink key={i} to={link} end>
                   <li className="w-fit  cursor-pointer inline h-[2rem] transition-all duration-200 py-2 m-2">

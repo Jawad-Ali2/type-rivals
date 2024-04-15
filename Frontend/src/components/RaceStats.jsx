@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { saveUserData } from "../../utils";
 import { AuthContext } from "../../context/AuthContext";
 import { calculateWPM } from "../../utils/calculateWPM";
 import { RaceContext } from "../../context/RaceContext";
 const RaceStats = ({ input, paragraph, time, setReplay }) => {
   const [speed, setSpeed] = useState(0);
-  const [timeTaken, setTimeTaken] = useState("");
+  const timeTakenRef = useRef(null);
   const { token, csrfToken, userId } = useContext(AuthContext);
   const {
     userFinishTimer,
@@ -23,13 +23,13 @@ const RaceStats = ({ input, paragraph, time, setReplay }) => {
       const minutes = Math.floor(userFinishTimer / 60);
       let remainingTime = userFinishTimer % 60;
       if (remainingTime === 0) remainingTime = "00";
-      setTimeTaken(minutes + ":" + remainingTime);
-      console.log("save data");
-      if (!isFriendlyMatchRef.length && iHaveFinished) {
+      timeTakenRef.current = minutes + ":" + remainingTime;
+
+      if (!isFriendlyMatchRef.current && iHaveFinished) {
         saveUserData(speed, userId, token, csrfToken);
       }
     }
-  }, [iHaveFinished]);
+  }, [iHaveFinished, userFinishTimer]);
 
   return (
     <div
@@ -54,16 +54,26 @@ const RaceStats = ({ input, paragraph, time, setReplay }) => {
           </thead>
           <tbody className="w-full h-full flex flex-col justify-around items-center">
             <tr className="w-[12rem] h-10 border-2 border-primary-f rounded-full ">
-              <td className="float-left bg-primary-e rounded-full w-24 text-center inline h-full py-2 text-sm">Speed</td>
-              <td className="float-right inline text-sm px-2 py-2">{speed} WPM</td>
+              <td className="float-left bg-primary-e rounded-full w-24 text-center inline h-full py-2 text-sm">
+                Speed
+              </td>
+              <td className="float-right inline text-sm px-2 py-2">
+                {speed} WPM
+              </td>
             </tr>
             <tr className="w-[12rem] h-10 border-2 border-primary-f rounded-full">
-              <td className="float-left bg-primary-e rounded-full w-24 text-center inline h-full py-2 text-sm">Accuracy</td>
+              <td className="float-left bg-primary-e rounded-full w-24 text-center inline h-full py-2 text-sm">
+                Accuracy
+              </td>
               <td className="float-right inline text-sm px-2 py-2">100%</td>
             </tr>
             <tr className="w-[12rem] h-10 border-2 border-primary-f rounded-full">
-              <td className="float-left bg-primary-e rounded-full w-24 text-center inline h-full py-2 text-sm">Time</td>
-              <td className="float-right inline text-sm px-2 py-2">{timeTaken}</td>
+              <td className="float-left bg-primary-e rounded-full w-24 text-center inline h-full py-2 text-sm">
+                Time
+              </td>
+              <td className="float-right inline text-sm px-2 py-2">
+                {timeTakenRef.current}
+              </td>
             </tr>
           </tbody>
         </table>

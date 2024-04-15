@@ -11,7 +11,7 @@ const Statistics = ({ data }) => {
     Losses: data.raceDetail?.loses,
     "Avg. Speed": data.raceDetail?.avgSpeed,
     "Max Speed": data.raceDetail?.maxSpeed,
-    races: data.raceDetail.races,
+    races: data.raceDetail?.races,
   });
   return (
     <section className="statistics-section">

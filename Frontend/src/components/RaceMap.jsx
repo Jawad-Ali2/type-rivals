@@ -60,7 +60,6 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
     if (startRace) {
       setRaceTimerOn((prev) => true);
       socket.on("raceFinished", (raceFinished1) => {
-        console.log(raceFinished1);
         setRaceHasFinished(() => raceFinished1);
         stopSignal();
         setRaceTimerOn(() => false);
@@ -88,8 +87,6 @@ const RaceMap = ({ paragraph, startRace, lobby, raceDuration, setReplay }) => {
   // If the time runs out
   useEffect(() => {
     if (raceTime <= 0 && !raceTimerOn) {
-      // setRaceFinished((prev) => true);
-      console.log("in here");
       setRaceHasFinished(() => true);
       stopSignal();
     }
