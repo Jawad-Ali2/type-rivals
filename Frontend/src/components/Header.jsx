@@ -28,11 +28,11 @@ const Header = () => {
   // If user not authenticate he see other dashboard
   const subHeaderButtons = isAuthenticated
     ? [
-        ["Quick Race", "/race?lobbySize=2"],
+        ["Quick Race", "/race?lobbySize=2&multiplayer=true"],
         ["Race vs Narrator", "/narrator"],
         ["vs CPU", "/race"],
         ["vs Friends", "#"],
-        ["Practice", "/practice?lobbySize=1"],
+        ["Practice", "/practice?lobbySize=1&practiceMode=true"],
         ["Tournaments", "/race"],
       ]
     : [

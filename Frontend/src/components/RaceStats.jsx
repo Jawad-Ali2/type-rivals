@@ -3,6 +3,8 @@ import { saveUserData } from "../../utils";
 import { AuthContext } from "../../context/AuthContext";
 import { calculateWPM } from "../../utils/calculateWPM";
 import { RaceContext } from "../../context/RaceContext";
+import { MdOutlineReplayCircleFilled } from "react-icons/md";
+
 const RaceStats = ({ input, paragraph, time, setReplay }) => {
   const [speed, setSpeed] = useState(0);
   const timeTakenRef = useRef(null);
@@ -16,20 +18,23 @@ const RaceStats = ({ input, paragraph, time, setReplay }) => {
 
   // console.log(raceHasFinished);
   useEffect(() => {
-    if (iHaveFinished) {
+    if (iHaveFinished || raceHasFinished) {
       const [wpm] = calculateWPM(input, time, paragraph, 60);
       setSpeed((prev) => wpm);
-
-      const minutes = Math.floor(userFinishTimer / 60);
-      let remainingTime = userFinishTimer % 60;
-      if (remainingTime === 0) remainingTime = "00";
-      timeTakenRef.current = minutes + ":" + remainingTime;
+      
+      if (userFinishTimer === 60) {
+        timeTakenRef.current = "1:00";
+      } else {
+        const date = new Date((60 - userFinishTimer) * 1000);
+        const timeString = date.toISOString().slice(14, 19);
+        timeTakenRef.current = timeString;
+      }
 
       if (!isFriendlyMatchRef.current && iHaveFinished) {
         saveUserData(speed, userId, token, csrfToken);
       }
     }
-  }, [iHaveFinished, userFinishTimer]);
+  }, [iHaveFinished, userFinishTimer, raceHasFinished]);
 
   return (
     <div
@@ -84,6 +89,19 @@ const RaceStats = ({ input, paragraph, time, setReplay }) => {
           className="bg-primary-e  ui-button"
         >
           Replay
+        </button>
+
+        <button
+          className={`bg-primary-e ui-button space-x-2 mt-5 ${
+            !iHaveFinished && "hidden"
+          }`}
+          onClick={() => setReplay((prev) => !prev)}
+        >
+          <p className="inline">Play Again</p>
+          <MdOutlineReplayCircleFilled
+            className="bg-primary-e inline"
+            size={20}
+          />
         </button>
       </div>
     </div>

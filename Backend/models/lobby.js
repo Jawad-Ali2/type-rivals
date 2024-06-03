@@ -17,6 +17,7 @@ const lobbySchema = new Schema({
       completionTime: Number,
     },
   ],
+  readyStatus: [{ playerId: String, status: Boolean }], // array to store status of each player
   state: String,
   lobbyType: String,
   lobbySize: Number,

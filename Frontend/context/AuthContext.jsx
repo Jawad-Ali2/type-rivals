@@ -21,23 +21,27 @@ export function AuthProvider({ children }) {
   const [csrfToken, setCsrfToken] = useState(null);
 
   useEffect(() => {
-    getCsrfToken();
-    const storedToken = JSON.parse(localStorage.getItem("token"));
-    const expiryDate = JSON.parse(localStorage.getItem("expiryDate"));
+    const fetchTokens = async () => {
+      await getCsrfToken();
+      const storedToken = JSON.parse(localStorage.getItem("token"));
+      const expiryDate = JSON.parse(localStorage.getItem("expiryDate"));
 
-    if (!storedToken || !expiryDate) {
-      setIsAuthenticated(false);
-      return;
-    }
-    if (new Date(expiryDate) <= new Date()) {
-      logout();
-      return;
-    }
+      if (!storedToken || !expiryDate) {
+        setIsAuthenticated(false);
+        return;
+      }
+      if (new Date(expiryDate) <= new Date()) {
+        logout();
+        return;
+      }
 
-    const remainingMiliseconds = new Date(expiryDate) - new Date().getTime();
-    setToken(storedToken);
-    setIsAuthenticated(true);
-    autoLogout(remainingMiliseconds);
+      const remainingMiliseconds = new Date(expiryDate) - new Date().getTime();
+      setToken(storedToken);
+      setIsAuthenticated(true);
+      autoLogout(remainingMiliseconds);
+    };
+
+    fetchTokens();
   }, [token]);
 
   const autoLogout = (miliseconds) => {

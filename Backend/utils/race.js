@@ -65,6 +65,7 @@ async function updateLobby(
   }
 }
 
+// TODO: We can combine these three functions below into one
 function createFriendlyLobby(noOfPlayers) {
   return new Promise((resolve, reject) => {
     const lobbyID = generateLobbyCode();
@@ -90,25 +91,6 @@ function createFriendlyLobby(noOfPlayers) {
 }
 
 async function createMultiplayerLobby(noOfPlayers) {
-  // console.log(noOfPlayers);
-  // return new Promise((resolve, reject) => {
-  //   const lobby = new Lobby({
-  //     players: [],
-  //     state: "waiting", // three states ('waiting', 'in_progress', 'finished')
-  //     lobbyType: "Multiplayer",
-  //     lobbySize: noOfPlayers,
-  //   });
-
-  //   lobby
-  //     .save()
-  //     .then((lobby) => {
-  //       resolve(lobby);
-  //     })
-  //     .catch((err) => {
-  //       reject(err);
-  //     });
-  // });
-
   let lobby = new Lobby({
     players: [],
     state: "waiting",
@@ -122,11 +104,26 @@ async function createMultiplayerLobby(noOfPlayers) {
   return lobby;
 }
 
+async function createPracticeLobby(noOfPlayers) {
+  let lobby = new Lobby({
+    players: [],
+    state: "waiting",
+    lobbyType: "Practice",
+    lobbySize: noOfPlayers,
+  });
+
+  lobby = await lobby.save();
+
+  return lobby;
+}
+
 /**
  * Joins a lobby
  * @param {string} playerId - The player ID
  * @param {Socket} socket - The socket object
  * @param {int} noOfPlayers - The number of players
+ * @param {boolean} isMultiplayerLobby - Whether the match is multiplayer (competitive)
+ * @param {boolean} isPracticeLobby - Whether the match is a practice match
  * @param {boolean} isFriendlyMatch - Whether the match is a friendly match or not
  * @param {boolean} isFriendlyLobbyCreator - Whether the player is the creator of the lobby
  * @param {string} friendLobbyID - The ID of the friend's lobby, if it's a friendly match
@@ -136,6 +133,8 @@ async function joinLobby(
   playerId,
   socket,
   noOfPlayers,
+  isMultiplayerLobby,
+  isPracticeLobby,
   isFriendlyMatch,
   isFriendlyLobbyCreator,
   friendLobbyID
@@ -159,14 +158,21 @@ async function joinLobby(
 
       if (!lobby) throw new Error("Lobby ID is invalid");
     } else {
-      // * When the user is just looking for a match
-      lobby = await Lobby.findOne({
-        $and: [{ state: "waiting" }, { lobbyType: "Multiplayer" }],
-      });
-      if (!lobby) lobby = await createMultiplayerLobby(noOfPlayers);
+      if (isPracticeLobby) {
+        // * Practice Mode
+        lobby = await createPracticeLobby(noOfPlayers);
+      }
+      if (isMultiplayerLobby) {
+        // * When the user is just looking for a multiplayer match
+        lobby = await Lobby.findOne({
+          $and: [{ state: "waiting" }, { lobbyType: "Multiplayer" }],
+        });
+        if (!lobby) lobby = await createMultiplayerLobby(noOfPlayers);
+      }
     }
 
     // * At this point we have a lobby of specific type
+    lobby.readyStatus.push({ playerId: playerId, status: false });
 
     const playerAlreadyJoined = lobby.players.find(
       (player) => player.playerId === playerId

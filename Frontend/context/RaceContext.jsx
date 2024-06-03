@@ -16,6 +16,7 @@ const RaceProvider = ({ children }) => {
   const [isFriendlyLobbyCreator, setIsFriendlyLobbyCreator] = useState(false);
   const isFriendlyMatchRef = useRef(false);
   const [friendlyLobbyCode, setFriendlyLobbyCode] = useState("");
+  const [startRace, setStartRace] = useState(false);
   // const lobbySizeRef = useRef(null);
 
   const resetContext = () => {
@@ -26,6 +27,7 @@ const RaceProvider = ({ children }) => {
     setRaceHasFinished(false);
     setUserFinishTimer(60);
     setIsFriendlyLobbyCreator(false);
+    setStartRace(false);
   };
 
   const resetLobbySize = () => {
@@ -67,6 +69,8 @@ const RaceProvider = ({ children }) => {
     setUserFinishTimer(() => val);
   };
 
+  const getStartRace = () => startRace;
+
   const updateLobbySize = (lobbySize) => {
     // lobbySizeRef.current = lobbySize;
     // console.log("Lobby size update", lobbySizeRef.current);
@@ -95,6 +99,9 @@ const RaceProvider = ({ children }) => {
         setIsFriendlyLobbyCreator,
         friendlyLobbyCode,
         setFriendlyLobbyCode,
+        startRace,
+        setStartRace,
+        getStartRace,
       }}
     >
       {children}

@@ -4,11 +4,13 @@ const {
   updateLobby,
   disconnectUser,
   switchLobbyState,
+  getLobby,
 } = require("./utils/race");
 const { Mutex } = require("async-mutex");
 
 const createOrJoinLobbyMutex = new Mutex();
 const deleteMutex = new Mutex();
+const playersReadyMutex = new Mutex();
 const userLastRequestMap = new Map();
 
 const corsOrigin =
@@ -42,6 +44,8 @@ module.exports = {
         async (
           playerId,
           noOfPlayers,
+          isMultiplayerLobby,
+          isPracticeLobby,
           isFriendlyMatch,
           isFriendlyLobbyCreator,
           friendLobbyID
@@ -55,6 +59,8 @@ module.exports = {
               playerId,
               socket,
               noOfPlayers,
+              isMultiplayerLobby,
+              isPracticeLobby,
               isFriendlyMatch,
               isFriendlyLobbyCreator,
               friendLobbyID
@@ -108,6 +114,42 @@ module.exports = {
           } finally {
             release();
           }
+
+          socket.on("playerReady", async (playerId, lobbyId) => {
+            const release = await playersReadyMutex.acquire();
+
+            try {
+              console.log("Checking for all ready Players");
+              const lobby = await getLobby(lobbyId);
+
+              if (lobby) {
+                for (let playerStatus of lobby.readyStatus) {
+                  if (playerStatus.playerId === playerId) {
+                    playerStatus.status = true;
+                    break;
+                  }
+                }
+
+                await lobby.save();
+                console.log(lobby.readyStatus);
+
+                let allReady = true;
+
+                for (let player of lobby.readyStatus) {
+                  if (player.status === false) {
+                    allReady = false;
+                    break;
+                  }
+                }
+
+                if (allReady) {
+                  io.in(lobbyId).emit("startRace");
+                }
+              }
+            } finally {
+              release();
+            }
+          });
 
           socket.on(
             "typingSpeedUpdate",

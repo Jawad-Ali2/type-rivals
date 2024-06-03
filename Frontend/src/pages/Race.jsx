@@ -7,7 +7,6 @@ import { AuthContext } from "../../context/AuthContext";
 import { RaceUser } from "@/components/RaceUser";
 import { RaceContext } from "../../context/RaceContext";
 import { toast } from "react-toastify";
-import { MdOutlineReplayCircleFilled } from "react-icons/md";
 const Race = () => {
   document.title = "Race | Type Rivals";
   const [
@@ -22,10 +21,27 @@ const Race = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const noOfPlayers = queryParams.get("lobbySize");
-  const isFriendlyLobby = queryParams.get("friendlyMatch");
+  const isFriendlyLobby = queryParams.get("friendlyMatch") || false;
+  const isPracticeLobby = queryParams.get("practiceMode") || false;
+  const isMultiplayerLobby = queryParams.get("multiplayer") || false;
+
+  console.log(isPracticeLobby, isFriendlyLobby, isMultiplayerLobby);
+
+  const lobbyTypes = {
+    friendly: isFriendlyLobby,
+    practice: isPracticeLobby,
+    multiplayer: isMultiplayerLobby,
+  };
+
+  const activeLobbyType = Object.entries(lobbyTypes).find(
+    ([key, value]) => value // returns the first true value in object
+  );
+
+  console.log(activeLobbyType);
 
   const [replay, setReplay] = useState(false);
   const [paragraph, setParagraph] = useState("");
+
   const [players, setPlayers] = useState([]);
   const [playersConnected, setPlayersConnected] = useState(false);
   const { userId, token } = useContext(AuthContext);
@@ -42,6 +58,9 @@ const Race = () => {
     isFriendlyLobbyCreator,
     friendlyLobbyCode,
     setFriendlyLobbyCode,
+    startRace,
+    setStartRace,
+    getStartRace,
   } = useContext(RaceContext);
 
   //Reload/Update Components
@@ -77,27 +96,30 @@ const Race = () => {
         "createOrJoinLobby",
         userId,
         noOfPlayers,
+        isMultiplayerLobby,
+        isPracticeLobby,
         isFriendlyMatchRef.current,
         isFriendlyLobbyCreator,
         friendlyLobbyCode
       );
 
       socket.on("playerJoined", (lobby) => {
-        console.log(lobby.players);
-        const playersLength = lobby.players.length;
-        // setPlayers((prev) => [...prev, lobby.players[playersLength - 1]]);
         setPlayers([...lobby.players]);
         setPlayersConnected(() => true);
       });
 
       socket.on("message", (quote, lobby) => {
         currentLobbyRef.current = lobby._id;
-        // setPlayers([...lobby.players]);
         setParagraph(quote.text);
-        setSocketConnected(true);
 
-        // setPlayersConnected(() => true);
-        initiateSignal();
+        socket.emit("playerReady", userId, lobby._id);
+        console.log("Here");
+      });
+
+      socket.on("startRace", () => {
+        console.log("here");
+
+        setStartRace(() => true);
       });
 
       // Current game is friendly we set the generated code
@@ -113,7 +135,7 @@ const Race = () => {
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
-          pauseOnHover: true,
+          pauseOnHover: false,
           draggable: true,
           progress: undefined,
         });
@@ -130,8 +152,12 @@ const Race = () => {
         }
       };
     }
-    if (paragraph) {
+
+    console.log("RACE START", startRace);
+    if (getStartRace) {
       setPrepareTimerOn(true);
+      setSocketConnected(true);
+      initiateSignal();
     }
     return () => {
       // Case 2: When the user is competing with players but leave before the race ends
@@ -189,18 +215,6 @@ const Race = () => {
             raceDuration={60}
             setReplay={setReplay}
           />
-          <button
-            className={`bg-primary-e ui-button space-x-2 mt-5 ${
-              !iHaveFinished && "hidden"
-            }`}
-            onClick={() => setReplay((prev) => !prev)}
-          >
-            <p className="inline">Play Again</p>
-            <MdOutlineReplayCircleFilled
-              className="bg-primary-e inline"
-              size={20}
-            />
-          </button>
         </div>
       </div>
       <div>
